@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CanvasComponent } from './components/canvas/canvas.component';
+import SvgElementsService from './services/svg-elements.service';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,9 @@ import { CanvasComponent } from './components/canvas/canvas.component';
     AppRoutingModule,
     BrowserAnimationsModule
   ],
-  providers: [],
+  providers: [
+    SvgElementsService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

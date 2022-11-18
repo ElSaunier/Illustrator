@@ -1,31 +1,37 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { Circle, SvgShape } from 'src/app/lib/default-svg';
+import SvgElementsService from 'src/app/services/svg-elements.service';
 
 @Component({
   selector: 'ill-app-canvas',
   templateUrl: './canvas.component.html',
   styleUrls: ['./canvas.component.css']
 })
-export class CanvasComponent implements OnInit, AfterViewInit {
+export class CanvasComponent implements AfterViewInit {
   @ViewChild('canvas') canvasElement!: ElementRef<SVGElement>;
 
-  ngOnInit() {
-
-  }
+  constructor(private elementsService: SvgElementsService) {}
 
   ngAfterViewInit() {
-    console.log(this.canvasElement)
     this.canvasElement.nativeElement.addEventListener('click', event => this.handleClick(event));
+
+    this.initSubscriptions();
+  }
+
+  initSubscriptions() {
+    this.elementsService.pushElement$.subscribe(elem => this.drawElement(elem));
+  }
+
+  drawElement(e: SvgShape) {
+    const render = e.render();
+
+    const element = this.canvasElement.nativeElement;
+    element.insertAdjacentHTML('beforeend', render);
   }
 
   handleClick(event: MouseEvent) {
     const { clientX, clientY } = event;
-    this.drawVertex(clientX, clientY, 'green');
-  }
-
-  drawVertex(x: number, y: number, color: string) {
-    const vertex = `<circle cx="${x}" cy="${y}" r="10" fill="${color}"></circle>`;
-
-    const element = this.canvasElement.nativeElement;
-    element.insertAdjacentHTML('beforeend', vertex);
+    const circle = new Circle('green', 'green', 0, { x: clientX, y: clientY }, 10);
+    this.elementsService.add(circle);
   }
 }
