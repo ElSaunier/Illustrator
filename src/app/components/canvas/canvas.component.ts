@@ -31,7 +31,10 @@ export class CanvasComponent implements AfterViewInit {
 
   handleClick(event: MouseEvent) {
     const { clientX, clientY } = event;
-    const circle = new Circle('green', 'green', 0, { x: clientX, y: clientY }, 10);
+
+    const { x, y } = this.canvasElement.nativeElement.getBoundingClientRect();
+
+    const circle = new Circle('green', 'green', 0, { x: clientX - x, y: clientY - y }, 10);
     this.elementsService.add(circle);
   }
 }
