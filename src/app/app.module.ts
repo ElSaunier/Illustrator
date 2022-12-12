@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CanvasComponent } from './components/canvas/canvas.component';
 import SvgElementsService from './services/svg-elements.service';
+import { StorageService } from './services/storage.service';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import SvgElementsService from './services/svg-elements.service';
     BrowserAnimationsModule
   ],
   providers: [
-    SvgElementsService
+    SvgElementsService,
+    StorageService
   ],
   bootstrap: [AppComponent]
 })
