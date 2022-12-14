@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { Circle, SvgShape } from '@lib/shapes/svg/default-svg';
+import { SvgShape } from '@lib/shapes/svg/default-svg';
 import { Vec2 } from '@lib/vec2';
 import { Rect } from 'src/app/lib/shapes/svg/rect-svg';
 import { StorageService } from 'src/app/services/storage.service';
