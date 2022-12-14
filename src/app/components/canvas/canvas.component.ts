@@ -35,8 +35,17 @@ export class CanvasComponent implements AfterViewInit {
   }
 
   _eraseElement(eUuid: string) {
-    const elem = document.getElementById(eUuid);
-    elem?.remove();
+    const canvas = this.canvasElement.nativeElement as unknown as HTMLElement;
+
+    const elements = canvas.getElementsByClassName('svgElement');
+    for (const element in elements) {
+      const e = elements[element];
+      if (e.id === eUuid) {
+        e.remove();
+
+        return;
+      }
+    }
   }
 
   handleClick(event: MouseEvent) {
@@ -45,20 +54,20 @@ export class CanvasComponent implements AfterViewInit {
     const drawMode = this.storage.get('drawMode');
 
     if (drawMode !== 'eraser') {
-      this.addElement({ x: clientX, y: clientY });
+      this.onAddElement({ x: clientX, y: clientY });
     } else {
-      this.removeElement({ x: clientX, y: clientY });
+      this.onRemoveElement({ x: clientX, y: clientY });
     }
   }
 
 
-  addElement(ePos: Vec2) {
+  onAddElement(ePos: Vec2) {
     const clientX = ePos.x;
     const clientY = ePos.y;
     const { x, y } = this.canvasElement.nativeElement.getBoundingClientRect();
 
     const fill = this.storage.get('drawMode') === 'polygon-empty'
-      ? 'none'
+      ? 'transparent'
       : this.storage.get('fill');
     const stroke = this.storage.get('stroke');
 
@@ -69,11 +78,9 @@ export class CanvasComponent implements AfterViewInit {
     this.elementsService.add(rect);
   }
 
-  removeElement(ePos: Vec2) {
+  onRemoveElement(ePos: Vec2) {
     const elements = document.elementsFromPoint(ePos.x, ePos.y)
       .filter(elem => elem.classList.contains('svgElement'));
-
-    console.log(elements);
 
     if (elements.length > 0) {
       const uuid = elements[0].id;
