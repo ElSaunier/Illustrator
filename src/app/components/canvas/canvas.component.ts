@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { Circle, SvgShape } from '@lib/shapes/svg/default-svg';
+import { Vec2 } from '@lib/vec2';
 import { Rect } from 'src/app/lib/shapes/svg/rect-svg';
 import { StorageService } from 'src/app/services/storage.service';
 import SvgElementsService from 'src/app/services/svg-elements.service';
@@ -34,14 +35,32 @@ export class CanvasComponent implements AfterViewInit {
   handleClick(event: MouseEvent) {
     const { clientX, clientY } = event;
 
-    const { x, y } = this.canvasElement.nativeElement.getBoundingClientRect();
+    const drawMode = this.storage.get('drawMode');
 
-    // const circle = new Circle('green', 'green', 0, { x: clientX - x, y: clientY - y }, 10);
-    // this.elementsService.add(circle);
+    if (drawMode !== 'eraser') {
+      this.addElement({ x: clientX, y: clientY });
+    }
+  }
+
+
+  addElement(ePos: Vec2) {
+    const clientX = ePos.x;
+    const clientY = ePos.y;
+    const { x, y } = this.canvasElement.nativeElement.getBoundingClientRect();
+    
+    const fill = this.storage.get('drawMode') === 'polygon-empty'
+      ? 'none'
+      : this.storage.get('fill');
+    const stroke = this.storage.get('stroke');
+
     
     const width = 30;
     const height = 20;
-    const rect = new Rect(this.storage.get('fill'), this.storage.get('stroke'), 0,  { x: clientX - x - 0.5 * width, y: clientY - y - 0.5 * height }, width, height);
+    const rect = new Rect(fill, stroke, 0,  { x: clientX - x - 0.5 * width, y: clientY - y - 0.5 * height }, width, height);
     this.elementsService.add(rect);
+  }
+
+  removeElement() {
+
   }
 }
