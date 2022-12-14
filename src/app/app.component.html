@@ -1,2 +1,3 @@
 <ill-app-tools-sidebar></ill-app-tools-sidebar>
-<ill-app-canvas [ngClass]="{ eraser: isErasing }"></ill-app-canvas>
+<ill-app-canvas [ngClass]="{ eraser: (isErasing | async) }">
+</ill-app-canvas>
