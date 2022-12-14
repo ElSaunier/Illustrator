@@ -1,6 +1,6 @@
 import { SvgShape } from './default-svg';
-import { randomUuid } from './uuid';
-import { Vec2 } from './vec2';
+import { randomUuid } from '../../uuid';
+import { Vec2 } from '../../vec2';
 
 export class Rect implements SvgShape {
   public uuid: string;

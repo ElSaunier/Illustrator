@@ -1,5 +1,5 @@
-import { Vec2 } from './vec2';
-import { randomUuid } from './uuid';
+import { Vec2 } from '@lib/vec2';
+import { randomUuid } from '@lib/uuid';
 
 export interface SvgShape {
   uuid: string;

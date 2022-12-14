@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { SvgShape } from '../lib/default-svg';
+import { SvgShape } from '@lib/shapes/svg/default-svg';
 
 @Injectable({
   providedIn: 'root'
