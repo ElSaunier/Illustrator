@@ -1,0 +1,11 @@
+ill-app-canvas {
+    display: inline-flex;
+    height: 100%;
+    width: 94%;
+}
+
+ill-app-tools-sidebar {
+    display: inline-flex;
+    width: 6%;
+    height: 100%;
+}
