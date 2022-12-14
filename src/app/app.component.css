@@ -9,3 +9,7 @@ ill-app-tools-sidebar {
     width: 6%;
     height: 100%;
 }
+
+.eraser {
+    cursor: url('/assets/customSVG/eraser-small.svg'), auto;
+}
