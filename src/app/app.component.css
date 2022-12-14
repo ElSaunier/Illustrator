@@ -2,3 +2,9 @@ ill-app-canvas {
     display: block;
     height: 100%;
 }
+
+app-tools-sidebar {
+    display: inline-flex;
+    width: 6%;
+    height: 100%;
+}
