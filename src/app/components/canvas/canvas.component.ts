@@ -47,7 +47,7 @@ export class CanvasComponent implements AfterViewInit {
     const clientX = ePos.x;
     const clientY = ePos.y;
     const { x, y } = this.canvasElement.nativeElement.getBoundingClientRect();
-    
+
     const fill = this.storage.get('drawMode') === 'polygon-empty'
       ? 'none'
       : this.storage.get('fill');
@@ -56,7 +56,7 @@ export class CanvasComponent implements AfterViewInit {
     
     const width = 30;
     const height = 20;
-    const rect = new Rect(fill, stroke, 0,  { x: clientX - x - 0.5 * width, y: clientY - y - 0.5 * height }, width, height);
+    const rect = new Rect(fill, stroke, 0,  { x: clientX - x, y: clientY - y }, width, height);
     this.elementsService.add(rect);
   }
 

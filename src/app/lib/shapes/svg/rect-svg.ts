@@ -14,6 +14,10 @@ export class Rect implements SvgShape {
     public height: number) {
 
     this.uuid = randomUuid();
+
+    this.rpos.x -= 0.5 * this.width;
+    this.rpos.y -= 0.5 * this.height;
+
   }
 
   render() {
