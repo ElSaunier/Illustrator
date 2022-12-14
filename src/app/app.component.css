@@ -1,6 +1,7 @@
 ill-app-canvas {
-    display: block;
+    display: inline-flex;
     height: 100%;
+    width: 94%;
 }
 
 app-tools-sidebar {
