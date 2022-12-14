@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
-import { defaultParameters } from '../lib/defaultParameters';
+import { defaultParameters, Parameters } from '../lib/defaultParameters';
 import merge from 'deepmerge';
-
-type Parameters = typeof defaultParameters;
 
 @Injectable({
   providedIn: 'root'
