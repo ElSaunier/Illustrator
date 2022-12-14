@@ -24,6 +24,6 @@ export class Circle implements SvgShape {
   }
 
   render() {
-    return `<circle cx="${this.rpos.x}" cy="${this.rpos.y}" r="10" fill="${this.fill}" id="${this.uuid}" />`;
+    return `<circle class="svgElement" cx="${this.rpos.x}" cy="${this.rpos.y}" r="10" fill="${this.fill}" id="${this.uuid}" />`;
   }
 }

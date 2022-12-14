@@ -21,6 +21,6 @@ export class Rect implements SvgShape {
   }
 
   render() {
-    return `<rect fill="${this.fill}" stroke="${this.stroke}" x="${this.rpos.x}" y="${this.rpos.y}" width="${this.width}" height="${this.height}" />`;
+    return `<rect class="svgElement" fill="${this.fill}" stroke="${this.stroke}" x="${this.rpos.x}" y="${this.rpos.y}" width="${this.width}" height="${this.height}" id="${this.uuid}"/>`;
   }
 }

@@ -22,14 +22,21 @@ export class CanvasComponent implements AfterViewInit {
   }
 
   initSubscriptions() {
-    this.elementsService.pushElement$.subscribe(elem => this.drawElement(elem));
+    this.elementsService.pushElement$.subscribe(elem => this._drawElement(elem));
+
+    this.elementsService.deleteElement$.subscribe(eUuid => this._eraseElement(eUuid));
   }
 
-  drawElement(e: SvgShape) {
+  _drawElement(e: SvgShape) {
     const render = e.render();
 
     const element = this.canvasElement.nativeElement;
     element.insertAdjacentHTML('beforeend', render);
+  }
+
+  _eraseElement(eUuid: string) {
+    const elem = document.getElementById(eUuid);
+    elem?.remove();
   }
 
   handleClick(event: MouseEvent) {
@@ -39,6 +46,8 @@ export class CanvasComponent implements AfterViewInit {
 
     if (drawMode !== 'eraser') {
       this.addElement({ x: clientX, y: clientY });
+    } else {
+      this.removeElement({ x: clientX, y: clientY });
     }
   }
 
@@ -60,7 +69,16 @@ export class CanvasComponent implements AfterViewInit {
     this.elementsService.add(rect);
   }
 
-  removeElement() {
+  removeElement(ePos: Vec2) {
+    const elements = document.elementsFromPoint(ePos.x, ePos.y)
+      .filter(elem => elem.classList.contains('svgElement'));
 
+    console.log(elements);
+
+    if (elements.length > 0) {
+      const uuid = elements[0].id;
+
+      this.elementsService.remove(uuid);
+    }
   }
 }
