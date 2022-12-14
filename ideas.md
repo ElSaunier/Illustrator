@@ -1,0 +1,11 @@
+Next features ideas:
+- Add  color picker for polygon fill, stroke ...
+- Implement Hand drawing
+- Add a feature to manually add a polygon (specifying pos ...)
+- Mobile version ?
+- Translations
+- Resizing elements
+- Replace elements
+- Change shapes
+- Zoom in/out
+- Add a grid with a scale
