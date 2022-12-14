@@ -7,3 +7,10 @@ app-root {
     display: block;
     height: 100vh;
 }
+button {
+    background-color: #b3e3ff;
+}
+
+button:hover, button.active{
+    background-color: #5647d3;
+}
