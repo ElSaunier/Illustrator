@@ -27,4 +27,12 @@ export default class SvgElementsService {
 
     this.deleteElement$.next(uuid);
   }
+
+  public getElement(index: number) {
+    return this.elements[index];
+  }
+
+  public getElements() {
+    return this.elements;
+  }
 }
