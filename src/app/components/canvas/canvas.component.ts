@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { SvgShape } from '@lib/shapes/svg/default-svg';
+import { Shape } from '@lib/interfaces/shape.interface';
+import { Rect } from '@lib/shapes/rect';
 import { Vec2 } from '@lib/vec2';
-import { Rect } from 'src/app/lib/shapes/svg/rect-svg';
 import { StorageService } from 'src/app/services/storage.service';
 import SvgElementsService from 'src/app/services/svg-elements.service';
 
@@ -11,11 +11,19 @@ import SvgElementsService from 'src/app/services/svg-elements.service';
   styleUrls: ['./canvas.component.css']
 })
 export class CanvasComponent implements AfterViewInit {
-  @ViewChild('canvas') canvasElement!: ElementRef<SVGElement>;
+  @ViewChild('canvas') canvasElement!: ElementRef<HTMLCanvasElement>;
 
-  constructor(private elementsService: SvgElementsService, private storage: StorageService) {}
+  constructor(private elementsService: SvgElementsService, private storage: StorageService,
+    private element: ElementRef<HTMLElement>) {}
 
   ngAfterViewInit() {
+    const elem = this.canvasElement.nativeElement;
+    if (elem && elem.parentElement) {
+      const rect = elem.parentElement.getBoundingClientRect();
+      elem.width = rect.width;
+      elem.height = rect.height;
+    }
+    
     this.canvasElement.nativeElement.addEventListener('click', event => this.handleClick(event));
 
     this.initSubscriptions();
@@ -23,15 +31,15 @@ export class CanvasComponent implements AfterViewInit {
 
   initSubscriptions() {
     this.elementsService.pushElement$.subscribe(elem => this._drawElement(elem));
-
-    this.elementsService.deleteElement$.subscribe(eUuid => this._eraseElement(eUuid));
+    // this.elementsService.deleteElement$.subscribe(eUuid => this._eraseElement(eUuid));
   }
 
-  _drawElement(e: SvgShape) {
-    const render = e.render();
+  _drawElement(e: Shape) {
+    const ctxt = this.canvasElement.nativeElement.getContext('2d');
 
-    const element = this.canvasElement.nativeElement;
-    element.insertAdjacentHTML('beforeend', render);
+    if (ctxt) {
+      e.render(ctxt);
+    }
   }
 
   _eraseElement(eUuid: string) {
@@ -49,43 +57,45 @@ export class CanvasComponent implements AfterViewInit {
   }
 
   handleClick(event: MouseEvent) {
-    const { clientX, clientY } = event;
+    const { offsetX, offsetY } = event;
 
     const drawMode = this.storage.get('drawMode');
 
     if (drawMode !== 'eraser') {
-      this.onAddElement({ x: clientX, y: clientY });
-    } else {
-      this.onRemoveElement({ x: clientX, y: clientY });
+      this.onAddElement({ x: offsetX, y: offsetY });
     }
   }
 
 
   onAddElement(ePos: Vec2) {
-    const clientX = ePos.x;
-    const clientY = ePos.y;
-    const { x, y } = this.canvasElement.nativeElement.getBoundingClientRect();
+    const { x, y } = ePos;
 
     const fill = this.storage.get('drawMode') === 'polygon-empty'
       ? 'transparent'
       : this.storage.get('fill');
     const stroke = this.storage.get('stroke');
 
-    
-    const width = 30;
-    const height = 20;
-    const rect = new Rect(fill, stroke, 0,  { x: clientX - x, y: clientY - y }, width, height);
-    this.elementsService.add(rect);
+    const canvas = this.element.nativeElement;
+    if (canvas) {
+      const canvasWidth = canvas.getBoundingClientRect().width;
+      const documentWidth = document.documentElement.clientWidth;
+      const coef = canvasWidth / documentWidth;
+
+      const width = 100;
+      const height = 100;
+      const rect = new Rect(fill, stroke, 0,  { x: x * coef, y }, width, height);
+      this.elementsService.add(rect);
+    }
   }
 
   onRemoveElement(ePos: Vec2) {
-    const elements = document.elementsFromPoint(ePos.x, ePos.y)
-      .filter(elem => elem.classList.contains('svgElement'));
+    // const elements = document.elementsFromPoint(ePos.x, ePos.y)
+    //   .filter(elem => elem.classList.contains('svgElement'));
 
-    if (elements.length > 0) {
-      const uuid = elements[0].id;
+    // if (elements.length > 0) {
+    //   const uuid = elements[0].id;
 
-      this.elementsService.remove(uuid);
-    }
+    //   this.elementsService.remove(uuid);
+    // }
   }
 }
