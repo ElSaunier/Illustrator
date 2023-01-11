@@ -5,18 +5,50 @@ import { Rect } from 'src/app/lib/shapes/svg/rect-svg';
 import { StorageService } from 'src/app/services/storage.service';
 import SvgElementsService from 'src/app/services/svg-elements.service';
 
+
+class Point {
+  private positionx: number;
+  private positionY: number;
+  constructor(positionX: number, positionY: number) {
+    this.positionx = positionX;
+    this.positionY = positionY;
+  }
+}
+
 @Component({
   selector: 'ill-app-canvas',
   templateUrl: './canvas.component.html',
   styleUrls: ['./canvas.component.css']
 })
+
 export class CanvasComponent implements AfterViewInit {
   @ViewChild('canvas') canvasElement!: ElementRef<SVGElement>;
 
-  constructor(private elementsService: SvgElementsService, private storage: StorageService) {}
+  constructor(private elementsService: SvgElementsService, private storage: StorageService) { }
 
   ngAfterViewInit() {
-    this.canvasElement.nativeElement.addEventListener('click', event => this.handleClick(event));
+    let tab: Point[] = new Array<Point>();
+    let listening: boolean = false;
+
+    this.canvasElement.nativeElement.addEventListener('mousedown', (event) => {
+      const { clientX, clientY } = event;
+      listening = true;
+      tab.push(new Point(clientX, clientY));
+    });
+
+    this.canvasElement.nativeElement.addEventListener('mouseup', (event) => {
+      const { clientX, clientY } = event;
+      listening = false;
+      tab.push(new Point(clientX, clientY));
+      console.log(tab);
+      tab.splice(0, tab.length);
+    });
+
+    this.canvasElement.nativeElement.addEventListener('mousemove', (event) => {
+      const { clientX, clientY } = event;
+      if (listening)
+        tab.push(new Point(clientX, clientY));
+    });
 
     this.initSubscriptions();
   }
@@ -60,7 +92,6 @@ export class CanvasComponent implements AfterViewInit {
     }
   }
 
-
   onAddElement(ePos: Vec2) {
     const clientX = ePos.x;
     const clientY = ePos.y;
@@ -71,10 +102,10 @@ export class CanvasComponent implements AfterViewInit {
       : this.storage.get('fill');
     const stroke = this.storage.get('stroke');
 
-    
+
     const width = 30;
     const height = 20;
-    const rect = new Rect(fill, stroke, 0,  { x: clientX - x, y: clientY - y }, width, height);
+    const rect = new Rect(fill, stroke, 0, { x: clientX - x, y: clientY - y }, width, height);
     this.elementsService.add(rect);
   }
 
