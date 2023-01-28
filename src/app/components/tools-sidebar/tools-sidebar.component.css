@@ -1,12 +1,15 @@
 mat-sidenav-container {
     height: 100vh;
     width: 100%;
+
+    overflow: visible;
 }
 
 mat-sidenav {
     background-color: #b5b5b9;
     width: 100%;
     height: 100%;
+    overflow: visible;
 }
 
 .content{
@@ -15,4 +18,9 @@ mat-sidenav {
     align-items: center;
     gap: 20px;
     margin-top: 50%;
+    overflow: visible
+}
+
+.color-picker-btn {
+    border: none;
 }

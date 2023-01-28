@@ -21,6 +21,21 @@
                     (click)="setActive('polygon-full'); onDrawFullPolygon();"> 
                 <mat-icon svgIcon="polygon-full"></mat-icon>
             </button>
+            <button [(colorPicker)]="fillColor" class="color-picker-btn" mat-fab
+                (colorPickerChange)="onFillChanges()"
+                cpPosition="right"
+                cpOutputFormat="rgba"
+                [cpUseRootViewContainer]="true"
+                [ngStyle]="{'background-color': fillColor }"
+            ></button>
+
+            <button [(colorPicker)]="strokeColor" class="color-picker-btn" mat-fab
+                (colorPickerChange)="onStrokeChanges()"
+                cpPosition="right"
+                cpOutputFormat="rgba"
+                [cpUseRootViewContainer]="true"
+                [ngStyle]="{'background-color': strokeColor }"
+            ></button>
         </div>
     </mat-sidenav>
 </mat-sidenav-container>

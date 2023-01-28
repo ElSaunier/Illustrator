@@ -12,6 +12,8 @@ import { StorageService } from 'src/app/services/storage.service';
 export class ToolsSidebarComponent implements OnInit {
 
   private activeButton!: DrawMode;
+  protected fillColor = 'rgba(0,0,0,1)';
+  protected strokeColor = 'rgba(0,0,0,1)';
 
   constructor(private matIconRegistry: MatIconRegistry,    
     private domSanitizer: DomSanitizer, private storage: StorageService) { 
@@ -42,6 +44,9 @@ export class ToolsSidebarComponent implements OnInit {
   ngOnInit() {
     const drawMode = this.storage.get('drawMode');
     this.setActive(drawMode);
+
+    this.fillColor = this.storage.get('fill');
+    this.strokeColor = this.storage.get('stroke');
   }
 
   /* Function for buttons */  
@@ -74,4 +79,11 @@ export class ToolsSidebarComponent implements OnInit {
     this.storage.set('drawMode', 'polygon-empty');
   }
 
+  onFillChanges() {
+    this.storage.set('fill', this.fillColor);
+  }
+
+  onStrokeChanges() {
+    this.storage.set('stroke', this.strokeColor);
+  }
 }
