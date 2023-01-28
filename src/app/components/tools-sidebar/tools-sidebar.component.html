@@ -19,6 +19,25 @@
                 (click)="setActive('polygon-full'); onDrawFullPolygon();">
                 <mat-icon svgIcon="polygon-full"></mat-icon>
             </button>
+            <div>
+                <button [(colorPicker)]="fillColor" id="fill-btn" mat-fab
+                    (colorPickerChange)="onFillChanges()"
+                    cpPosition="right"
+                    cpOutputFormat="rgba"
+                    [cpUseRootViewContainer]="true"
+                    [ngStyle]="{'background-color': fillColor }"
+                ></button>
+            </div>
+
+            <div>
+                <button [(colorPicker)]="strokeColor" id="stroke-btn" mat-fab
+                (colorPickerChange)="onStrokeChanges()"
+                cpPosition="right"
+                cpOutputFormat="rgba"
+                [cpUseRootViewContainer]="false"
+                [ngStyle]="{'border-color': strokeColor }"
+            ></button>
+            </div>
             <button mat-fab aria-label="Icon button to clear all page" (click)="onEraseAll();">
                 <mat-icon svgIcon="trash-can"></mat-icon>
             </button>

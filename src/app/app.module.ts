@@ -12,6 +12,7 @@ import { ToolsSidebarComponent } from './components/tools-sidebar/tools-sidebar.
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { HttpClientModule } from '@angular/common/http';
+import { ColorPickerModule } from 'ngx-color-picker';
 
 @NgModule({
   declarations: [
@@ -26,8 +27,8 @@ import { HttpClientModule } from '@angular/common/http';
     MatSidenavModule,
     MatButtonModule,
     MatIconModule,
-    HttpClientModule
-
+    HttpClientModule,
+    ColorPickerModule
   ],
   providers: [
     SvgElementsService,
