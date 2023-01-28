@@ -3,6 +3,7 @@ import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { DrawMode } from '@lib/defaultParameters';
 import { StorageService } from 'src/app/services/storage.service';
+import SvgElementsService from 'src/app/services/svg-elements.service';
 
 @Component({
   selector: 'ill-app-tools-sidebar',
@@ -15,8 +16,8 @@ export class ToolsSidebarComponent implements OnInit {
   protected fillColor = 'rgba(0,0,0,1)';
   protected strokeColor = 'rgba(0,0,0,1)';
 
-  constructor(private matIconRegistry: MatIconRegistry,    
-    private domSanitizer: DomSanitizer, private storage: StorageService) { 
+  constructor(private matIconRegistry: MatIconRegistry,
+    private domSanitizer: DomSanitizer, private storage: StorageService, private elementsService: SvgElementsService) {
 
     /* Registering custom SVGs */
     this.matIconRegistry.addSvgIcon(
@@ -38,6 +39,11 @@ export class ToolsSidebarComponent implements OnInit {
       'polygon-empty',
       this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/customSVG/hexagonEmpty.svg')
     );
+
+    this.matIconRegistry.addSvgIcon(
+      'trash-can',
+      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/customSVG/trash-can.svg')
+    );
     /* ----------------------- */
   }
 
@@ -49,7 +55,7 @@ export class ToolsSidebarComponent implements OnInit {
     this.strokeColor = this.storage.get('stroke');
   }
 
-  /* Function for buttons */  
+  /* Function for buttons */
   isButtonActive(name: string) {
     return this.activeButton == name;
   }
@@ -86,4 +92,11 @@ export class ToolsSidebarComponent implements OnInit {
   onStrokeChanges() {
     this.storage.set('stroke', this.strokeColor);
   }
+  /* Function called when click on clear all picture */
+  onEraseAll() {
+    while (this.elementsService.getElements().length > 0) {
+      this.elementsService.remove(this.elementsService.getElement(0).uuid);
+    }
+  }
+
 }

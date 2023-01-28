@@ -1,24 +1,22 @@
 <mat-sidenav-container class="example-container">
     <mat-sidenav mode="side" opened>
         <div class="content">
-            <button mat-fab aria-label="Icon button to draw a segment" 
-            [class.active]="isButtonActive('pencil')" 
-            (click)="setActive('pencil'); onPencil();"> 
+            <button mat-fab aria-label="Icon button to draw a segment" [class.active]="isButtonActive('pencil')"
+                (click)="setActive('pencil'); onPencil();">
                 <mat-icon svgIcon="pencil"></mat-icon>
             </button>
-            <button mat-fab aria-label="Icon button to delete a segment" 
-                    [class.active]="isButtonActive('eraser')" 
-                    (click)="setActive('eraser'); onErase();"> 
+            <button mat-fab aria-label="Icon button to delete a segment" [class.active]="isButtonActive('eraser')"
+                (click)="setActive('eraser'); onErase();">
                 <mat-icon svgIcon="eraser"></mat-icon>
             </button>
-            <button mat-fab aria-label="Icon button to draw an empty polygon" 
-                    [class.active]="isButtonActive('polygon-empty')" 
-                    (click)="setActive('polygon-empty'); onDrawEmptyPolygon();"> 
+            <button mat-fab aria-label="Icon button to draw an empty polygon"
+                [class.active]="isButtonActive('polygon-empty')"
+                (click)="setActive('polygon-empty'); onDrawEmptyPolygon();">
                 <mat-icon svgIcon="polygon-empty"></mat-icon>
             </button>
-            <button mat-fab aria-label="Icon button to draw a full polygon" 
-                    [class.active]="isButtonActive('polygon-full')" 
-                    (click)="setActive('polygon-full'); onDrawFullPolygon();"> 
+            <button mat-fab aria-label="Icon button to draw a full polygon"
+                [class.active]="isButtonActive('polygon-full')"
+                (click)="setActive('polygon-full'); onDrawFullPolygon();">
                 <mat-icon svgIcon="polygon-full"></mat-icon>
             </button>
             <button [(colorPicker)]="fillColor" class="color-picker-btn" mat-fab
@@ -36,6 +34,9 @@
                 [cpUseRootViewContainer]="true"
                 [ngStyle]="{'background-color': strokeColor }"
             ></button>
+            <button mat-fab aria-label="Icon button to clear all page" (click)="onEraseAll();">
+                <mat-icon svgIcon="trash-can"></mat-icon>
+            </button>
         </div>
     </mat-sidenav>
 </mat-sidenav-container>

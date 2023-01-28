@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
+import { Shape } from '@lib/interfaces/shape.interface';
 import { Subject } from 'rxjs';
-import { SvgShape } from '@lib/shapes/svg/default-svg';
 
 @Injectable({
   providedIn: 'root'
 })
 export default class SvgElementsService {
-  private elements: SvgShape[] = [];
-  public pushElement$ = new Subject<SvgShape>();
+  private elements: Shape[] = [];
+  public pushElement$ = new Subject<Shape>();
   public deleteElement$ = new Subject<string>();
 
-  public add(e: SvgShape) {
+  public add(e: Shape) {
     this.elements.push(e);
     this.pushElement$.next(e);
   }
@@ -26,5 +26,13 @@ export default class SvgElementsService {
     this.elements.splice(index, 1);
 
     this.deleteElement$.next(uuid);
+  }
+
+  public getElement(index: number) {
+    return this.elements[index];
+  }
+
+  public getElements() {
+    return this.elements;
   }
 }
