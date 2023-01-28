@@ -21,9 +21,14 @@ export class Rect implements Shape {
   }
 
   public render(ctx: CanvasRenderingContext2D) {
-    this.drawBorder(ctx);
-    ctx.fillStyle = this.fill;
-    ctx.fillRect(this.rpos.x, this.rpos.y, this.width, this.height);
+    if (this.fill !== 'transparent') {
+      this.drawBorder(ctx);
+      ctx.fillStyle = this.fill;
+      ctx.fillRect(this.rpos.x, this.rpos.y, this.width, this.height);
+    } else {
+      ctx.strokeStyle = this.stroke;
+      ctx.strokeRect(this.rpos.x, this.rpos.y, this.width, this.height);    
+    }
   }
 
   public drawBorder(ctx: CanvasRenderingContext2D) {

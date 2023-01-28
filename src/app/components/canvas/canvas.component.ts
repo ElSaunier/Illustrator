@@ -71,7 +71,7 @@ export class CanvasComponent implements AfterViewInit {
     const { x, y } = ePos;
 
     const fill = this.storage.get('drawMode') === 'polygon-empty'
-      ? 'whitesmoke'
+      ? 'transparent'
       : this.storage.get('fill');
     const stroke = this.storage.get('stroke');
 
