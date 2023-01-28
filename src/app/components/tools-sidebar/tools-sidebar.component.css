@@ -21,6 +21,11 @@ mat-sidenav {
     overflow: visible
 }
 
-.color-picker-btn {
+#fill-btn {
     border: none;
+}
+
+#stroke-btn {
+    border: dotted 5px;
+    background: none;
 }
