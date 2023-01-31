@@ -16,10 +16,18 @@ export class Circle implements Shape {
   }
 
   callback() {
-    
+
   }
 
-  public render(ctx: CanvasRenderingContext2D): void  {
-    
+  public render(ctx: CanvasRenderingContext2D): void {
+    ctx.beginPath();
+    ctx.arc(this.rpos.x, this.rpos.y, this.radius, 0, 2 * Math.PI);
+    if (this.fill === 'fill') {
+      ctx.fillStyle = this.stroke;
+      ctx.fill();
+    }
+    ctx.lineWidth = this.strokeWidth;
+    ctx.strokeStyle = this.stroke;
+    ctx.stroke()
   }
 }

@@ -1,7 +1,9 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { Shape } from '@lib/interfaces/shape.interface';
+import { Circle } from '@lib/shapes/circle';
 import { Rect } from '@lib/shapes/rect';
 import { Vec2 } from '@lib/vec2';
+import { Rgba } from 'ngx-color-picker';
 import { StorageService } from 'src/app/services/storage.service';
 import SvgElementsService from 'src/app/services/svg-elements.service';
 
@@ -14,7 +16,7 @@ export class CanvasComponent implements AfterViewInit {
   @ViewChild('canvas') canvasElement!: ElementRef<HTMLCanvasElement>;
 
   constructor(private elementsService: SvgElementsService, private storage: StorageService,
-    private element: ElementRef<HTMLElement>) {}
+    private element: ElementRef<HTMLElement>) { }
 
   ngAfterViewInit() {
     const elem = this.canvasElement.nativeElement;
@@ -23,8 +25,13 @@ export class CanvasComponent implements AfterViewInit {
       elem.width = rect.width;
       elem.height = rect.height;
     }
-    
+
+    const isMousDown = false;
+
     this.canvasElement.nativeElement.addEventListener('click', event => this.handleClick(event));
+    this.canvasElement.nativeElement.addEventListener('mousedown', event => this.handleMouseDown(event));
+    this.canvasElement.nativeElement.addEventListener('mouseup', event => this.handleMouseUp(event));
+    this.canvasElement.nativeElement.addEventListener('mousemove', event => this.handleMouseMove(event));
 
     this.initSubscriptions();
   }
@@ -56,36 +63,87 @@ export class CanvasComponent implements AfterViewInit {
     }
   }
 
+  handleMouseMove(event: MouseEvent) {
+
+  }
+
+  handleMouseUp(event: MouseEvent) {
+
+  }
+
+  handleMouseDown(event: MouseEvent) {
+
+  }
+
   handleClick(event: MouseEvent) {
     const { offsetX, offsetY } = event;
 
     const drawMode = this.storage.get('drawMode');
 
-    if (drawMode !== 'eraser') {
+    if (drawMode !== 'eraser' && drawMode !== 'pencil') {
       this.onAddElement({ x: offsetX, y: offsetY });
     }
   }
 
 
   onAddElement(ePos: Vec2) {
-    const { x, y } = ePos;
+    const drawMode = this.storage.get('drawMode');
+    const canvas = this.element.nativeElement;
 
-    const fill = this.storage.get('drawMode') === 'polygon-empty'
-      ? 'transparent'
-      : this.storage.get('fill');
+    const canvasWidth = canvas.getBoundingClientRect().width;
+    const documentWidth = document.documentElement.clientWidth;
+    const coef = canvasWidth / documentWidth;
+
+    const pos = { x: ePos.x * coef, y: ePos.y };
+
+    if (canvas === null) {
+      return;
+    }
+
+    switch (drawMode) {
+      case 'polygon-empty':
+        this.onAddPolygonEmpty(pos);
+        break;
+      case 'polygon-full':
+        this.onAddPolygonFill(pos);
+        break;
+      case 'point':
+        this.onAddPoint(pos);
+        break;
+      case 'pencil':
+        const point = new Circle('fill', this.storage.get('stroke'), 0, pos, 1);
+        this.elementsService.add(point);
+        break;
+      default:
+        console.error('DrawMode not found : ' + drawMode.toString());
+    }
+  }
+
+  onAddPoint(ePos: Vec2) {
     const stroke = this.storage.get('stroke');
 
-    const canvas = this.element.nativeElement;
-    if (canvas) {
-      const canvasWidth = canvas.getBoundingClientRect().width;
-      const documentWidth = document.documentElement.clientWidth;
-      const coef = canvasWidth / documentWidth;
+    const radius = 5;
 
-      const width = 100;
-      const height = 100;
-      const rect = new Rect(fill, stroke, 0,  { x: x * coef, y }, width, height);
-      this.elementsService.add(rect);
-    }
+    const point = new Circle('fill', stroke, 0, ePos, radius);
+    this.elementsService.add(point);
+  }
+
+  onAddPolygonFill(ePos: Vec2) {
+    const stroke = this.storage.get('stroke');
+
+    const width = 100;
+    const height = 100;
+    const rect = new Rect(this.storage.get('fill'), stroke, 0, ePos, width, height);
+    this.elementsService.add(rect);
+  }
+
+  onAddPolygonEmpty(ePos: Vec2) {
+    const stroke = this.storage.get('stroke');
+
+    const width = 100;
+    const height = 100;
+    const rect = new Rect('transparent', stroke, 0, ePos, width, height);
+    this.elementsService.add(rect);
   }
 
   onRemoveElement(ePos: Vec2) {
