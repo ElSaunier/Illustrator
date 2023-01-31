@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { Shape } from '@lib/interfaces/shape.interface';
 import { Circle } from '@lib/shapes/circle';
+import { Line } from '@lib/shapes/line';
 import { Rect } from '@lib/shapes/rect';
 import { Vec2 } from '@lib/vec2';
 import { Rgba } from 'ngx-color-picker';
@@ -26,12 +27,42 @@ export class CanvasComponent implements AfterViewInit {
       elem.height = rect.height;
     }
 
-    const isMousDown = false;
+    let isMouseDown: Boolean = false;
+    let lastPoint: Vec2 | null = null;
 
     this.canvasElement.nativeElement.addEventListener('click', event => this.handleClick(event));
-    this.canvasElement.nativeElement.addEventListener('mousedown', event => this.handleMouseDown(event));
-    this.canvasElement.nativeElement.addEventListener('mouseup', event => this.handleMouseUp(event));
-    this.canvasElement.nativeElement.addEventListener('mousemove', event => this.handleMouseMove(event));
+
+    this.canvasElement.nativeElement.addEventListener('mousedown', event => {
+      isMouseDown = true;
+    });
+
+    this.canvasElement.nativeElement.addEventListener('mouseup', event => {
+      isMouseDown = false;
+      lastPoint = null;
+    });
+
+    this.canvasElement.nativeElement.addEventListener('mousemove', event => {
+      if (!isMouseDown) {
+        return;
+      }
+
+      const { offsetX, offsetY } = event;
+      const pos = { x: offsetX, y: offsetY };
+
+      const drawMode = this.storage.get('drawMode');
+      if (drawMode === 'pencil') {
+        if (lastPoint !== null) {
+          const drawMode = this.storage.get('drawMode');
+          const canvas = this.element.nativeElement;
+
+          const canvasWidth = canvas.getBoundingClientRect().width;
+          const documentWidth = document.documentElement.clientWidth;
+          const coef = canvasWidth / documentWidth;
+          this.onAddLine({ x: lastPoint.x * coef, y: lastPoint.y }, { x: pos.x * coef, y: pos.y });
+        }
+        lastPoint = pos;
+      }
+    });
 
     this.initSubscriptions();
   }
@@ -61,18 +92,6 @@ export class CanvasComponent implements AfterViewInit {
         return;
       }
     }
-  }
-
-  handleMouseMove(event: MouseEvent) {
-
-  }
-
-  handleMouseUp(event: MouseEvent) {
-
-  }
-
-  handleMouseDown(event: MouseEvent) {
-
   }
 
   handleClick(event: MouseEvent) {
@@ -114,9 +133,32 @@ export class CanvasComponent implements AfterViewInit {
         const point = new Circle('fill', this.storage.get('stroke'), 0, pos, 1);
         this.elementsService.add(point);
         break;
+      case 'line':
+        for (let i = 0; i < this.elementsService.getElements().length; i++) {
+          let elem: Shape;
+          if ((elem = this.elementsService.getElement(i)) instanceof Circle) {
+            if (elem.isColliding(pos)) {
+              if (this.storage.get('lastCircleSelected') === null) {
+                this.storage.set('lastCircleSelected', elem);
+              }
+              else {
+                if (elem !== this.storage.get('lastCircleSelected')) {
+                  this.onAddLine(this.storage.get('lastCircleSelected')!.rpos, elem.rpos);
+                  this.storage.set('lastCircleSelected', null);
+                }
+              }
+            }
+          }
+        }
+        break;
       default:
         console.error('DrawMode not found : ' + drawMode.toString());
     }
+  }
+
+  onAddLine(pos1: Vec2, pos2: Vec2) {
+    const line = new Line(this.storage.get('stroke'), 0, pos1, pos2);
+    this.elementsService.add(line);
   }
 
   onAddPoint(ePos: Vec2) {

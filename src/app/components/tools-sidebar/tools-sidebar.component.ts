@@ -49,6 +49,11 @@ export class ToolsSidebarComponent implements OnInit {
       'point',
       this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/customSVG/point.svg')
     );
+
+    this.matIconRegistry.addSvgIcon(
+      'line',
+      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/customSVG/line.svg')
+    );
     /* ----------------------- */
   }
 
@@ -107,6 +112,11 @@ export class ToolsSidebarComponent implements OnInit {
   /* Function called when click on point button */
   onDrawPoint() {
     this.storage.set('drawMode', 'point');
+  }
+
+  /* Function called when click on line button */
+  onDrawLine() {
+    this.storage.set('drawMode', 'line');
   }
 
 }

@@ -27,14 +27,18 @@ export class Rect implements Shape {
       ctx.fillRect(this.rpos.x, this.rpos.y, this.width, this.height);
     } else {
       ctx.strokeStyle = this.stroke;
-      ctx.strokeRect(this.rpos.x, this.rpos.y, this.width, this.height);    
+      ctx.strokeRect(this.rpos.x, this.rpos.y, this.width, this.height);
     }
   }
 
   public drawBorder(ctx: CanvasRenderingContext2D) {
     const thickness = 1;
-    
+
     ctx.fillStyle = this.stroke;
     ctx.fillRect(this.rpos.x - thickness, this.rpos.y - thickness, this.width + thickness * 2, this.height + thickness * 2);
+  }
+
+  isColliding(pos: Vec2): Boolean {
+    throw new Error('Method not implemented.');
   }
 }

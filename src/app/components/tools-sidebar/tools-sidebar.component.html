@@ -13,6 +13,10 @@
                 (click)="setActive('point'); onDrawPoint();">
                 <mat-icon svgIcon="point"></mat-icon>
             </button>
+            <button mat-fab aria-label="Icon button to draw a line" [class.active]="isButtonActive('line')"
+                (click)="setActive('line'); onDrawLine();">
+                <mat-icon svgIcon="line"></mat-icon>
+            </button>
             <button mat-fab aria-label="Icon button to draw an empty polygon"
                 [class.active]="isButtonActive('polygon-empty')"
                 (click)="setActive('polygon-empty'); onDrawEmptyPolygon();">

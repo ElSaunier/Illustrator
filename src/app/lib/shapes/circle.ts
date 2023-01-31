@@ -1,6 +1,7 @@
 import { Vec2 } from '@lib/vec2';
 import { randomUuid } from '@lib/uuid';
 import { Shape } from '@lib/interfaces/shape.interface';
+import { ɵpublishDefaultGlobalUtils } from '@angular/core';
 
 export class Circle implements Shape {
   public uuid: string;
@@ -14,7 +15,6 @@ export class Circle implements Shape {
 
     this.uuid = randomUuid();
   }
-
   callback() {
 
   }
@@ -30,4 +30,15 @@ export class Circle implements Shape {
     ctx.strokeStyle = this.stroke;
     ctx.stroke()
   }
+
+  isColliding(pos: Vec2): Boolean {
+    const distX: number = pos.x - this.rpos.x;
+    const distY: number = pos.y - this.rpos.y;
+    const distance: number = Math.sqrt((distX * distX) + (distY * distY));
+    if (distance <= this.radius) {
+      return true;
+    }
+    return false;
+  }
+
 }
