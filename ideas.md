@@ -9,3 +9,8 @@ Next features ideas:
 - Change shapes
 - Zoom in/out
 - Add a grid with a scale
+
+
+Arch:
+- Abstract class for tools (every method is empty and each child class implement wanted methods)
+- Implement actions related to tools
