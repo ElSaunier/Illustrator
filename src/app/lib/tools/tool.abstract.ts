@@ -5,6 +5,8 @@ export abstract class Tool {
   constructor(protected name: string, protected iconPath: string) {
   }
 
+  abstract toolName: string;
+
   abstract doClick(x: number, y: number): Action[] | null;
 
   abstract doPress(x: number, y: number): Action[] | null;

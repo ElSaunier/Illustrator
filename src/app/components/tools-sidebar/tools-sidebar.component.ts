@@ -4,7 +4,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { DrawMode } from '@lib/defaultParameters';
 import { StorageService } from 'src/app/services/storage.service';
 import SvgElementsService from 'src/app/services/svg-elements.service';
-
+import { tools } from '@lib/tools/tools';
 @Component({
   selector: 'ill-app-tools-sidebar',
   templateUrl: './tools-sidebar.component.html',
@@ -63,6 +63,8 @@ export class ToolsSidebarComponent implements OnInit {
 
     this.fillColor = this.storage.get('fill');
     this.strokeColor = this.storage.get('stroke');
+
+    console.log(tools);
   }
 
   /* Function for buttons */
