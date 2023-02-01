@@ -13,6 +13,8 @@ import SvgElementsService from 'src/app/services/svg-elements.service';
 export class ToolsSidebarComponent implements OnInit {
 
   private activeButton!: DrawMode;
+  protected fillColor = 'rgba(0,0,0,1)';
+  protected strokeColor = 'rgba(0,0,0,1)';
 
   constructor(private matIconRegistry: MatIconRegistry,
     private domSanitizer: DomSanitizer, private storage: StorageService, private elementsService: SvgElementsService) {
@@ -42,12 +44,25 @@ export class ToolsSidebarComponent implements OnInit {
       'trash-can',
       this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/customSVG/trash-can.svg')
     );
+
+    this.matIconRegistry.addSvgIcon(
+      'point',
+      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/customSVG/point.svg')
+    );
+
+    this.matIconRegistry.addSvgIcon(
+      'line',
+      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/customSVG/line.svg')
+    );
     /* ----------------------- */
   }
 
   ngOnInit() {
     const drawMode = this.storage.get('drawMode');
     this.setActive(drawMode);
+
+    this.fillColor = this.storage.get('fill');
+    this.strokeColor = this.storage.get('stroke');
   }
 
   /* Function for buttons */
@@ -80,11 +95,28 @@ export class ToolsSidebarComponent implements OnInit {
     this.storage.set('drawMode', 'polygon-empty');
   }
 
+  onFillChanges() {
+    this.storage.set('fill', this.fillColor);
+  }
+
+  onStrokeChanges() {
+    this.storage.set('stroke', this.strokeColor);
+  }
   /* Function called when click on clear all picture */
   onEraseAll() {
     while (this.elementsService.getElements().length > 0) {
       this.elementsService.remove(this.elementsService.getElement(0).uuid);
     }
+  }
+
+  /* Function called when click on point button */
+  onDrawPoint() {
+    this.storage.set('drawMode', 'point');
+  }
+
+  /* Function called when click on line button */
+  onDrawLine() {
+    this.storage.set('drawMode', 'line');
   }
 
 }
