@@ -3,7 +3,7 @@ import { ActionStack } from '@lib/action-stacks/action-stack.class';
 import { IToolConfiguration } from '@lib/tools/tool-configuration.interface';
 
 export abstract class Tool {
-  constructor(protected name: string, protected iconPath: string, protected config: IToolConfiguration) {
+  constructor(protected name: string, protected iconPath: string, /*protected config: IToolConfiguration*/) {
   }
 
   abstract doClick(x: number, y: number): Action[] | null;
@@ -14,7 +14,7 @@ export abstract class Tool {
 
   abstract checkCompleted(stack: ActionStack): Action | null;
 
-  configure(config: IToolConfiguration) {
+ /* configure(config: IToolConfiguration) {
     this.config = config;
-  }
+  }*/
 }

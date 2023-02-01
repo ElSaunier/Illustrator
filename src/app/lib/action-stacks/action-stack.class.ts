@@ -1,5 +1,10 @@
 import { Action } from '@lib/actions/action.class';
+import { Injectable } from '@angular/core';
 
+
+@Injectable({
+  providedIn: 'root'
+})
 export class ActionStack {
   private _stack: Action[] = [];
   private _headPosition = 0;

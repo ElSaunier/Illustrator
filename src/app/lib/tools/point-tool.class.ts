@@ -2,6 +2,7 @@ import { ActionStack } from "@lib/action-stacks/action-stack.class";
 import { Action } from "@lib/actions/action.class";
 import { Circle } from "@lib/shapes/circle";
 import { Line } from "@lib/shapes/line";
+import { IToolConfiguration } from "./tool-configuration.interface";
 import { Tool } from "./tool.abstract";
 
 export class PointTool extends Tool {
@@ -12,7 +13,7 @@ export class PointTool extends Tool {
 
     doClick(x: number, y: number): Action[] | null {
         return [new Action(x,y,
-            [new Circle('fill','',1,{x,y}, 1)],
+            [new Circle('fill','',1,{x,y}, 5)],
             PointTool,
             true
             )]
@@ -27,20 +28,26 @@ export class PointTool extends Tool {
     }
 
     checkCompleted(stack: ActionStack): Action | null {
-        return null;
-        /*
-        let lastAction:Action = stack._stack[stack._headPosition];
-        let firstAction:Action= stack._stack[stack.headPosition-1];
+        
+        let actions = stack.getStack()
+
+        if (actions.length != 2){
+            console.log("Here")
+            return null;
+        }
+
+        console.log("Drawing line")
+        let lastAction:Action = actions[0];
+        let firstAction:Action= actions[1];
 
         let newAction = new Action(0,0,
-            [new Line('',1,firstAction.getCoordinates(),lastAction.getCoordinates())],
+            [new Line('rgba(0,0,0,1)',1,firstAction.getCoordinates(),lastAction.getCoordinates())],
             PointTool,
             false)
 
         stack.do(newAction);
 
         return newAction;
-        */
     }
 
 }
