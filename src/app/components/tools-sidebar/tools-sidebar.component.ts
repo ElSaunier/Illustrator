@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
-import { DrawMode } from '@lib/defaultParameters';
+import { ToolName } from '@lib/tools/tools';
 import { StorageService } from 'src/app/services/storage.service';
 import SvgElementsService from 'src/app/services/svg-elements.service';
 import { tools } from '@lib/tools/tools';
@@ -11,90 +11,51 @@ import { tools } from '@lib/tools/tools';
   styleUrls: ['./tools-sidebar.component.css']
 })
 export class ToolsSidebarComponent implements OnInit {
-
-  private activeButton!: DrawMode;
+  protected tools = tools;
+  private activeButton!: ToolName;
   protected fillColor = 'rgba(0,0,0,1)';
   protected strokeColor = 'rgba(0,0,0,1)';
 
   constructor(private matIconRegistry: MatIconRegistry,
     private domSanitizer: DomSanitizer, private storage: StorageService, private elementsService: SvgElementsService) {
-
-    /* Registering custom SVGs */
-    this.matIconRegistry.addSvgIcon(
-      'pencil',
-      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/customSVG/pencil.svg')
-    );
-
-    this.matIconRegistry.addSvgIcon(
-      'eraser',
-      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/customSVG/eraser.svg')
-    );
-
-    this.matIconRegistry.addSvgIcon(
-      'polygon-full',
-      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/customSVG/hexagonFull.svg')
-    );
-
-    this.matIconRegistry.addSvgIcon(
-      'polygon-empty',
-      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/customSVG/hexagonEmpty.svg')
-    );
-
-    this.matIconRegistry.addSvgIcon(
-      'trash-can',
-      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/customSVG/trash-can.svg')
-    );
-
-    this.matIconRegistry.addSvgIcon(
-      'point',
-      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/customSVG/point.svg')
-    );
-
-    this.matIconRegistry.addSvgIcon(
-      'line',
-      this.domSanitizer.bypassSecurityTrustResourceUrl('../assets/customSVG/line.svg')
-    );
-    /* ----------------------- */
   }
 
   ngOnInit() {
-    const drawMode = this.storage.get('drawMode');
+    const drawMode = this.storage.get('toolName');
     this.setActive(drawMode);
 
     this.fillColor = this.storage.get('fill');
     this.strokeColor = this.storage.get('stroke');
-
-    console.log(tools);
   }
 
   /* Function for buttons */
-  isButtonActive(name: string) {
+  isButtonActive(name: ToolName) {
     return this.activeButton == name;
   }
 
-  setActive(name: DrawMode) {
+  setActive(name: ToolName) {
     this.activeButton = name;
   }
   /* --------------- */
 
   /* Function called when click on pencil button */
   onPencil() {
-    this.storage.set('drawMode', 'pencil');
+    this.storage.set('toolName', 'pencil');
   }
 
   /* Function called when click on eraser button */
   onErase() {
-    this.storage.set('drawMode', 'eraser');
+    this.storage.set('toolName', 'eraser');
   }
 
   /* Function called when click on polygon-full button */
   onDrawFullPolygon() {
-    this.storage.set('drawMode', 'polygon-full');
+    this.storage.set('toolName', 'polygon-full');
   }
 
   /* Function called when click on polygon-empty button */
   onDrawEmptyPolygon() {
-    this.storage.set('drawMode', 'polygon-empty');
+    this.storage.set('toolName', 'polygon-empty');
   }
 
   onFillChanges() {
@@ -113,12 +74,12 @@ export class ToolsSidebarComponent implements OnInit {
 
   /* Function called when click on point button */
   onDrawPoint() {
-    this.storage.set('drawMode', 'point');
+    this.storage.set('toolName', 'point');
   }
 
   /* Function called when click on line button */
   onDrawLine() {
-    this.storage.set('drawMode', 'line');
+    this.storage.set('toolName', 'line');
   }
 
 }
