@@ -1,46 +1,7 @@
 <mat-sidenav-container class="example-container">
     <mat-sidenav mode="side" opened>
         <div class="content">
-            <button mat-fab aria-label="Icon button to draw a segment" [class.active]="isButtonActive('pencil')"
-                (click)="setActive('pencil'); onPencil();">
-                <mat-icon svgIcon="pencil"></mat-icon>
-            </button>
-            <button mat-fab aria-label="Icon button to delete a segment" [class.active]="isButtonActive('eraser')"
-                (click)="setActive('eraser'); onErase();">
-                <mat-icon svgIcon="eraser"></mat-icon>
-            </button>
-            <button mat-fab aria-label="Icon button to draw a point" [class.active]="isButtonActive('point')"
-                (click)="setActive('point'); onDrawPoint();">
-                <mat-icon svgIcon="point"></mat-icon>
-            </button>
-            <button mat-fab aria-label="Icon button to draw a line" [class.active]="isButtonActive('line')"
-                (click)="setActive('line'); onDrawLine();">
-                <mat-icon svgIcon="line"></mat-icon>
-            </button>
-            <button mat-fab aria-label="Icon button to draw an empty polygon"
-                [class.active]="isButtonActive('polygon-empty')"
-                (click)="setActive('polygon-empty'); onDrawEmptyPolygon();">
-                <mat-icon svgIcon="polygon-empty"></mat-icon>
-            </button>
-            <button mat-fab aria-label="Icon button to draw a full polygon"
-                [class.active]="isButtonActive('polygon-full')"
-                (click)="setActive('polygon-full'); onDrawFullPolygon();">
-                <mat-icon svgIcon="polygon-full"></mat-icon>
-            </button>
-            <div>
-                <button [(colorPicker)]="fillColor" id="fill-btn" mat-fab (colorPickerChange)="onFillChanges()"
-                    cpPosition="right" cpOutputFormat="rgba" [cpUseRootViewContainer]="true"
-                    [ngStyle]="{'background-color': fillColor }"></button>
-            </div>
-
-            <div>
-                <button [(colorPicker)]="strokeColor" id="stroke-btn" mat-fab (colorPickerChange)="onStrokeChanges()"
-                    cpPosition="right" cpOutputFormat="rgba" [cpUseRootViewContainer]="false"
-                    [ngStyle]="{'border-color': strokeColor }"></button>
-            </div>
-            <button mat-fab aria-label="Icon button to clear all page" (click)="onEraseAll();">
-                <mat-icon svgIcon="trash-can"></mat-icon>
-            </button>
+            <app-tool *ngFor="let tool of tools" [tool]="tool" [active]="isButtonActive(tool.cls.toolName)" (click)="setActive(tool.cls.toolName)"></app-tool>
         </div>
     </mat-sidenav>
 </mat-sidenav-container>
