@@ -21,8 +21,8 @@ export class ToolsSidebarComponent implements OnInit {
   }
 
   ngOnInit() {
-    const drawMode = this.storage.get('toolName');
-    this.setActive(drawMode);
+    const toolName = this.storage.get('toolName');
+    this.setActive(toolName);
 
     this.fillColor = this.storage.get('fill');
     this.strokeColor = this.storage.get('stroke');
@@ -30,56 +30,18 @@ export class ToolsSidebarComponent implements OnInit {
 
   /* Function for buttons */
   isButtonActive(name: ToolName) {
-    return this.activeButton == name;
+    return this.activeButton === name;
   }
 
   setActive(name: ToolName) {
     this.activeButton = name;
-  }
-  /* --------------- */
-
-  /* Function called when click on pencil button */
-  onPencil() {
-    this.storage.set('toolName', 'pencil');
+    this.storage.set('toolName', name);
   }
 
-  /* Function called when click on eraser button */
-  onErase() {
-    this.storage.set('toolName', 'eraser');
-  }
-
-  /* Function called when click on polygon-full button */
-  onDrawFullPolygon() {
-    this.storage.set('toolName', 'polygon-full');
-  }
-
-  /* Function called when click on polygon-empty button */
-  onDrawEmptyPolygon() {
-    this.storage.set('toolName', 'polygon-empty');
-  }
-
-  onFillChanges() {
-    this.storage.set('fill', this.fillColor);
-  }
-
-  onStrokeChanges() {
-    this.storage.set('stroke', this.strokeColor);
-  }
   /* Function called when click on clear all picture */
   onEraseAll() {
     while (this.elementsService.getElements().length > 0) {
       this.elementsService.remove(this.elementsService.getElement(0).uuid);
     }
   }
-
-  /* Function called when click on point button */
-  onDrawPoint() {
-    this.storage.set('toolName', 'point');
-  }
-
-  /* Function called when click on line button */
-  onDrawLine() {
-    this.storage.set('toolName', 'line');
-  }
-
 }
