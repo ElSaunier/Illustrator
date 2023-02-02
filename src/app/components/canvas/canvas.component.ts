@@ -1,8 +1,10 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { ActionStack } from '@lib/action-stacks/action-stack.class';
 import { Shape } from '@lib/interfaces/shape.interface';
 import { Circle } from '@lib/shapes/circle';
 import { Line } from '@lib/shapes/line';
 import { Rect } from '@lib/shapes/rect';
+import { PointTool } from '@lib/tools/point-tool.class';
 import { Vec2 } from '@lib/vec2';
 import { Rgba } from 'ngx-color-picker';
 import { StorageService } from 'src/app/services/storage.service';
@@ -16,8 +18,14 @@ import SvgElementsService from 'src/app/services/svg-elements.service';
 export class CanvasComponent implements AfterViewInit {
   @ViewChild('canvas') canvasElement!: ElementRef<HTMLCanvasElement>;
 
+  // Mock
+  tool: PointTool
+
   constructor(private elementsService: SvgElementsService, private storage: StorageService,
-    private element: ElementRef<HTMLElement>) { }
+    private element: ElementRef<HTMLElement>, private stack: ActionStack) {
+      // Mock
+      this.tool = new PointTool()
+     }
 
   ngAfterViewInit() {
     const elem = this.canvasElement.nativeElement;
@@ -97,8 +105,34 @@ export class CanvasComponent implements AfterViewInit {
 
     const toolName = this.storage.get('toolName');
 
-    if (toolName !== 'eraser' && toolName !== 'pencil') {
+    if (toolName !== 'eraser' && toolName !== 'pencil' && toolName !== 'point') {
       this.onAddElement({ x: offsetX, y: offsetY });
+    }
+
+    // MockUp for now
+    // In the future, we shouldn't need a if
+    // Also, we shouldn't need to instantiate tool
+    if (toolName == 'point'){
+      let curAction = this.tool.doClick(offsetX,offsetY);
+      if (curAction){
+        this.stack.do(curAction[0]);
+        let shapes = curAction[0].getShapes()
+
+        console.log("DRAWING ");
+        shapes.forEach((shape) => {
+          this.elementsService.add(shape);
+        })
+
+      }
+      console.log(this.stack)
+
+      let lastAction = this.tool.checkCompleted(this.stack);
+      if (lastAction){
+        let shapes = lastAction.getShapes();
+        shapes.forEach((shape) => {
+          this.elementsService.add(shape)
+        })
+      }
     }
   }
 
