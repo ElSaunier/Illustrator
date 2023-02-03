@@ -14,6 +14,7 @@ export class ActionStack {
       this._stack = this.getActiveStack();
     }
     this._stack.push(action);
+    this._headPosition++;
   }
 
   undo(): void {

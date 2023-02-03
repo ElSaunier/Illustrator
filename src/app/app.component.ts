@@ -11,5 +11,5 @@ export class AppComponent {
   title = 'Illustrator';
 
   constructor(private storage: StorageService) {}
-  isErasing = this.storage.subject('drawMode').pipe(map(val => val === 'eraser'));
+  isErasing = this.storage.subject('toolName').pipe(map(val => val === 'eraser'));
 }

@@ -63,7 +63,6 @@ export class CanvasComponent implements AfterViewInit {
 
   initSubscriptions() {
     this.elementsService.pushElement$.subscribe(elem => this._drawElement(elem));
-    // this.elementsService.deleteElement$.subscribe(eUuid => this._eraseElement(eUuid));
   }
 
   _drawElement(e: Shape) {
@@ -125,16 +124,16 @@ export class CanvasComponent implements AfterViewInit {
   handleClick(event: MouseEvent) {
     const { offsetX, offsetY } = event;
 
-    const drawMode = this.storage.get('drawMode');
+    const toolName = this.storage.get('toolName');
 
-    if (drawMode !== 'eraser' && drawMode !== 'pencil' && drawMode !== 'point') {
+    if (toolName !== 'eraser' && toolName !== 'pencil' && toolName !== 'point') {
       this.onAddElement({ x: offsetX, y: offsetY });
     }
 
     // MockUp for now
     // In the future, we shouldn't need a if
     // Also, we shouldn't need to instantiate tool
-    if (drawMode == 'point') {
+    if (toolName == 'point') {
       let curAction = this.tool.doClick(offsetX, offsetY);
       if (curAction) {
         this.stack.do(curAction[0]);
@@ -160,7 +159,7 @@ export class CanvasComponent implements AfterViewInit {
 
 
   onAddElement(ePos: Vec2) {
-    const drawMode = this.storage.get('drawMode');
+    const toolName = this.storage.get('toolName');
     const canvas = this.element.nativeElement;
 
     const canvasWidth = canvas.getBoundingClientRect().width;
@@ -173,7 +172,7 @@ export class CanvasComponent implements AfterViewInit {
       return;
     }
 
-    switch (drawMode) {
+    switch (toolName) {
       case 'polygon-empty':
         this.onAddPolygonEmpty(pos);
         break;
@@ -206,7 +205,7 @@ export class CanvasComponent implements AfterViewInit {
         }
         break;
       default:
-        console.error('DrawMode not found : ' + drawMode.toString());
+        console.error('DrawMode not found : ' + toolName.toString());
     }
   }
 
