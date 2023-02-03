@@ -1,6 +1,7 @@
+import { PencilTool } from './pencil-tool.class';
 import { PointTool } from './point-tool.class';
 import { PolygonFullTool } from './polygon-full-tool.class';
-import { PencilTool, Tool } from './tool.abstract';
+import { Tool } from './tool.abstract';
 
 export type ToolMeta = { cls: typeof Tool, desc: string };
 

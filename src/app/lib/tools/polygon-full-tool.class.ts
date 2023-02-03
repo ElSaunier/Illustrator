@@ -8,6 +8,8 @@ import { ToolName } from './tools';
 
 export class PolygonFullTool extends Tool {
   static override toolName: ToolName = 'polygon-full';
+  static override svgPath = '/assets/customSVG/hexagonFull.svg';
+
   actionDone: number = 0;
 
   constructor() {

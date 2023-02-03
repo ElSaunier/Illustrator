@@ -7,7 +7,7 @@ export abstract class Tool {
   constructor(protected config: IToolConfiguration) {}
 
   static toolName: ToolName;
-  static svgPath: string;
+  static svgPath = '/assets/customSVG/hexagonFull.svg';
 
   abstract doClick(x: number, y: number): Action[] | null;
 
@@ -19,23 +19,5 @@ export abstract class Tool {
 
   configure(config: IToolConfiguration) {
     this.config = config;
-  }
-}
-
-export class PencilTool extends Tool {
-  static override toolName: ToolName = 'pencil';
-  static override svgPath = '../assets/customSVG/pencil.svg';
-
-  override doClick(x: number, y: number): Action[] | null {
-    throw new Error('Method not implemented.');
-  }
-  override doPress(x: number, y: number): Action[] | null {
-    throw new Error('Method not implemented.');
-  }
-  override doRelease(x: number, y: number): Action[] | null {
-    throw new Error('Method not implemented.');
-  }
-  override checkCompleted(stack: ActionStack): Action | null {
-    throw new Error('Method not implemented.');
   }
 }

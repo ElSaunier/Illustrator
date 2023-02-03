@@ -9,8 +9,8 @@ import { IToolConfiguration } from '@lib/tools/tool-configuration.interface';
 
 export class PointTool extends Tool {
   static override toolName: ToolName = 'point';
-  static override svgPath = '../assets/customSVG/point.svg';
-  
+  static override svgPath = '/assets/customSVG/point.svg';
+
   actionDone = 0;
 
   constructor() {
