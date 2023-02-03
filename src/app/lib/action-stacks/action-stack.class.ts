@@ -7,7 +7,7 @@ import { Injectable } from '@angular/core';
 })
 export class ActionStack {
   private _stack: Action[] = [];
-  private _headPosition = 0;
+  private _headPosition = -1;
 
   do(action: Action) {
     if (this._stack.length - 1 !== this._headPosition) {
