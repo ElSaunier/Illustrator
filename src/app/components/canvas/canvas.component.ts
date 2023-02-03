@@ -21,12 +21,12 @@ export class CanvasComponent implements AfterViewInit {
   @ViewChild('canvas') canvasElement!: ElementRef<HTMLCanvasElement>;
 
   // Mock
-  tool: PolygonFullTool
+  tool: PencilTool
 
   constructor(private elementsService: SvgElementsService, private storage: StorageService,
     private element: ElementRef<HTMLElement>, private stack: ActionStack) {
     // Mock
-    this.tool = new PolygonFullTool()
+    this.tool = new PencilTool()
   }
 
   ngAfterViewInit() {

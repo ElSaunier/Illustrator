@@ -8,7 +8,13 @@ import { Tool } from "./tool.abstract";
 export class PencilTool extends Tool {
 
 	constructor() {
-		super('pencil', '../assets/customSVG/pencil.svg');
+		const config: IToolConfiguration = {
+			color: 'rgba(0,0,0,1)',
+			thickness: 1,
+			fill: true,
+			fillColor: 'rgba(0,0,0,1)'
+		};
+		super('pencil', '../assets/customSVG/pencil.svg', config);
 	}
 
 	doClick(x: number, y: number): Action[] | null {
@@ -59,7 +65,9 @@ export class PencilTool extends Tool {
 		const newAction: Action = new Action(
 			0,
 			0,
-			[new Line('rgba(0,0,0,1)', 1, beforeLastAction!.getCoordinates(), lastAction!.getCoordinates())],
+			[new Line(
+				this.config.color,
+				this.config.thickness, beforeLastAction!.getCoordinates(), lastAction!.getCoordinates())],
 			PencilTool,
 			false
 		);

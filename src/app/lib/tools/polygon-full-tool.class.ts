@@ -8,7 +8,7 @@ import { ToolName } from './tools';
 
 export class PolygonFullTool extends Tool {
   static override toolName: ToolName = 'polygon-full';
-  actionDone : number = 0;
+  actionDone: number = 0;
 
   constructor() {
     const config: IToolConfiguration = {
@@ -46,7 +46,7 @@ export class PolygonFullTool extends Tool {
     return null;
   }
 
-  doRelease(x: number, y: number): Action[] | null {
+  doRelease(x: number, y: number, stack?: ActionStack): Action[] | null {
     return null;
   }
 

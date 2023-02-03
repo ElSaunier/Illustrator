@@ -46,7 +46,7 @@ export class PointTool extends Tool {
     return null;
   }
 
-  doRelease(x: number, y: number): Action[] | null {
+  doRelease(x: number, y: number, stack?: ActionStack): Action[] | null {
     return null;
   }
 
