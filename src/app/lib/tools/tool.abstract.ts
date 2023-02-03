@@ -4,10 +4,10 @@ import { ToolName } from './tools';
 import { IToolConfiguration } from '@lib/tools/tool-configuration.interface';
 
 export abstract class Tool {
-  constructor(protected name: string, protected iconPath: string, protected config: IToolConfiguration) {
-  }
+  constructor(protected config: IToolConfiguration) {}
 
   static toolName: ToolName;
+  static svgPath: string;
 
   abstract doClick(x: number, y: number): Action[] | null;
 
@@ -24,6 +24,7 @@ export abstract class Tool {
 
 export class PencilTool extends Tool {
   static override toolName: ToolName = 'pencil';
+  static override svgPath = '../assets/customSVG/pencil.svg';
 
   override doClick(x: number, y: number): Action[] | null {
     throw new Error('Method not implemented.');

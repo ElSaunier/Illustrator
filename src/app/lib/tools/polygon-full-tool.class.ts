@@ -17,7 +17,7 @@ export class PolygonFullTool extends Tool {
       fill: true,
       fillColor: 'rgba(255,0,0,1)'
     };
-    super('polygon-full', '../assets/customSVG/hexagonFull.svg', config);
+    super(config);
   }
 
   doClick(x: number, y: number): Action[] | null {

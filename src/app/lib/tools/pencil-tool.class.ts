@@ -14,7 +14,7 @@ export class PencilTool extends Tool {
 			fill: true,
 			fillColor: 'rgba(0,0,0,1)'
 		};
-		super('pencil', '../assets/customSVG/pencil.svg', config);
+		super(config);
 	}
 
 	inTrace: Boolean = false;
