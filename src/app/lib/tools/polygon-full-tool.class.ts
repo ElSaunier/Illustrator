@@ -8,7 +8,8 @@ import { ToolName } from './tools';
 
 export class PolygonFullTool extends Tool {
   static override toolName: ToolName = 'polygon-full';
-  actionDone : number = 0;
+  static override svgPath = '../assets/customSVG/hexagonFull.svg';
+  actionDone = 0;
 
   constructor() {
     const config: IToolConfiguration = {
@@ -17,7 +18,7 @@ export class PolygonFullTool extends Tool {
       fill: true,
       fillColor: 'rgba(255,0,0,1)'
     };
-    super('polygon-full', '../assets/customSVG/hexagonFull.svg', config);
+    super(config);
   }
 
   doClick(x: number, y: number): Action[] | null {

@@ -18,8 +18,7 @@ export class ToolComponent implements OnInit {
     /* Registering custom SVGs */
     this.matIconRegistry.addSvgIcon(
       this.tool.cls.toolName,
-      this.domSanitizer.bypassSecurityTrustResourceUrl(this.tool.svgPath)
+      this.domSanitizer.bypassSecurityTrustResourceUrl(this.tool.cls.svgPath)
     );
   }
-
 }

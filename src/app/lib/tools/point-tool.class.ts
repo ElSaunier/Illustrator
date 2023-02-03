@@ -9,6 +9,8 @@ import { IToolConfiguration } from '@lib/tools/tool-configuration.interface';
 
 export class PointTool extends Tool {
   static override toolName: ToolName = 'point';
+  static override svgPath = '../assets/customSVG/point.svg';
+  
   actionDone = 0;
 
   constructor() {
@@ -18,7 +20,7 @@ export class PointTool extends Tool {
       fill: true,
       fillColor: 'rgba(255,0,0,1)'
     };
-    super('point', '../assets/customSVG/point.svg', config);
+    super(config);
   }
 
   doClick(x: number, y: number): Action[] | null {
