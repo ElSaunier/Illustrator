@@ -8,11 +8,14 @@ import { ToolName } from './tools';
 
 export class PointTool extends Tool {
   static override toolName: ToolName = 'point';
+  actionDone : number = 0;
+
   constructor() {
     super('point', '../assets/customSVG/point.svg');
   }
 
   doClick(x: number, y: number): Action[] | null {
+    this.actionDone ++;
     return [
       new Action(
         x,
@@ -35,14 +38,17 @@ export class PointTool extends Tool {
   checkCompleted(stack: ActionStack): Action | null {
     let actions = stack.getStack();
 
-    if (actions.length != 2) {
+    console.log(this.actionDone)
+
+    if (this.actionDone != 2) {
       console.log('Here');
       return null;
     }
 
     console.log('Drawing line');
-    let lastAction: Action = actions[0];
-    let firstAction: Action = actions[1];
+    // Can replace by headposition
+    let lastAction: Action = actions[actions.length -1];
+    let firstAction: Action = actions[actions.length - 2];
 
     let newAction = new Action(
       0,
@@ -60,6 +66,7 @@ export class PointTool extends Tool {
     );
 
     stack.do(newAction);
+    this.actionDone = 0;
 
     return newAction;
   }
