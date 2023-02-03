@@ -3,30 +3,33 @@ import { randomUuid } from '@lib/uuid';
 import { Shape } from '@lib/interfaces/shape.interface';
 
 export class Line implements Shape {
-	public uuid: string;
+  public uuid: string;
 
-	constructor(
-		public stroke: string,
-		public strokeWidth: number,
-		public rpos: Vec2,
-		public lpos: Vec2) {
+  constructor(
+    public stroke: string,
+    public strokeWidth: number,
+    public rpos: Vec2,
+    public lpos: Vec2) {
 
-		this.uuid = randomUuid();
-	}
-	fill!: string;
+    this.uuid = randomUuid();
+  }
 
-	callback() {
+  fill!: string;
 
-	}
+  callback() {
 
-	public render(ctx: CanvasRenderingContext2D): void {
-		ctx.beginPath();
-		ctx.moveTo(this.rpos.x, this.rpos.y);
-		ctx.lineTo(this.lpos.x, this.lpos.y);
-		ctx.stroke();
-	}
+  }
 
-	isColliding(pos: Vec2): Boolean {
-		throw new Error('Method not implemented.');
-	}
+  public render(ctx: CanvasRenderingContext2D): void {
+    ctx.strokeStyle = this.stroke;
+    ctx.lineWidth = this.strokeWidth;
+    ctx.beginPath();
+    ctx.moveTo(this.rpos.x, this.rpos.y);
+    ctx.lineTo(this.lpos.x, this.lpos.y);
+    ctx.stroke();
+  }
+
+  isColliding(pos: Vec2): boolean {
+    throw new Error('Method not implemented.');
+  }
 }
