@@ -90,7 +90,7 @@ export class CanvasComponent implements AfterViewInit {
   handleMouseRelease(event: MouseEvent) {
     const coord = this.getCoordinates(event);
 
-    const curActions = this.tool.doRelease(coord.x, coord.y, this.stack);
+    const curActions = this.tool.doRelease(coord.x, coord.y);
 
     if (curActions) {
       curActions.forEach((curAction) => {

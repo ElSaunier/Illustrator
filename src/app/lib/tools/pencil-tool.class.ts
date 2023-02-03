@@ -1,109 +1,102 @@
-import { ActionStack } from '@lib/action-stacks/action-stack.class';
-import { Action } from '@lib/actions/action.class';
-import { Circle } from '@lib/shapes/circle';
-import { Line } from '@lib/shapes/line';
-import { IToolConfiguration } from './tool-configuration.interface';
-import { Tool } from './tool.abstract';
-import { ToolName } from './tools';
+import { ActionStack } from "@lib/action-stacks/action-stack.class";
+import { Action } from "@lib/actions/action.class";
+import { Circle } from "@lib/shapes/circle";
+import { Line } from "@lib/shapes/line";
+import { IToolConfiguration } from "./tool-configuration.interface";
+import { Tool } from "./tool.abstract";
+import { ToolName } from "./tools";
 
 export class PencilTool extends Tool {
-  static override toolName: ToolName = 'pencil';
-  static override svgPath = '/assets/customSVG/pencil.svg';
+	static override toolName: ToolName = 'pencil';
+	static override svgPath = '/assets/customSVG/pencil.svg';
 
-  constructor() {
-    const config: IToolConfiguration = {
-      color: 'rgba(0,0,0,1)',
-      thickness: 1,
-      fill: true,
-      fillColor: 'rgba(0,0,0,1)',
-    };
-    super(config);
-  }
+	constructor() {
+		const config: IToolConfiguration = {
+			color: 'rgba(0,0,0,1)',
+			thickness: 1,
+			fill: true,
+			fillColor: 'rgba(0,0,0,1)'
+		};
+		super(config);
+	}
 
-  doClick(x: number, y: number): Action[] | null {
-    return null;
-  }
+	inTrace: Boolean = false;
 
-  doPress(x: number, y: number): Action[] | null {
-    return [
-      new Action(x, y, [new Circle('', '', 0, { x, y }, 0)], PencilTool, true),
-    ];
-  }
+	doClick(x: number, y: number): Action[] | null {
+		return null;
+	}
 
-  doRelease(x: number, y: number, stack?: ActionStack): Action[] | null {
-    // Remove all pending PencilTool
-    let actions = stack!.getStack();
-    for (let i = 0; i < actions.length; ) {
-      if (
-        actions[i].getToolType() === PencilTool &&
-        actions[i].getPending() === true
-      ) {
-        actions.splice(i, 1);
-      } else {
-        i++;
-      }
-    }
-    return null;
-  }
+	doPress(x: number, y: number): Action[] | null {
+		this.inTrace = true;
+		return [
+			new Action(
+				x,
+				y,
+				[new Circle('', '', 0, { x, y }, 0)],
+				PencilTool,
+				true
+			)
+		]
+	}
 
-  checkCompleted(stack: ActionStack): Action | null {
-    const actions: Action[] = stack.getStack().reverse();
+	doRelease(x: number, y: number): Action[] | null {
+		this.inTrace = false;
+		return null;
+	}
 
-    if (actions.length < 2) {
-      return null;
-    }
+	checkCompleted(stack: ActionStack): Action | null {
 
-    const lastAction: Action | null = this.getLastPendingPencilTool(actions);
-    const beforeLastAction: Action | null =
-      this.getBeforeLastPendingTool(actions);
+		const actions: Action[] = stack.getStack();
 
-    if (!lastAction || !beforeLastAction) {
-      return null;
-    }
+		if (actions.length < 2) {
+			return null;
+		}
 
-    const newAction: Action = new Action(
-      0,
-      0,
-      [
-        new Line(
-          this.config.color,
-          this.config.thickness,
-          beforeLastAction!.getCoordinates(),
-          lastAction!.getCoordinates()
-        ),
-      ],
-      PencilTool,
-      false
-    );
+		const lastAction: Action | null = this.getLastPendingPencilTool(actions);
+		const beforeLastAction: Action | null = this.getBeforeLastPendingTool(actions);
 
-    return newAction;
-  }
+		if (!lastAction || !beforeLastAction) {
+			return null;
+		}
 
-  getLastPendingPencilTool(actions: Action[]) {
-    for (let i = 0; i < actions.length; i++) {
-      if (
-        actions[i].getToolType() === PencilTool &&
-        actions[i].getPending() === true
-      ) {
-        return actions[i];
-      }
-    }
-    return null;
-  }
+		const newAction: Action = new Action(
+			0,
+			0,
+			[new Line(
+				this.config.color,
+				this.config.thickness, beforeLastAction!.getCoordinates(), lastAction!.getCoordinates())],
+			PencilTool,
+			false
+		);
 
-  getBeforeLastPendingTool(actions: Action[]) {
-    let alreadyFoundOne = false;
-    for (let i = 0; i < actions.length; i++) {
-      if (
-        actions[i].getToolType() === PencilTool &&
-        actions[i].getPending() === true &&
-        alreadyFoundOne
-      ) {
-        return actions[i];
-      } else {
-        alreadyFoundOne = true;
-      }
-    }
-    return null;
-  }
+		beforeLastAction.setPending(false);
+
+		if (!this.inTrace) {
+			lastAction.setPending(false);
+		}
+
+		return newAction;
+	}
+
+	getLastPendingPencilTool(actions: Action[]) {
+		for (let i = actions.length - 1; i >= 0; i--) {
+			if (actions[i].getToolType() === PencilTool && actions[i].getPending() === true) {
+				return actions[i];
+			}
+		}
+		return null;
+	}
+
+	getBeforeLastPendingTool(actions: Action[]) {
+		let alreadyFoundOne = false;
+		for (let i = actions.length - 1; i >= 0; i--) {
+			if (actions[i].getToolType() === PencilTool && actions[i].getPending() === true && alreadyFoundOne) {
+				return actions[i];
+			}
+			else {
+				alreadyFoundOne = true;
+			}
+		}
+		return null;
+	}
 }
