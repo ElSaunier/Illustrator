@@ -6,6 +6,7 @@ import { Line } from '@lib/shapes/line';
 import { Rect } from '@lib/shapes/rect';
 import { PencilTool } from '@lib/tools/pencil-tool.class';
 import { PointTool } from '@lib/tools/point-tool.class';
+import { PolygonFullTool } from '@lib/tools/polygon-full-tool.class';
 import { Vec2 } from '@lib/vec2';
 import { Rgba } from 'ngx-color-picker';
 import { StorageService } from 'src/app/services/storage.service';
@@ -20,12 +21,12 @@ export class CanvasComponent implements AfterViewInit {
   @ViewChild('canvas') canvasElement!: ElementRef<HTMLCanvasElement>;
 
   // Mock
-  tool: PencilTool
+  tool: PolygonFullTool
 
   constructor(private elementsService: SvgElementsService, private storage: StorageService,
     private element: ElementRef<HTMLElement>, private stack: ActionStack) {
     // Mock
-    this.tool = new PencilTool()
+    this.tool = new PolygonFullTool()
   }
 
   ngAfterViewInit() {
@@ -150,14 +151,14 @@ export class CanvasComponent implements AfterViewInit {
 
     const toolName = this.storage.get('toolName');
 
-    if (toolName !== 'eraser' && toolName !== 'pencil' && toolName !== 'point') {
+    if (toolName !== 'eraser' && toolName !== 'pencil' && toolName !== 'point' && toolName !== 'polygon-full') {
       this.onAddElement({ x: offsetX, y: offsetY });
     }
 
     // MockUp for now
     // In the future, we shouldn't need a if
     // Also, we shouldn't need to instantiate tool
-    if (toolName == 'point') {
+    if (toolName == 'point' || toolName == 'polygon-full') {
       let curAction = this.tool.doClick(offsetX, offsetY);
       if (curAction) {
         this.stack.do(curAction[0]);
@@ -174,6 +175,7 @@ export class CanvasComponent implements AfterViewInit {
       let lastAction = this.tool.checkCompleted(this.stack);
       if (lastAction) {
         let shapes = lastAction.getShapes();
+        this.stack.do(lastAction)
         shapes.forEach((shape) => {
           this.elementsService.add(shape)
         })
