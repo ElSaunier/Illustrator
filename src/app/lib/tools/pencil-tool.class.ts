@@ -17,11 +17,14 @@ export class PencilTool extends Tool {
 		super('pencil', '../assets/customSVG/pencil.svg', config);
 	}
 
+	inTrace: Boolean = false;
+
 	doClick(x: number, y: number): Action[] | null {
 		return null;
 	}
 
 	doPress(x: number, y: number): Action[] | null {
+		this.inTrace = true;
 		return [
 			new Action(
 				x,
@@ -33,23 +36,14 @@ export class PencilTool extends Tool {
 		]
 	}
 
-	doRelease(x: number, y: number, stack?: ActionStack): Action[] | null {
-		// Remove all pending PencilTool
-		let actions = stack!.getStack();
-		for (let i = 0; i < actions.length;) {
-			if (actions[i].getToolType() === PencilTool && actions[i].getPending() === true) {
-				actions.splice(i, 1);
-			}
-			else {
-				i++;
-			}
-		}
+	doRelease(x: number, y: number): Action[] | null {
+		this.inTrace = false;
 		return null;
 	}
 
 	checkCompleted(stack: ActionStack): Action | null {
 
-		const actions: Action[] = stack.getStack().reverse();
+		const actions: Action[] = stack.getStack();
 
 		if (actions.length < 2) {
 			return null;
@@ -72,11 +66,17 @@ export class PencilTool extends Tool {
 			false
 		);
 
+		beforeLastAction.setPending(false);
+
+		if (!this.inTrace) {
+			lastAction.setPending(false);
+		}
+
 		return newAction;
 	}
 
 	getLastPendingPencilTool(actions: Action[]) {
-		for (let i = 0; i < actions.length; i++) {
+		for (let i = actions.length - 1; i >= 0; i--) {
 			if (actions[i].getToolType() === PencilTool && actions[i].getPending() === true) {
 				return actions[i];
 			}
@@ -86,7 +86,7 @@ export class PencilTool extends Tool {
 
 	getBeforeLastPendingTool(actions: Action[]) {
 		let alreadyFoundOne = false;
-		for (let i = 0; i < actions.length; i++) {
+		for (let i = actions.length - 1; i >= 0; i--) {
 			if (actions[i].getToolType() === PencilTool && actions[i].getPending() === true && alreadyFoundOne) {
 				return actions[i];
 			}
