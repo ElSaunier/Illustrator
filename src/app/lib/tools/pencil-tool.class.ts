@@ -27,38 +27,65 @@ export class PencilTool extends Tool {
 		]
 	}
 
-	doRelease(x: number, y: number): Action[] | null {
-		return [
-			new Action(
-				x,
-				y,
-				[new Circle('', '', 0, { x, y }, 0)],
-				PencilTool,
-				true
-			)
-		]
+	doRelease(x: number, y: number, stack?: ActionStack): Action[] | null {
+		// Remove all pending PencilTool
+		let actions = stack!.getStack();
+		for (let i = 0; i < actions.length;) {
+			if (actions[i].getToolType() === PencilTool && actions[i].getPending() === true) {
+				actions.splice(i, 1);
+			}
+			else {
+				i++;
+			}
+		}
+		return null;
 	}
 
 	checkCompleted(stack: ActionStack): Action | null {
 
-		const actions = stack.getStack();
-		console.log(actions);
+		const actions: Action[] = stack.getStack().reverse();
 
-		if (actions.length != 2) {
+		if (actions.length < 2) {
 			return null;
 		}
 
-		const lastAction: Action = actions[actions.length - 1];
-		const beforeLastAction: Action = actions[actions.length - 2];
+		const lastAction: Action | null = this.getLastPendingPencilTool(actions);
+		const beforeLastAction: Action | null = this.getBeforeLastPendingTool(actions);
+
+		if (!lastAction || !beforeLastAction) {
+			return null;
+		}
 
 		const newAction: Action = new Action(
 			0,
 			0,
-			[new Line('rgba(0,0,0,1)', 1, beforeLastAction.getCoordinates(), lastAction.getCoordinates())],
+			[new Line('rgba(0,0,0,1)', 1, beforeLastAction!.getCoordinates(), lastAction!.getCoordinates())],
 			PencilTool,
 			false
 		);
 
 		return newAction;
+	}
+
+	getLastPendingPencilTool(actions: Action[]) {
+		for (let i = 0; i < actions.length; i++) {
+			if (actions[i].getToolType() === PencilTool && actions[i].getPending() === true) {
+				return actions[i];
+			}
+		}
+		return null;
+	}
+
+	getBeforeLastPendingTool(actions: Action[]) {
+		let alreadyFoundOne = false;
+		for (let i = 0; i < actions.length; i++) {
+			if (actions[i].getToolType() === PencilTool && actions[i].getPending() === true && alreadyFoundOne) {
+				return actions[i];
+			}
+			else {
+				alreadyFoundOne = true;
+			}
+		}
+		return null;
 	}
 }

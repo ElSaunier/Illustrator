@@ -13,13 +13,13 @@ export abstract class Tool {
 
   abstract doPress(x: number, y: number): Action[] | null;
 
-  abstract doRelease(x: number, y: number): Action[] | null;
+  abstract doRelease(x: number, y: number, stack?: ActionStack): Action[] | null;
 
   abstract checkCompleted(stack: ActionStack): Action | null;
 
- /* configure(config: IToolConfiguration) {
-    this.config = config;
-  }*/
+  /* configure(config: IToolConfiguration) {
+     this.config = config;
+   }*/
 }
 
 export class PencilTool extends Tool {

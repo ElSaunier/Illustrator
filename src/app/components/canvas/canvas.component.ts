@@ -20,12 +20,12 @@ export class CanvasComponent implements AfterViewInit {
   @ViewChild('canvas') canvasElement!: ElementRef<HTMLCanvasElement>;
 
   // Mock
-  tool: PointTool
+  tool: PencilTool
 
   constructor(private elementsService: SvgElementsService, private storage: StorageService,
     private element: ElementRef<HTMLElement>, private stack: ActionStack) {
     // Mock
-    this.tool = new PointTool()
+    this.tool = new PencilTool()
   }
 
   ngAfterViewInit() {
@@ -37,7 +37,6 @@ export class CanvasComponent implements AfterViewInit {
     }
 
     let isMouseDown: Boolean = false;
-    let lastPoint: Vec2 | null = null;
 
     this.canvasElement.nativeElement.addEventListener('click', event => this.handleClick(event));
 
@@ -47,7 +46,7 @@ export class CanvasComponent implements AfterViewInit {
 
     this.canvasElement.nativeElement.addEventListener('mouseup', event => {
       isMouseDown = false;
-      lastPoint = null;
+      this.handleMouseRelease(event);
     });
 
     this.canvasElement.nativeElement.addEventListener('mousemove', event => {
@@ -84,6 +83,31 @@ export class CanvasComponent implements AfterViewInit {
 
         return;
       }
+    }
+  }
+
+  handleMouseRelease(event: MouseEvent) {
+    const coord = this.getCoordinates(event);
+
+    const curActions = this.tool.doRelease(coord.x, coord.y, this.stack);
+
+    if (curActions) {
+      curActions.forEach((curAction) => {
+        this.stack.do(curAction);
+        let shapes = curAction.getShapes();
+        shapes.forEach((shape) => {
+          this.elementsService.add(shape);
+        });
+      });
+    }
+
+    let lastAction = this.tool.checkCompleted(this.stack);
+    if (lastAction) {
+      this.stack.do(lastAction);
+      let shapes = lastAction.getShapes();
+      shapes.forEach((shape) => {
+        this.elementsService.add(shape)
+      })
     }
   }
 
