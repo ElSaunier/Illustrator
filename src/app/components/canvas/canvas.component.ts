@@ -129,6 +129,7 @@ export class CanvasComponent implements AfterViewInit {
       let lastAction = this.tool.checkCompleted(this.stack);
       if (lastAction){
         let shapes = lastAction.getShapes();
+        this.stack.do(lastAction)
         shapes.forEach((shape) => {
           this.elementsService.add(shape)
         })

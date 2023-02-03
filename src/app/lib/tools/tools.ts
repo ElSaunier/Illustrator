@@ -1,4 +1,5 @@
 import { PointTool } from './point-tool.class';
+import { PolygonFullTool } from './polygon-full-tool.class';
 import { PencilTool, Tool } from './tool.abstract';
 
 export type ToolMeta = { svgPath: string, cls: typeof Tool, desc: string };
@@ -9,4 +10,5 @@ export type ToolName = typeof toolNames[number];
 export const tools: ToolMeta[] = [
   { svgPath: '../assets/customSVG/pencil.svg', cls: PencilTool, desc: 'Icon button to draw a segment' },
   { svgPath: '../assets/customSVG/point.svg', cls: PointTool, desc: 'Icon button to draw a point' },
+  { svgPath: '../assets/customSVG/hexagonFull.svg', cls: PolygonFullTool, desc: 'Icon button to draw a rectangle' },
 ];

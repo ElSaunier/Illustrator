@@ -65,7 +65,6 @@ export class PointTool extends Tool {
       false
     );
 
-    stack.do(newAction);
     this.actionDone = 0;
 
     return newAction;
