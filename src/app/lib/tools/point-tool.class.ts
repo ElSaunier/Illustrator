@@ -5,22 +5,37 @@ import { Line } from '@lib/shapes/line';
 
 import { Tool } from './tool.abstract';
 import { ToolName } from './tools';
+import { IToolConfiguration } from '@lib/tools/tool-configuration.interface';
 
 export class PointTool extends Tool {
   static override toolName: ToolName = 'point';
-  actionDone : number = 0;
+  actionDone = 0;
 
   constructor() {
-    super('point', '../assets/customSVG/point.svg');
+    const config: IToolConfiguration = {
+      color: 'rgba(255,0,0,1)',
+      thickness: 1,
+      fill: true,
+      fillColor: 'rgba(255,0,0,1)'
+    };
+    super('point', '../assets/customSVG/point.svg', config);
   }
 
   doClick(x: number, y: number): Action[] | null {
-    this.actionDone ++;
+    this.actionDone++;
+
+    const startCircle = new Circle(
+      this.config.fill ? 'fill' : '',
+      this.config.color,
+      this.config.thickness,
+      { x, y },
+      this.config.thickness * 5
+    );
     return [
       new Action(
         x,
         y,
-        [new Circle('fill', '', 1, { x, y }, 5)],
+        [startCircle],
         PointTool,
         true
       ),
@@ -36,27 +51,22 @@ export class PointTool extends Tool {
   }
 
   checkCompleted(stack: ActionStack): Action | null {
-    let actions = stack.getStack();
-
-    console.log(this.actionDone)
+    const actions = stack.getActiveStack();
 
     if (this.actionDone != 2) {
-      console.log('Here');
       return null;
     }
 
-    console.log('Drawing line');
-    // Can replace by headposition
-    let lastAction: Action = actions[actions.length -1];
-    let firstAction: Action = actions[actions.length - 2];
+    const lastAction: Action = actions[stack.getHeadPosition()];
+    const firstAction: Action = actions[stack.getHeadPosition() - 1];
 
-    let newAction = new Action(
+    const newAction = new Action(
       0,
       0,
       [
         new Line(
-          'rgba(0,0,0,1)',
-          1,
+          this.config.color,
+          this.config.thickness,
           firstAction.getCoordinates(),
           lastAction.getCoordinates()
         ),
