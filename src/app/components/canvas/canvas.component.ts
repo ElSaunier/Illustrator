@@ -4,11 +4,7 @@ import { Shape } from '@lib/interfaces/shape.interface';
 import { Circle } from '@lib/shapes/circle';
 import { Line } from '@lib/shapes/line';
 import { Rect } from '@lib/shapes/rect';
-import { PencilTool } from '@lib/tools/pencil-tool.class';
-import { PointTool } from '@lib/tools/point-tool.class';
-import { PolygonFullTool } from '@lib/tools/polygon-full-tool.class';
 import { Vec2 } from '@lib/vec2';
-import { Rgba } from 'ngx-color-picker';
 import { StorageService } from 'src/app/services/storage.service';
 import SvgElementsService from 'src/app/services/svg-elements.service';
 
@@ -32,11 +28,11 @@ export class CanvasComponent implements AfterViewInit {
       elem.height = rect.height;
     }
 
-    let isMouseDown: Boolean = false;
+    let isMouseDown = false;
 
     this.canvasElement.nativeElement.addEventListener('click', event => this.handleClick(event));
 
-    this.canvasElement.nativeElement.addEventListener('mousedown', event => {
+    this.canvasElement.nativeElement.addEventListener('mousedown', () => {
       isMouseDown = true;
     });
 
@@ -89,22 +85,22 @@ export class CanvasComponent implements AfterViewInit {
     const curActions = tool.doRelease(coord.x, coord.y);
 
     if (curActions) {
-      curActions.forEach((curAction) => {
+      curActions.forEach(curAction => {
         this.stack.do(curAction);
-        let shapes = curAction.getShapes();
-        shapes.forEach((shape) => {
+        const shapes = curAction.getShapes();
+        shapes.forEach(shape => {
           this.elementsService.add(shape);
         });
       });
     }
 
-    let lastAction = tool.checkCompleted(this.stack);
+    const lastAction = tool.checkCompleted(this.stack);
     if (lastAction) {
       this.stack.do(lastAction);
-      let shapes = lastAction.getShapes();
-      shapes.forEach((shape) => {
-        this.elementsService.add(shape)
-      })
+      const shapes = lastAction.getShapes();
+      shapes.forEach(shape => {
+        this.elementsService.add(shape);
+      });
     }
   }
 
@@ -115,22 +111,22 @@ export class CanvasComponent implements AfterViewInit {
     const curActions = tool.doPress(coord.x, coord.y);
 
     if (curActions) {
-      curActions.forEach((curAction) => {
+      curActions.forEach(curAction => {
         this.stack.do(curAction);
-        let shapes = curAction.getShapes();
-        shapes.forEach((shape) => {
+        const shapes = curAction.getShapes();
+        shapes.forEach(shape => {
           this.elementsService.add(shape);
         });
       });
     }
 
-    let lastAction = tool.checkCompleted(this.stack);
+    const lastAction = tool.checkCompleted(this.stack);
     if (lastAction) {
       this.stack.do(lastAction);
-      let shapes = lastAction.getShapes();
-      shapes.forEach((shape) => {
-        this.elementsService.add(shape)
-      })
+      const shapes = lastAction.getShapes();
+      shapes.forEach(shape => {
+        this.elementsService.add(shape);
+      });
     }
   }
 
@@ -157,26 +153,24 @@ export class CanvasComponent implements AfterViewInit {
     // In the future, we shouldn't need a if
     // Also, we shouldn't need to instantiate tool
     if (toolName == 'point' || toolName == 'polygon-full') {
-      let curAction = tool.doClick(offsetX, offsetY);
+      const curAction = tool.doClick(offsetX, offsetY);
       if (curAction) {
         this.stack.do(curAction[0]);
-        let shapes = curAction[0].getShapes()
+        const shapes = curAction[0].getShapes();
 
-        console.log("DRAWING ");
-        shapes.forEach((shape) => {
+        shapes.forEach(shape => {
           this.elementsService.add(shape);
-        })
+        });
 
       }
-      console.log(this.stack)
 
-      let lastAction = tool.checkCompleted(this.stack);
+      const lastAction = tool.checkCompleted(this.stack);
       if (lastAction) {
-        let shapes = lastAction.getShapes();
-        this.stack.do(lastAction)
-        shapes.forEach((shape) => {
-          this.elementsService.add(shape)
-        })
+        const shapes = lastAction.getShapes();
+        this.stack.do(lastAction);
+        shapes.forEach(shape => {
+          this.elementsService.add(shape);
+        });
       }
     }
   }
@@ -206,10 +200,11 @@ export class CanvasComponent implements AfterViewInit {
       case 'point':
         this.onAddPoint(pos);
         break;
-      case 'pencil':
+      case 'pencil': {
         const point = new Circle('fill', this.storage.get('stroke'), 0, pos, 1);
         this.elementsService.add(point);
         break;
+      }
       case 'line':
         for (let i = 0; i < this.elementsService.getElements().length; i++) {
           let elem: Shape;
