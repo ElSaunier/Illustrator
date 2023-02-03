@@ -3,19 +3,21 @@ import { ActionStack } from '@lib/action-stacks/action-stack.class';
 import { ToolName } from './tools';
 import { IToolConfiguration } from '@lib/tools/tool-configuration.interface';
 
-export abstract class Tool {
-  constructor(protected config: IToolConfiguration) {}
+export class Tool {
+  protected config!: IToolConfiguration;
 
-  static toolName: ToolName;
+  constructor() {}
+
+  public static toolName: ToolName;
   static svgPath = '/assets/customSVG/hexagonFull.svg';
 
-  abstract doClick(x: number, y: number): Action[] | null;
+  doClick(x: number, y: number): Action[] | null { return null; }
 
-  abstract doPress(x: number, y: number): Action[] | null;
+  doPress(x: number, y: number): Action[] | null { return null; }
 
-  abstract doRelease(x: number, y: number): Action[] | null;
+  doRelease(x: number, y: number): Action[] | null { return null; }
 
-  abstract checkCompleted(stack: ActionStack): Action | null;
+  checkCompleted(stack: ActionStack): Action | null { return null; }
 
   configure(config: IToolConfiguration) {
     this.config = config;

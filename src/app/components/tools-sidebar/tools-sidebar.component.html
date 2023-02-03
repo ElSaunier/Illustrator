@@ -1,7 +1,10 @@
 <mat-sidenav-container class="example-container">
     <mat-sidenav mode="side" opened>
         <div class="content">
-            <app-tool *ngFor="let tool of tools" [tool]="tool" [active]="isButtonActive(tool.cls.toolName)" (click)="setActive(tool.cls.toolName)"></app-tool>
+            <app-tool class="tool" *ngFor="let tool of tools" [tool]="tool"
+            [active]="isButtonActive(tool.cls.toolName)"
+            (toolClicked)="onToolClicked($event)"
+            ></app-tool>
         </div>
     </mat-sidenav>
 </mat-sidenav-container>

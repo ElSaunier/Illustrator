@@ -1,5 +1,5 @@
 import { Circle } from './shapes/circle';
-import { ToolName, tools } from './tools/tools';
+import { ToolName } from './tools/tools';
 
 export type Parameters = {
   fill: string,
@@ -14,17 +14,3 @@ export const defaultParameters: Parameters = {
   toolName: 'pencil',
   lastCircleSelected: null
 };
-
-type TestType = typeof tools[number]['cls']['toolName'];
-
-class ClassA {
-  static sharedAttribute: string = 'A' as const;
-}
-
-class ClassB {
-  static sharedAttribute: string = 'B';
-}
-
-type SharedAttributeType = typeof ClassA.sharedAttribute | typeof ClassB.sharedAttribute;
-
-const sharedAttributeValue: SharedAttributeType = 'C';

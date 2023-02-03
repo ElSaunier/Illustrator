@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Shape } from '@lib/interfaces/shape.interface';
+import { Tool } from '@lib/tools/tool.abstract';
 import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export default class SvgElementsService {
+  activeTool: Tool | undefined;
+
   private elements: Shape[] = [];
   public pushElement$ = new Subject<Shape>();
   public deleteElement$ = new Subject<string>();

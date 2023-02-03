@@ -14,16 +14,17 @@ export class PointTool extends Tool {
   actionDone = 0;
 
   constructor() {
+    super();
     const config: IToolConfiguration = {
-      color: 'rgba(255,0,0,1)',
+      color: 'rgba(0,0,0,1)',
       thickness: 1,
       fill: true,
-      fillColor: 'rgba(255,0,0,1)'
+      fillColor: 'rgba(0,0,0,1)',
     };
-    super(config);
+    this.configure(config);
   }
 
-  doClick(x: number, y: number): Action[] | null {
+  override doClick(x: number, y: number): Action[] | null {
     this.actionDone++;
 
     const startCircle = new Circle(
@@ -44,15 +45,15 @@ export class PointTool extends Tool {
     ];
   }
 
-  doPress(x: number, y: number): Action[] | null {
+  override doPress(x: number, y: number): Action[] | null {
     return null;
   }
 
-  doRelease(x: number, y: number, stack?: ActionStack): Action[] | null {
+  override doRelease(x: number, y: number, stack?: ActionStack): Action[] | null {
     return null;
   }
 
-  checkCompleted(stack: ActionStack): Action | null {
+  override checkCompleted(stack: ActionStack): Action | null {
     const actions = stack.getActiveStack();
 
     if (this.actionDone != 2) {

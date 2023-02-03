@@ -13,16 +13,17 @@ export class PolygonFullTool extends Tool {
   actionDone: number = 0;
 
   constructor() {
+    super();
     const config: IToolConfiguration = {
-      color: 'rgba(255,0,0,1)',
-      thickness: 0,
+      color: 'rgba(0,0,0,1)',
+      thickness: 1,
       fill: true,
-      fillColor: 'rgba(255,0,0,1)'
+      fillColor: 'rgba(0,0,0,1)',
     };
-    super(config);
+    this.configure(config);
   }
 
-  doClick(x: number, y: number): Action[] | null {
+  override doClick(x: number, y: number): Action[] | null {
 
     const rect = new Rect(
       this.config.fill ? this.config.color : 'transparent',
@@ -44,15 +45,15 @@ export class PolygonFullTool extends Tool {
     ];
   }
 
-  doPress(x: number, y: number): Action[] | null {
+  override doPress(x: number, y: number): Action[] | null {
     return null;
   }
 
-  doRelease(x: number, y: number, stack?: ActionStack): Action[] | null {
+  override doRelease(x: number, y: number, stack?: ActionStack): Action[] | null {
     return null;
   }
 
-  checkCompleted(stack: ActionStack): Action | null {
+  override checkCompleted(stack: ActionStack): Action | null {
     return null;
   }
 }
