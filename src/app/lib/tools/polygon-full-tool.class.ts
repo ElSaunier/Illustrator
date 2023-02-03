@@ -8,8 +8,7 @@ import { ToolName } from './tools';
 
 export class PolygonFullTool extends Tool {
   static override toolName: ToolName = 'polygon-full';
-  static override svgPath = '../assets/customSVG/hexagonFull.svg';
-  actionDone = 0;
+  actionDone: number = 0;
 
   constructor() {
     const config: IToolConfiguration = {
@@ -47,7 +46,7 @@ export class PolygonFullTool extends Tool {
     return null;
   }
 
-  doRelease(x: number, y: number): Action[] | null {
+  doRelease(x: number, y: number, stack?: ActionStack): Action[] | null {
     return null;
   }
 

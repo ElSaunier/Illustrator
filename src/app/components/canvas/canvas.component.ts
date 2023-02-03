@@ -4,6 +4,7 @@ import { Shape } from '@lib/interfaces/shape.interface';
 import { Circle } from '@lib/shapes/circle';
 import { Line } from '@lib/shapes/line';
 import { Rect } from '@lib/shapes/rect';
+import { PencilTool } from '@lib/tools/pencil-tool.class';
 import { PointTool } from '@lib/tools/point-tool.class';
 import { PolygonFullTool } from '@lib/tools/polygon-full-tool.class';
 import { Vec2 } from '@lib/vec2';
@@ -20,13 +21,13 @@ export class CanvasComponent implements AfterViewInit {
   @ViewChild('canvas') canvasElement!: ElementRef<HTMLCanvasElement>;
 
   // Mock
-  tool: PolygonFullTool
+  tool: PencilTool
 
   constructor(private elementsService: SvgElementsService, private storage: StorageService,
     private element: ElementRef<HTMLElement>, private stack: ActionStack) {
-      // Mock
-      this.tool = new PolygonFullTool()
-     }
+    // Mock
+    this.tool = new PencilTool()
+  }
 
   ngAfterViewInit() {
     const elem = this.canvasElement.nativeElement;
@@ -37,7 +38,6 @@ export class CanvasComponent implements AfterViewInit {
     }
 
     let isMouseDown: Boolean = false;
-    let lastPoint: Vec2 | null = null;
 
     this.canvasElement.nativeElement.addEventListener('click', event => this.handleClick(event));
 
@@ -47,7 +47,7 @@ export class CanvasComponent implements AfterViewInit {
 
     this.canvasElement.nativeElement.addEventListener('mouseup', event => {
       isMouseDown = false;
-      lastPoint = null;
+      this.handleMouseRelease(event);
     });
 
     this.canvasElement.nativeElement.addEventListener('mousemove', event => {
@@ -55,21 +55,7 @@ export class CanvasComponent implements AfterViewInit {
         return;
       }
 
-      const { offsetX, offsetY } = event;
-      const pos = { x: offsetX, y: offsetY };
-
-      const toolName = this.storage.get('toolName');
-      if (toolName === 'pencil') {
-        if (lastPoint !== null) {
-          const canvas = this.element.nativeElement;
-
-          const canvasWidth = canvas.getBoundingClientRect().width;
-          const documentWidth = document.documentElement.clientWidth;
-          const coef = canvasWidth / documentWidth;
-          this.onAddLine({ x: lastPoint.x * coef, y: lastPoint.y }, { x: pos.x * coef, y: pos.y });
-        }
-        lastPoint = pos;
-      }
+      this.handleMouseMoveWhenClicked(event);
     });
 
     this.initSubscriptions();
@@ -101,6 +87,65 @@ export class CanvasComponent implements AfterViewInit {
     }
   }
 
+  handleMouseRelease(event: MouseEvent) {
+    const coord = this.getCoordinates(event);
+
+    const curActions = this.tool.doRelease(coord.x, coord.y, this.stack);
+
+    if (curActions) {
+      curActions.forEach((curAction) => {
+        this.stack.do(curAction);
+        let shapes = curAction.getShapes();
+        shapes.forEach((shape) => {
+          this.elementsService.add(shape);
+        });
+      });
+    }
+
+    let lastAction = this.tool.checkCompleted(this.stack);
+    if (lastAction) {
+      this.stack.do(lastAction);
+      let shapes = lastAction.getShapes();
+      shapes.forEach((shape) => {
+        this.elementsService.add(shape)
+      })
+    }
+  }
+
+  handleMouseMoveWhenClicked(event: MouseEvent) {
+    const coord = this.getCoordinates(event);
+
+    const curActions = this.tool.doPress(coord.x, coord.y);
+
+    if (curActions) {
+      curActions.forEach((curAction) => {
+        this.stack.do(curAction);
+        let shapes = curAction.getShapes();
+        shapes.forEach((shape) => {
+          this.elementsService.add(shape);
+        });
+      });
+    }
+
+    let lastAction = this.tool.checkCompleted(this.stack);
+    if (lastAction) {
+      this.stack.do(lastAction);
+      let shapes = lastAction.getShapes();
+      shapes.forEach((shape) => {
+        this.elementsService.add(shape)
+      })
+    }
+  }
+
+  getCoordinates(event: MouseEvent) {
+    const { offsetX, offsetY } = event;
+    const canvas = this.element.nativeElement;
+    const canvasWidth = canvas.getBoundingClientRect().width;
+    const documentWidth = document.documentElement.clientWidth;
+    const coef = canvasWidth / documentWidth;
+    return { x: offsetX * coef, y: offsetY };
+  }
+
   handleClick(event: MouseEvent) {
     const { offsetX, offsetY } = event;
 
@@ -113,9 +158,9 @@ export class CanvasComponent implements AfterViewInit {
     // MockUp for now
     // In the future, we shouldn't need a if
     // Also, we shouldn't need to instantiate tool
-    if (toolName == 'point' || toolName == 'polygon-full'){
-      let curAction = this.tool.doClick(offsetX,offsetY);
-      if (curAction){
+    if (toolName == 'point' || toolName == 'polygon-full') {
+      let curAction = this.tool.doClick(offsetX, offsetY);
+      if (curAction) {
         this.stack.do(curAction[0]);
         let shapes = curAction[0].getShapes()
 
@@ -128,7 +173,7 @@ export class CanvasComponent implements AfterViewInit {
       console.log(this.stack)
 
       let lastAction = this.tool.checkCompleted(this.stack);
-      if (lastAction){
+      if (lastAction) {
         let shapes = lastAction.getShapes();
         this.stack.do(lastAction)
         shapes.forEach((shape) => {
