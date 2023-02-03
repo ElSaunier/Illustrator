@@ -20,13 +20,8 @@ import SvgElementsService from 'src/app/services/svg-elements.service';
 export class CanvasComponent implements AfterViewInit {
   @ViewChild('canvas') canvasElement!: ElementRef<HTMLCanvasElement>;
 
-  // Mock
-  tool: PencilTool
-
   constructor(private elementsService: SvgElementsService, private storage: StorageService,
     private element: ElementRef<HTMLElement>, private stack: ActionStack) {
-    // Mock
-    this.tool = new PencilTool()
   }
 
   ngAfterViewInit() {
@@ -88,9 +83,10 @@ export class CanvasComponent implements AfterViewInit {
   }
 
   handleMouseRelease(event: MouseEvent) {
+    const tool = this.elementsService.activeTool;
     const coord = this.getCoordinates(event);
 
-    const curActions = this.tool.doRelease(coord.x, coord.y);
+    const curActions = tool.doRelease(coord.x, coord.y);
 
     if (curActions) {
       curActions.forEach((curAction) => {
@@ -102,7 +98,7 @@ export class CanvasComponent implements AfterViewInit {
       });
     }
 
-    let lastAction = this.tool.checkCompleted(this.stack);
+    let lastAction = tool.checkCompleted(this.stack);
     if (lastAction) {
       this.stack.do(lastAction);
       let shapes = lastAction.getShapes();
@@ -113,9 +109,10 @@ export class CanvasComponent implements AfterViewInit {
   }
 
   handleMouseMoveWhenClicked(event: MouseEvent) {
+    const tool = this.elementsService.activeTool;
     const coord = this.getCoordinates(event);
 
-    const curActions = this.tool.doPress(coord.x, coord.y);
+    const curActions = tool.doPress(coord.x, coord.y);
 
     if (curActions) {
       curActions.forEach((curAction) => {
@@ -127,7 +124,7 @@ export class CanvasComponent implements AfterViewInit {
       });
     }
 
-    let lastAction = this.tool.checkCompleted(this.stack);
+    let lastAction = tool.checkCompleted(this.stack);
     if (lastAction) {
       this.stack.do(lastAction);
       let shapes = lastAction.getShapes();
@@ -147,6 +144,7 @@ export class CanvasComponent implements AfterViewInit {
   }
 
   handleClick(event: MouseEvent) {
+    const tool = this.elementsService.activeTool;
     const { offsetX, offsetY } = event;
 
     const toolName = this.storage.get('toolName');
@@ -159,7 +157,7 @@ export class CanvasComponent implements AfterViewInit {
     // In the future, we shouldn't need a if
     // Also, we shouldn't need to instantiate tool
     if (toolName == 'point' || toolName == 'polygon-full') {
-      let curAction = this.tool.doClick(offsetX, offsetY);
+      let curAction = tool.doClick(offsetX, offsetY);
       if (curAction) {
         this.stack.do(curAction[0]);
         let shapes = curAction[0].getShapes()
@@ -172,7 +170,7 @@ export class CanvasComponent implements AfterViewInit {
       }
       console.log(this.stack)
 
-      let lastAction = this.tool.checkCompleted(this.stack);
+      let lastAction = tool.checkCompleted(this.stack);
       if (lastAction) {
         let shapes = lastAction.getShapes();
         this.stack.do(lastAction)

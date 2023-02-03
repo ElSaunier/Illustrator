@@ -7,7 +7,7 @@ import { Subject } from 'rxjs';
   providedIn: 'root'
 })
 export default class SvgElementsService {
-  activeTool: Tool | undefined;
+  activeTool!: Tool;
 
   private elements: Shape[] = [];
   public pushElement$ = new Subject<Shape>();
