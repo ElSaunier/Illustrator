@@ -32,4 +32,8 @@ export class ActionStack {
   getStack(): Action[] {
     return this._stack;
   }
+
+  getHeadPosition(): number {
+    return this._headPosition;
+  }
 }

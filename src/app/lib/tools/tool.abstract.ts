@@ -4,7 +4,7 @@ import { ToolName } from './tools';
 import { IToolConfiguration } from '@lib/tools/tool-configuration.interface';
 
 export abstract class Tool {
-  constructor(protected name: string, protected iconPath: string, /*protected config: IToolConfiguration*/) {
+  constructor(protected name: string, protected iconPath: string, protected config: IToolConfiguration) {
   }
 
   static toolName: ToolName;
@@ -17,9 +17,9 @@ export abstract class Tool {
 
   abstract checkCompleted(stack: ActionStack): Action | null;
 
- /* configure(config: IToolConfiguration) {
+  configure(config: IToolConfiguration) {
     this.config = config;
-  }*/
+  }
 }
 
 export class PencilTool extends Tool {
