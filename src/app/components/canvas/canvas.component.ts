@@ -152,7 +152,7 @@ export class CanvasComponent implements AfterViewInit {
     // MockUp for now
     // In the future, we shouldn't need a if
     // Also, we shouldn't need to instantiate tool
-    if (toolName == 'point' || toolName == 'polygon-full') {
+    if (toolName === 'point' || toolName === 'polygon-full') {
       const curAction = tool.doClick(offsetX, offsetY);
       if (curAction) {
         this.stack.do(curAction[0]);
@@ -212,8 +212,7 @@ export class CanvasComponent implements AfterViewInit {
             if (elem.isColliding(pos)) {
               if (this.storage.get('lastCircleSelected') === null) {
                 this.storage.set('lastCircleSelected', elem);
-              }
-              else {
+              } else {
                 if (elem !== this.storage.get('lastCircleSelected')) {
                   this.onAddLine(this.storage.get('lastCircleSelected')!.rpos, elem.rpos);
                   this.storage.set('lastCircleSelected', null);
