@@ -11,11 +11,11 @@ export class Tool {
   public static toolName: ToolName;
   static svgPath = '/assets/customSVG/hexagonFull.svg';
 
-  doClick(x: number, y: number): Action[] | null { return null; }
+  doClick(x: number, y: number, stack?: ActionStack): Action[] | null { return null; }
 
-  doPress(x: number, y: number): Action[] | null { return null; }
+  doPress(x: number, y: number, stack?: ActionStack): Action[] | null { return null; }
 
-  doRelease(x: number, y: number): Action[] | null { return null; }
+  doRelease(x: number, y: number, stack?: ActionStack): Action[] | null { return null; }
 
   checkCompleted(stack: ActionStack): Action | null { return null; }
 

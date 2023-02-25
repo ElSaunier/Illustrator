@@ -6,6 +6,7 @@ import { Line } from '@lib/shapes/line';
 import { Tool } from './tool.abstract';
 import { ToolName } from './tools';
 import { IToolConfiguration } from '@lib/tools/tool-configuration.interface';
+import { Text } from '@lib/shapes/text';
 
 export class PointTool extends Tool {
   static override toolName: ToolName = 'point';
@@ -24,8 +25,20 @@ export class PointTool extends Tool {
     this.configure(config);
   }
 
-  override doClick(x: number, y: number): Action[] | null {
+  override doClick(x: number, y: number, stack?: ActionStack): Action[] | null {
     this.actionDone++;
+
+    if (stack !== undefined) {
+      const actions = stack.getActiveStack();
+      const action = actions.find(ac => ac.getShapes().find(s => s instanceof Circle && s.isColliding({ x, y })));
+      if (action !== undefined) {
+        const shape = action.getShapes().find(s => s instanceof Circle && s.isColliding({ x, y })) as Circle;
+        if (shape !== undefined) {
+          x = shape.rpos.x;
+          y = shape.rpos.y;
+        }
+      }
+    }
 
     const startCircle = new Circle(
       this.config.fill ? 'fill' : '',
@@ -53,12 +66,60 @@ export class PointTool extends Tool {
     return null;
   }
 
+  override doUnPress(x: number, y: number, stack?: ActionStack | undefined): Action[] | null {
+    if (stack === undefined || this.actionDone < 1) {
+      return null;
+    }
+
+    const actions: Action[] = stack!.getStack();
+
+    if (actions.length < 1) {
+      return null;
+    }
+
+    // Remove the last ghost shown line
+    this.removeGhostElement(stack);
+
+    const lastAction: Action = actions[stack.getHeadPosition()];
+
+    if (lastAction.getToolType() !== PointTool && !lastAction.getPending()) {
+      return null;
+    }
+
+    const coord1 = lastAction.getCoordinates();
+    const distance = Math.sqrt(Math.pow((x - coord1.x), 2) + Math.pow((y - coord1.y), 2));
+
+    const newAction = new Action(
+      x,
+      y,
+      [
+        new Line(
+          'rgba(0,0,0,0.2)',
+          this.config.thickness,
+          lastAction.getCoordinates(),
+          { x, y }
+        ),
+        new Text(
+          'rgba(0,0,0,1)',
+          distance.toFixed(1).toString(),
+          { x: (x + coord1.x) / 2, y: (y + coord1.y) / 2 }
+        )
+      ],
+      PointTool,
+      true
+    );
+
+    return [newAction];
+  }
+
   override checkCompleted(stack: ActionStack): Action | null {
     const actions = stack.getActiveStack();
 
     if (this.actionDone != 2) {
       return null;
     }
+
+    this.removeGhostElement(stack);
 
     const lastAction: Action = actions[stack.getHeadPosition()];
     const firstAction: Action = actions[stack.getHeadPosition() - 1];
@@ -81,5 +142,19 @@ export class PointTool extends Tool {
     this.actionDone = 0;
 
     return newAction;
+  }
+
+  removeGhostElement(stack: ActionStack): void {
+    const actions = stack.getActiveStack();
+    const lastAction = actions[stack.getHeadPosition()];
+    if (this.actionDone == 1 && lastAction.getToolType() === PointTool && lastAction.getPending() && lastAction.getShapes().find(shape => shape instanceof Line)) { // Point - Line
+      stack.undo();
+    }
+    else if (this.actionDone == 2) { // Point - Line - Point
+      const lastPoint = actions[stack.getHeadPosition()];
+      stack.undo();
+      stack.undo();
+      stack.do(lastPoint);
+    }
   }
 }

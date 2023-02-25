@@ -83,7 +83,7 @@ export class CanvasComponent implements AfterViewInit {
     const tool = this.elementsService.activeTool;
     const coord = this.getCoordinates(event);
 
-    const curActions = tool.doRelease(coord.x, coord.y);
+    const curActions = tool.doRelease(coord.x, coord.y, this.stack);
 
     if (curActions) {
       curActions.forEach(curAction => {
@@ -141,7 +141,7 @@ export class CanvasComponent implements AfterViewInit {
     const tool = this.elementsService.activeTool;
     const coord = this.getCoordinates(event);
 
-    const curActions = tool.doPress(coord.x, coord.y);
+    const curActions = tool.doPress(coord.x, coord.y, this.stack);
 
     if (curActions) {
       curActions.forEach(curAction => {
@@ -170,7 +170,7 @@ export class CanvasComponent implements AfterViewInit {
     const tool = this.elementsService.activeTool;
     const coord = this.getCoordinates(event);
 
-    const curActions = tool.doClick(coord.x, coord.y);
+    const curActions = tool.doClick(coord.x, coord.y, this.stack);
 
     if (curActions) {
       curActions.forEach(curAction => {
