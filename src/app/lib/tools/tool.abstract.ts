@@ -6,7 +6,7 @@ import { IToolConfiguration } from '@lib/tools/tool-configuration.interface';
 export class Tool {
   protected config!: IToolConfiguration;
 
-  constructor() {}
+  constructor() { }
 
   public static toolName: ToolName;
   static svgPath = '/assets/customSVG/hexagonFull.svg';
@@ -22,4 +22,6 @@ export class Tool {
   configure(config: IToolConfiguration) {
     this.config = config;
   }
+
+  doUnPress(x: number, y: number, stack?: ActionStack): Action[] | null { return null; }
 }

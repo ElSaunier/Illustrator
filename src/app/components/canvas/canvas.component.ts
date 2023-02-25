@@ -43,10 +43,11 @@ export class CanvasComponent implements AfterViewInit {
 
     this.canvasElement.nativeElement.addEventListener('mousemove', event => {
       if (!isMouseDown) {
-        return;
+        this.handleMouseMoveWhenUnClicked(event);
       }
-
-      this.handleMouseMoveWhenClicked(event);
+      else {
+        this.handleMouseMoveWhenClicked(event);
+      }
     });
 
     this.initSubscriptions();
@@ -87,21 +88,53 @@ export class CanvasComponent implements AfterViewInit {
     if (curActions) {
       curActions.forEach(curAction => {
         this.stack.do(curAction);
-        const shapes = curAction.getShapes();
-        shapes.forEach(shape => {
-          this.elementsService.add(shape);
-        });
       });
     }
 
     const lastAction = tool.checkCompleted(this.stack);
     if (lastAction) {
       this.stack.do(lastAction);
-      const shapes = lastAction.getShapes();
+    }
+
+    this.updateCanvas();
+  }
+
+  handleMouseMoveWhenUnClicked(event: MouseEvent) {
+    const tool = this.elementsService.activeTool;
+    const coord = this.getCoordinates(event);
+
+    const curActions = tool.doUnPress(coord.x, coord.y, this.stack);
+
+    if (curActions) {
+      curActions.forEach(curAction => {
+        this.stack.do(curAction);
+      });
+    }
+
+    const lastAction = tool.checkCompleted(this.stack);
+    if (lastAction) {
+      this.stack.do(lastAction);
+    }
+
+    this.updateCanvas();
+  }
+
+  updateCanvas() {
+    const elem = this.canvasElement.nativeElement;
+    if (!elem) {
+      return;
+    }
+    const rect = elem.parentElement!.getBoundingClientRect();
+    elem.width = rect.width;
+    elem.height = rect.height;
+    this.canvasElement.nativeElement.getContext('2d')?.clearRect(0, 0, elem.width, elem.height);
+    let actions = this.stack.getActiveStack();
+    actions.forEach(action => {
+      const shapes = action.getShapes();
       shapes.forEach(shape => {
         this.elementsService.add(shape);
       });
-    }
+    });
   }
 
   handleMouseMoveWhenClicked(event: MouseEvent) {
@@ -113,21 +146,15 @@ export class CanvasComponent implements AfterViewInit {
     if (curActions) {
       curActions.forEach(curAction => {
         this.stack.do(curAction);
-        const shapes = curAction.getShapes();
-        shapes.forEach(shape => {
-          this.elementsService.add(shape);
-        });
       });
     }
 
     const lastAction = tool.checkCompleted(this.stack);
     if (lastAction) {
       this.stack.do(lastAction);
-      const shapes = lastAction.getShapes();
-      shapes.forEach(shape => {
-        this.elementsService.add(shape);
-      });
     }
+
+    this.updateCanvas();
   }
 
   getCoordinates(event: MouseEvent) {
@@ -141,38 +168,22 @@ export class CanvasComponent implements AfterViewInit {
 
   handleClick(event: MouseEvent) {
     const tool = this.elementsService.activeTool;
-    const { offsetX, offsetY } = event;
+    const coord = this.getCoordinates(event);
 
-    const toolName = this.storage.get('toolName');
+    const curActions = tool.doClick(coord.x, coord.y);
 
-    if (toolName !== 'eraser' && toolName !== 'pencil' && toolName !== 'point' && toolName !== 'polygon-full') {
-      this.onAddElement({ x: offsetX, y: offsetY });
+    if (curActions) {
+      curActions.forEach(curAction => {
+        this.stack.do(curAction);
+      });
     }
 
-    // MockUp for now
-    // In the future, we shouldn't need a if
-    // Also, we shouldn't need to instantiate tool
-    if (toolName === 'point' || toolName === 'polygon-full') {
-      const curAction = tool.doClick(offsetX, offsetY);
-      if (curAction) {
-        this.stack.do(curAction[0]);
-        const shapes = curAction[0].getShapes();
-
-        shapes.forEach(shape => {
-          this.elementsService.add(shape);
-        });
-
-      }
-
-      const lastAction = tool.checkCompleted(this.stack);
-      if (lastAction) {
-        const shapes = lastAction.getShapes();
-        this.stack.do(lastAction);
-        shapes.forEach(shape => {
-          this.elementsService.add(shape);
-        });
-      }
+    const lastAction = tool.checkCompleted(this.stack);
+    if (lastAction) {
+      this.stack.do(lastAction);
     }
+
+    this.updateCanvas();
   }
 
 
