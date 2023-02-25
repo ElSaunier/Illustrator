@@ -1,6 +1,8 @@
 import { ActionStack } from '@lib/action-stacks/action-stack.class';
 import { Action } from '@lib/actions/action.class';
 import { Circle } from '@lib/shapes/circle';
+import { Line } from '@lib/shapes/line';
+import { Text } from '@lib/shapes/text';
 import { IToolConfiguration } from './tool-configuration.interface';
 import { Tool } from './tool.abstract';
 import { ToolName } from './tools';
@@ -67,6 +69,17 @@ export class CircleTool extends Tool {
 					this.config.thickness,
 					coord1,
 					distance
+				),
+				new Line(
+					'rgba(0,0,0,0.2)',
+					1,
+					coord1,
+					{ x, y }
+				),
+				new Text(
+					'rgba(0,0,0,1)',
+					distance.toFixed(1).toString(),
+					{ x: (x + coord1.x) / 2, y: (y + coord1.y) / 2 }
 				)
 			],
 			CircleTool,
