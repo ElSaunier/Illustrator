@@ -21,13 +21,15 @@ export class Rect implements Shape {
   }
 
   public render(ctx: CanvasRenderingContext2D) {
-    if (this.fill !== 'transparent') {
+    if (this.fill === 'none') {
+      ctx.strokeStyle = this.stroke;
+      ctx.strokeRect(this.rpos.x, this.rpos.y, this.width, this.height);
+    }
+    else {
       ctx.fillStyle = this.fill;
+      ctx.strokeStyle = this.stroke;
       ctx.fillRect(this.rpos.x, this.rpos.y, this.width, this.height);
     }
-
-    ctx.strokeStyle = this.stroke;
-    ctx.strokeRect(this.rpos.x, this.rpos.y, this.width, this.height);
   }
 
   isColliding(pos: Vec2): Boolean {
