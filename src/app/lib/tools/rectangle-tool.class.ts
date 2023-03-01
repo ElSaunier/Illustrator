@@ -143,7 +143,7 @@ export class RectangleTool extends Tool {
     return newAction;
   }
 
-  removeGhostElement(stack: ActionStack): void {
+  override removeGhostElement(stack: ActionStack): void {
     const actions = stack.getActiveStack();
     const lastAction = actions[stack.getHeadPosition()];
     if (this.actionDone == 1 && lastAction.getToolType() === RectangleTool && lastAction.getPending() && lastAction.getShapes().find(shape => shape instanceof Rect)) { // Point - Ghost

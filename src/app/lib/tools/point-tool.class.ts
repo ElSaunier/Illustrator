@@ -144,7 +144,7 @@ export class PointTool extends Tool {
     return newAction;
   }
 
-  removeGhostElement(stack: ActionStack): void {
+  override removeGhostElement(stack: ActionStack): void {
     const actions = stack.getActiveStack();
     const lastAction = actions[stack.getHeadPosition()];
     if (this.actionDone == 1 && lastAction.getToolType() === PointTool && lastAction.getPending() && lastAction.getShapes().find(shape => shape instanceof Line)) { // Point - Line
