@@ -13,14 +13,18 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { HttpClientModule } from '@angular/common/http';
 import { ColorPickerModule } from 'ngx-color-picker';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import { FormsModule } from '@angular/forms';
 import { ToolComponent } from './components/tool/tool.component';
+import { ToolConfigurationComponent } from './components/tool-configuration/tool-configuration.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     CanvasComponent,
     ToolsSidebarComponent,
-    ToolComponent
+    ToolComponent,
+    ToolConfigurationComponent
   ],
   imports: [
     BrowserModule,
@@ -30,7 +34,9 @@ import { ToolComponent } from './components/tool/tool.component';
     MatButtonModule,
     MatIconModule,
     HttpClientModule,
-    ColorPickerModule
+    ColorPickerModule,
+    MatButtonToggleModule,
+    FormsModule
   ],
   providers: [
     SvgElementsService,

@@ -1,0 +1,66 @@
+mat-sidenav-container {
+    height: 100vh;
+    width: 100%;
+
+    overflow: visible;
+}
+
+mat-sidenav {
+    background-color: #b5b5b9;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+.content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    margin-top: 50%;
+    overflow: visible
+}
+
+mat-button-toggle-group{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 20px;
+}
+
+input {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+}
+
+.active {
+    background-color: blue;
+}
+
+section {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+#high, #medium, #low {
+    background-color: #323131;
+    border-radius: 50%;
+}
+
+#high {
+    height: 30px;
+    width: 30px;
+}
+
+#medium {
+    height: 15px;
+    width: 15px;
+}
+
+#low {
+    height: 5px;
+    width: 5px;
+}
