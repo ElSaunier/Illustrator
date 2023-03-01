@@ -1,11 +1,26 @@
-import { Vec2 } from "@lib/vec2";
+import { Vec2 } from '@lib/vec2';
 
 export interface Shape {
+  /** the unique id of the shape */
   uuid: string;
+
+  /** Fill color (rgb, hexadecimal) */
   fill: string;
+
+  /** Stroke color (rgb, hexadecimal)*/
   stroke: string;
+
+  /** Stroke width, in px*/
   strokeWidth: number;
 
-  render(ctx: CanvasRenderingContext2D): void;
-  isColliding(pos: Vec2): Boolean;
+  /**
+   * @summary draw the shape within a canvas context
+   */
+  render(context: CanvasRenderingContext2D): void;
+
+  /**
+   * @returns true if the pos is inside the concerning shape.
+   * @param pos 
+   */
+  isColliding(pos: Vec2): boolean;
 }

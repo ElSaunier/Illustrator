@@ -32,7 +32,7 @@ export class Rect implements Shape {
     }
   }
 
-  isColliding(pos: Vec2): Boolean {
+  isColliding(pos: Vec2): boolean {
     throw new Error('Method not implemented.');
   }
 }
