@@ -4,6 +4,7 @@ import { PointTool } from './point-tool.class';
 import { PolygonFullTool } from './polygon-full-tool.class';
 import { RectangleTool } from './rectangle-tool.class';
 import { Tool } from './tool.abstract';
+import { EraserTool } from '@lib/tools/eraser-tool.class';
 
 export type ToolMeta = { cls: typeof Tool, desc: string };
 
@@ -14,5 +15,6 @@ export const tools: ToolMeta[] = [
   { cls: PencilTool, desc: 'Icon button to draw a segment' },
   { cls: PointTool, desc: 'Icon button to draw a line' },
   { cls: RectangleTool, desc: 'Icon button to draw a rectangle' },
-  { cls: CircleTool, desc: 'Icon button to draw a circle' }
+  { cls: CircleTool, desc: 'Icon button to draw a circle' },
+  { cls: EraserTool, desc: 'Icon button to erase' }
 ];
