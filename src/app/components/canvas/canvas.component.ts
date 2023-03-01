@@ -86,13 +86,13 @@ export class CanvasComponent implements AfterViewInit {
 
     if (curActions) {
       curActions.forEach(curAction => {
-        this.stack.do(curAction);
+        this.stack.insert(curAction);
       });
     }
 
     const lastAction = tool.checkCompleted(this.stack);
     if (lastAction) {
-      this.stack.do(lastAction);
+      this.stack.insert(lastAction);
     }
 
     this.updateCanvas();
@@ -106,13 +106,13 @@ export class CanvasComponent implements AfterViewInit {
 
     if (curActions) {
       curActions.forEach(curAction => {
-        this.stack.do(curAction);
+        this.stack.insert(curAction);
       });
     }
 
     const lastAction = tool.checkCompleted(this.stack);
     if (lastAction) {
-      this.stack.do(lastAction);
+      this.stack.insert(lastAction);
     }
 
     this.updateCanvas();
@@ -144,13 +144,13 @@ export class CanvasComponent implements AfterViewInit {
 
     if (curActions) {
       curActions.forEach(curAction => {
-        this.stack.do(curAction);
+        this.stack.insert(curAction);
       });
     }
 
     const lastAction = tool.checkCompleted(this.stack);
     if (lastAction) {
-      this.stack.do(lastAction);
+      this.stack.insert(lastAction);
     }
 
     this.updateCanvas();
@@ -173,13 +173,13 @@ export class CanvasComponent implements AfterViewInit {
 
     if (curActions) {
       curActions.forEach(curAction => {
-        this.stack.do(curAction);
+        this.stack.insert(curAction);
       });
     }
 
     const lastAction = tool.checkCompleted(this.stack);
     if (lastAction) {
-      this.stack.do(lastAction);
+      this.stack.insert(lastAction);
     }
 
     this.updateCanvas();

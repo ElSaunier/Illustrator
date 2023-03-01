@@ -6,8 +6,6 @@ import { IToolConfiguration } from '@lib/tools/tool-configuration.interface';
 export class Tool {
   protected config!: IToolConfiguration;
 
-  constructor() { }
-
   public static toolName: ToolName;
   static svgPath = '/assets/customSVG/hexagonFull.svg';
 

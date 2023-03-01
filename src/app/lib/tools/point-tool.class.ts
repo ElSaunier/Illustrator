@@ -153,7 +153,7 @@ export class PointTool extends Tool {
       const lastPoint = actions[stack.getHeadPosition()];
       stack.undo();
       stack.undo();
-      stack.do(lastPoint);
+      stack.insert(lastPoint);
     }
   }
 }
