@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CanvasComponent } from './components/canvas/canvas.component';
-import SvgElementsService from './services/svg-elements.service';
+import ShapeService from './services/shapes.service';
 import { StorageService } from './services/storage.service';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { ToolsSidebarComponent } from './components/tools-sidebar/tools-sidebar.component';
@@ -33,7 +33,7 @@ import { ToolComponent } from './components/tool/tool.component';
     ColorPickerModule
   ],
   providers: [
-    SvgElementsService,
+    ShapeService,
     StorageService
   ],
   bootstrap: [AppComponent]
