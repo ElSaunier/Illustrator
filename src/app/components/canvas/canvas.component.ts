@@ -52,32 +52,50 @@ export class CanvasComponent implements AfterViewInit {
     this.initSubscriptions();
   }
 
+  /**
+   * Init subscriptions for the component.
+   * Listen for new elements to be added
+   */
   initSubscriptions() {
     this.elementsService.pushElement$.subscribe(elem => this._drawElement(elem));
   }
 
-  _drawElement(e: Shape) {
+  /**
+   * Draw an element into the canvas context
+   * @param shape 
+   */
+  _drawElement(shape: Shape) {
     const ctxt = this.canvasElement.nativeElement.getContext('2d');
 
     if (ctxt) {
-      e.render(ctxt);
+      shape.render(ctxt);
     }
   }
 
-  _eraseElement(eUuid: string) {
-    const canvas = this.canvasElement.nativeElement as unknown as HTMLElement;
+  /**
+   * 
+   * @param shapeId 
+   * @returns 
+   */
+  _eraseElement(shapeId: string) {
+    // const canvas = this.canvasElement.nativeElement as unknown as HTMLElement;
 
-    const elements = canvas.getElementsByClassName('svgElement');
-    for (const element in elements) {
-      const e = elements[element];
-      if (e.id === eUuid) {
-        e.remove();
+    // const elements = canvas.getElementsByClassName('svgElement');
+    // for (const element in elements) {
+    //   const e = elements[element];
+    //   if (e.id === shapeId) {
+    //     e.remove();
 
-        return;
-      }
-    }
+    //     return;
+    //   }
+    // }
   }
 
+  /**
+   * @summary handle mouse button released events
+   * triggers the concerned event in the currently selected tool, and process the returned action if any (for instance, draw a line between two points)
+   * @param event 
+   */
   handleMouseRelease(event: MouseEvent) {
     const tool = this.elementsService.activeTool;
     const coord = this.getCoordinates(event);
@@ -98,6 +116,11 @@ export class CanvasComponent implements AfterViewInit {
     this.updateCanvas();
   }
 
+  /**
+   * @summary handle mouse move events
+   * triggers the concerned event in the currently selected tool, and process the returned action if any (for instance, draw a line between two points)
+   * @param event 
+  */
   handleMouseMoveWhenUnClicked(event: MouseEvent) {
     const tool = this.elementsService.activeTool;
     const coord = this.getCoordinates(event);
@@ -118,6 +141,9 @@ export class CanvasComponent implements AfterViewInit {
     this.updateCanvas();
   }
 
+  /**
+   * @summary redraw the entire canvas with the stack
+   */
   updateCanvas() {
     const elem = this.canvasElement.nativeElement;
     if (!elem) {
@@ -136,6 +162,12 @@ export class CanvasComponent implements AfterViewInit {
     });
   }
 
+  /**
+   * @summary handle mouse move when clicked events
+   * triggers the concerned event in the currently selected tool
+   * process the returned action if any (for instance, draw a line between two points)
+   * @param event 
+  */
   handleMouseMoveWhenClicked(event: MouseEvent) {
     const tool = this.elementsService.activeTool;
     const coord = this.getCoordinates(event);
@@ -156,6 +188,11 @@ export class CanvasComponent implements AfterViewInit {
     this.updateCanvas();
   }
 
+  /**
+   * Compute the coordinates of an event
+   * @param event 
+   * @returns x and y
+   */
   getCoordinates(event: MouseEvent) {
     const { offsetX, offsetY } = event;
     const canvas = this.element.nativeElement;
@@ -165,6 +202,12 @@ export class CanvasComponent implements AfterViewInit {
     return { x: offsetX * coef, y: offsetY };
   }
 
+  /**
+   * @summary handle click events
+   * triggers the concerned event in the currently selected tool
+   * process the returned action if any (for instance, draw a line between two points)
+   * @param event 
+  */
   handleClick(event: MouseEvent) {
     const tool = this.elementsService.activeTool;
     const coord = this.getCoordinates(event);
@@ -185,7 +228,12 @@ export class CanvasComponent implements AfterViewInit {
     this.updateCanvas();
   }
 
-
+  /**
+   * @summary handle mouse move when clicked events
+   * triggers the concerned event in the currently selected tool
+   * process the returned action if any (for instance, draw a line between two points)
+   * @param event 
+  */
   onAddElement(ePos: Vec2) {
     const toolName = this.storage.get('toolName');
     const canvas = this.element.nativeElement;
@@ -237,11 +285,20 @@ export class CanvasComponent implements AfterViewInit {
     }
   }
 
+  /**
+   * @summary add line from pos1 to pos2 and push it to the element service.
+   * @param pos1 
+   * @param pos2 
+   */
   onAddLine(pos1: Vec2, pos2: Vec2) {
     const line = new Line(this.storage.get('stroke'), 0, pos1, pos2);
     this.elementsService.add(line);
   }
 
+  /**
+   * Add a point to the elements
+   * @param ePos 
+   */
   onAddPoint(ePos: Vec2) {
     const stroke = this.storage.get('stroke');
 
@@ -251,6 +308,10 @@ export class CanvasComponent implements AfterViewInit {
     this.elementsService.add(point);
   }
 
+  /**
+   * Add a filled polygon to the elements list
+   * @param ePos 
+   */
   onAddPolygonFill(ePos: Vec2) {
     const stroke = this.storage.get('stroke');
 
@@ -260,6 +321,10 @@ export class CanvasComponent implements AfterViewInit {
     this.elementsService.add(rect);
   }
 
+  /**
+   * Add an empty polygon to the elements list
+   * @param ePos
+   */
   onAddPolygonEmpty(ePos: Vec2) {
     const stroke = this.storage.get('stroke');
 
@@ -269,6 +334,10 @@ export class CanvasComponent implements AfterViewInit {
     this.elementsService.add(rect);
   }
 
+  /**
+   * Remove an element from a given position
+   * @param ePos 
+   */
   onRemoveElement(ePos: Vec2) {
     // const elements = document.elementsFromPoint(ePos.x, ePos.y)
     //   .filter(elem => elem.classList.contains('svgElement'));
