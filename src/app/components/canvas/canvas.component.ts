@@ -1,9 +1,9 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { ActionStack } from '@lib/action-stacks/action-stack.class';
 import { Shape } from '@lib/interfaces/shape.interface';
-import { Circle } from '@lib/shapes/circle';
-import { Line } from '@lib/shapes/line';
-import { Rect } from '@lib/shapes/rect';
+import { Circle } from '@lib/shapes/circle.class';
+import { Line } from '@lib/shapes/line.class';
+import { Rect } from '@lib/shapes/rect.class';
 import { Vec2 } from '@lib/vec2';
 import { StorageService } from 'src/app/services/storage.service';
 import SvgElementsService from 'src/app/services/svg-elements.service';
@@ -44,8 +44,7 @@ export class CanvasComponent implements AfterViewInit {
     this.canvasElement.nativeElement.addEventListener('mousemove', event => {
       if (!isMouseDown) {
         this.handleMouseMoveWhenUnClicked(event);
-      }
-      else {
+      } else {
         this.handleMouseMoveWhenClicked(event);
       }
     });
@@ -128,7 +127,7 @@ export class CanvasComponent implements AfterViewInit {
     elem.width = rect.width;
     elem.height = rect.height;
     this.canvasElement.nativeElement.getContext('2d')?.clearRect(0, 0, elem.width, elem.height);
-    let actions = this.stack.getActiveStack();
+    const actions = this.stack.getActiveStack();
     actions.forEach(action => {
       const shapes = action.getShapes();
       shapes.forEach(shape => {

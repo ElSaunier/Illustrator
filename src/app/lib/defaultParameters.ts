@@ -1,4 +1,4 @@
-import { Circle } from './shapes/circle';
+import { Circle } from './shapes/circle.class';
 import { ToolName } from './tools/tools';
 
 export type Parameters = {

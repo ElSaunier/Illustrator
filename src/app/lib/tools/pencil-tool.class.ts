@@ -1,7 +1,7 @@
 import { ActionStack } from '@lib/action-stacks/action-stack.class';
 import { Action } from '@lib/actions/action.class';
-import { Circle } from '@lib/shapes/circle';
-import { Line } from '@lib/shapes/line';
+import { Circle } from '@lib/shapes/circle.class';
+import { Line } from '@lib/shapes/line.class';
 import { IToolConfiguration } from './tool-configuration.interface';
 import { Tool } from './tool.abstract';
 import { ToolName } from './tools';
@@ -21,7 +21,7 @@ export class PencilTool extends Tool {
     this.configure(config);
   }
 
-  inTrace: Boolean = false;
+  inTrace = false;
 
   override doClick(x: number, y: number): Action[] | null {
     return null;

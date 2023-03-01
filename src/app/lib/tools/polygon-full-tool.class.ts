@@ -1,6 +1,6 @@
 import { ActionStack } from '@lib/action-stacks/action-stack.class';
 import { Action } from '@lib/actions/action.class';
-import { Rect } from '@lib/shapes/rect';
+import { Rect } from '@lib/shapes/rect.class';
 import { IToolConfiguration } from './tool-configuration.interface';
 
 import { Tool } from './tool.abstract';
@@ -10,7 +10,7 @@ export class PolygonFullTool extends Tool {
   static override toolName: ToolName = 'polygon-full';
   static override svgPath = '/assets/customSVG/hexagonFull.svg';
 
-  actionDone: number = 0;
+  actionDone = 0;
 
   constructor() {
     super();

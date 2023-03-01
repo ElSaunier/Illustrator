@@ -1,12 +1,12 @@
 import { ActionStack } from '@lib/action-stacks/action-stack.class';
 import { Action } from '@lib/actions/action.class';
-import { Circle } from '@lib/shapes/circle';
-import { Line } from '@lib/shapes/line';
+import { Circle } from '@lib/shapes/circle.class';
+import { Line } from '@lib/shapes/line.class';
 
 import { Tool } from './tool.abstract';
 import { ToolName } from './tools';
 import { IToolConfiguration } from '@lib/tools/tool-configuration.interface';
-import { Text } from '@lib/shapes/text';
+import { Text } from '@lib/shapes/text.class';
 
 export class PointTool extends Tool {
   static override toolName: ToolName = 'point';
@@ -87,7 +87,7 @@ export class PointTool extends Tool {
     }
 
     const coord1 = lastAction.getCoordinates();
-    const distance = Math.sqrt(Math.pow((x - coord1.x), 2) + Math.pow((y - coord1.y), 2));
+    const distance = Math.sqrt(Math.pow(x - coord1.x, 2) + Math.pow(y - coord1.y, 2));
 
     const newAction = new Action(
       x,
@@ -149,8 +149,7 @@ export class PointTool extends Tool {
     const lastAction = actions[stack.getHeadPosition()];
     if (this.actionDone == 1 && lastAction.getToolType() === PointTool && lastAction.getPending() && lastAction.getShapes().find(shape => shape instanceof Line)) { // Point - Line
       stack.undo();
-    }
-    else if (this.actionDone == 2) { // Point - Line - Point
+    } else if (this.actionDone == 2) { // Point - Line - Point
       const lastPoint = actions[stack.getHeadPosition()];
       stack.undo();
       stack.undo();
