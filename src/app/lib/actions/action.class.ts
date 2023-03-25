@@ -2,7 +2,7 @@ import { Tool } from '@lib/tools/tool.abstract';
 import { Shape } from '@lib/interfaces/shape.interface';
 
 export class Action {
-  constructor(protected x: number, protected y: number, protected shapes: Shape[], protected toolType: typeof Tool, protected isPending = true) {
+  constructor(protected x: number, protected y: number, protected shapes: Shape[], protected toolType: typeof Tool, protected isPending = true, protected isShowed = true) {
   }
 
   getPending(): boolean {
@@ -36,5 +36,13 @@ export class Action {
 
   setToolType(toolType: typeof Tool) {
     this.toolType = toolType;
+  }
+
+  getIsShowed() {
+    return this.isShowed;
+  }
+
+  setIsShowed(isShowed: boolean) {
+    this.isShowed = isShowed;
   }
 }

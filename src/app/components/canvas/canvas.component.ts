@@ -1,9 +1,10 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { ActionStack } from '@lib/action-stacks/action-stack.class';
 import { Shape } from '@lib/interfaces/shape.interface';
 import { Circle } from '@lib/shapes/circle.class';
 import { Line } from '@lib/shapes/line.class';
 import { Rect } from '@lib/shapes/rect.class';
+import { UndoTool } from '@lib/tools/undo-tool.class';
 import { Vec2 } from '@lib/vec2';
 import { StorageService } from 'src/app/services/storage.service';
 import SvgElementsService from 'src/app/services/svg-elements.service';
@@ -49,6 +50,8 @@ export class CanvasComponent implements AfterViewInit {
       }
     });
 
+    window.addEventListener('keydown', event => this.handleKeyDoawn(event));
+
     this.initSubscriptions();
   }
 
@@ -75,6 +78,18 @@ export class CanvasComponent implements AfterViewInit {
 
         return;
       }
+    }
+  }
+
+  handleKeyDoawn(event: KeyboardEvent) {
+    if (event.ctrlKey && event.key === 'z') {
+      event.preventDefault();
+      (document.getElementById('undo')?.children[0] as HTMLElement).click();
+      this.updateCanvas();
+    } else if (event.ctrlKey && event.key === 'y') {
+      event.preventDefault();
+      (document.getElementById('redo')?.children[0] as HTMLElement).click();
+      this.updateCanvas();
     }
   }
 
@@ -129,10 +144,12 @@ export class CanvasComponent implements AfterViewInit {
     this.canvasElement.nativeElement.getContext('2d')?.clearRect(0, 0, elem.width, elem.height);
     const actions = this.stack.getActiveStack();
     actions.forEach(action => {
-      const shapes = action.getShapes();
-      shapes.forEach(shape => {
-        this.elementsService.add(shape);
-      });
+      if (action.getIsShowed()) {
+        const shapes = action.getShapes();
+        shapes.forEach(shape => {
+          this.elementsService.add(shape);
+        });
+      }
     });
   }
 
