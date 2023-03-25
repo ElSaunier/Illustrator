@@ -28,10 +28,10 @@ export class Circle implements Shape {
     }
     ctx.lineWidth = this.strokeWidth;
     ctx.strokeStyle = this.stroke;
-    ctx.stroke()
+    ctx.stroke();
   }
 
-  isColliding(pos: Vec2): Boolean {
+  isColliding(pos: Vec2): boolean {
     const distX: number = pos.x - this.rpos.x;
     const distY: number = pos.y - this.rpos.y;
     const distance: number = Math.sqrt((distX * distX) + (distY * distY));

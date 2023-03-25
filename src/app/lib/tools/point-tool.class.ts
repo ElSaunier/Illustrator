@@ -113,7 +113,7 @@ export class PointTool extends Tool {
   }
 
   override checkCompleted(stack: ActionStack): Action | null {
-    const actions = stack.getActiveStack();
+    let actions = stack.getActiveStack();
 
     if (this.actionDone != 2) {
       return null;
@@ -121,18 +121,29 @@ export class PointTool extends Tool {
 
     this.removeGhostElement(stack);
 
-    const lastAction: Action = actions[stack.getHeadPosition()];
-    const firstAction: Action = actions[stack.getHeadPosition() - 1];
+    actions = stack.getActiveStack();
+
+    const lastPoint: Action = actions[stack.getHeadPosition()];
+    const firstPoint: Action = actions[stack.getHeadPosition() - 1];
+
+    const firstShape = firstPoint.getShapes()[0] as Circle;
+    const secondShape = lastPoint.getShapes()[0] as Circle;
+
+    // Remove points
+    stack.undo();
+    stack.undo();
 
     const newAction = new Action(
       0,
       0,
       [
+        new Circle(firstShape.fill, firstShape.stroke, firstShape.strokeWidth, firstShape.rpos, firstShape.radius),
+        new Circle(secondShape.fill, secondShape.stroke, secondShape.strokeWidth, secondShape.rpos, secondShape.radius),
         new Line(
           this.config.color,
           this.config.thickness,
-          firstAction.getCoordinates(),
-          lastAction.getCoordinates()
+          firstPoint.getCoordinates(),
+          lastPoint.getCoordinates()
         ),
       ],
       PointTool,

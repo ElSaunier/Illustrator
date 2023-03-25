@@ -50,7 +50,7 @@ export class CanvasComponent implements AfterViewInit {
       }
     });
 
-    window.addEventListener('keydown', event => this.handleKeyDoawn(event));
+    window.addEventListener('keydown', event => this.handleKeyDown(event));
 
     this.initSubscriptions();
   }
@@ -81,7 +81,7 @@ export class CanvasComponent implements AfterViewInit {
     }
   }
 
-  handleKeyDoawn(event: KeyboardEvent) {
+  handleKeyDown(event: KeyboardEvent) {
     if (event.ctrlKey && event.key === 'z') {
       event.preventDefault();
       (document.getElementById('undo')?.children[0] as HTMLElement).click();
