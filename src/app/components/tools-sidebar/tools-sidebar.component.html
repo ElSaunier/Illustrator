@@ -5,6 +5,11 @@
             [active]="isButtonActive(tool.cls.toolName)"
             (toolClicked)="onToolClicked($event)"
             ></app-tool>
+            <app-unselectable-tool class="unselectableTool" *ngFor="let nonSelectableTool of nonSelectableTools" 
+            [unselectableTool]="nonSelectableTool"
+            [id]="nonSelectableTool.cls.toolName"
+            (unselectableToolClicked)="onUnselectableToolClicked($event)">
+            </app-unselectable-tool>
         </div>
     </mat-sidenav>
 </mat-sidenav-container>

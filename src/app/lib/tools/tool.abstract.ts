@@ -1,12 +1,13 @@
 import { Action } from '@lib/actions/action.class';
 import { ActionStack } from '@lib/action-stacks/action-stack.class';
-import { ToolName } from './tools';
+import { ToolName, UnSelectableToolName } from './tools';
 import { IToolConfiguration } from '@lib/tools/tool-configuration.interface';
+import { ToolWrapper } from './toolWrapper.class';
 
 /**
  * Defines an object which can trigger actions
  */
-export class Tool {
+export class Tool implements ToolWrapper {
   protected config!: IToolConfiguration;
 
   /** Name of the tool */

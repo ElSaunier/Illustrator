@@ -13,7 +13,7 @@ export class Action {
    * @param toolType the type of tool which triggered the action
    * @param isPending Default value is true. Is the action finished ? Updated by the tool most of the time.
    */
-  constructor(protected x: number, protected y: number, protected shapes: Shape[], protected toolType: typeof Tool, protected isPending = true) {
+  constructor(protected x: number, protected y: number, protected shapes: Shape[], protected toolType: typeof Tool, protected isPending = true, protected isShowed = true) {
   }
 
   /**
@@ -80,5 +80,13 @@ export class Action {
    */
   setToolType(toolType: typeof Tool) {
     this.toolType = toolType;
+  }
+
+  getIsShowed() {
+    return this.isShowed;
+  }
+
+  setIsShowed(isShowed: boolean) {
+    this.isShowed = isShowed;
   }
 }

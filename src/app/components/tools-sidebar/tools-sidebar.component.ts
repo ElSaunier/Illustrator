@@ -1,12 +1,16 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ToolName } from '@lib/tools/tools';
+import { nonSelectableTools, ToolName, UnSelectableToolName } from '@lib/tools/tools';
 import { StorageService } from 'src/app/services/storage.service';
 import ShapeService from 'src/app/services/shapes.service';
 import { tools } from '@lib/tools/tools';
 import { Tool } from '@lib/tools/tool.abstract';
 import { ToolComponent } from '../tool/tool.component';
+import { UnselectableTool } from '@lib/tools/unselectableTool.class';
+import { UnselectableToolComponent } from '../tool/unselectableTool.component';
+import { ActionStack } from '@lib/action-stacks/action-stack.class';
+import { CanvasComponent } from '../canvas/canvas.component';
 @Component({
   selector: 'ill-app-tools-sidebar',
   templateUrl: './tools-sidebar.component.html',
@@ -14,13 +18,16 @@ import { ToolComponent } from '../tool/tool.component';
 })
 export class ToolsSidebarComponent implements OnInit, AfterViewInit {
   @ViewChildren(ToolComponent) toolComponentRefs!: QueryList<ToolComponent>;
+  @ViewChildren(UnselectableToolComponent) unselectableToolComponentRefs!: QueryList<UnselectableToolComponent>;
 
   protected tools = tools;
+  protected nonSelectableTools = nonSelectableTools;
   private activeButton!: ToolName;
   protected fillColor = 'rgba(0,0,0,1)';
   protected strokeColor = 'rgba(0,0,0,1)';
 
-  constructor(private storage: StorageService, private shapeService: ShapeService, private cd: ChangeDetectorRef) {}
+  constructor(private storage: StorageService, private shapeService: ShapeService, private cd: ChangeDetectorRef,
+    private stack: ActionStack) { }
 
   ngOnInit() {
     this.fillColor = this.storage.get('fill');
@@ -57,5 +64,9 @@ export class ToolsSidebarComponent implements OnInit, AfterViewInit {
 
   onToolClicked(tool: [Tool, ToolName]) {
     this.setActive(tool[1], tool[0]);
+  }
+
+  onUnselectableToolClicked(unselectableTool: [UnselectableTool, UnSelectableToolName]) {
+    unselectableTool[0].doClick(0, 0, this.stack);
   }
 }
