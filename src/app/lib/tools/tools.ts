@@ -7,6 +7,7 @@ import { Tool } from './tool.abstract';
 import { EraserTool } from '@lib/tools/eraser-tool.class';
 import { UndoTool } from './undo-tool.class';
 import { UnselectableTool } from './unselectableTool.class';
+import { TrashCanTool } from './trash-can-tool.class';
 
 /** Tool informations type */
 export type ToolMeta = { cls: typeof Tool, desc: string };
@@ -14,7 +15,7 @@ export type UnselectableToolMeta = { cls: typeof UnselectableTool; desc: string 
 
 /** List of tools in which we can pick a name to define a new tool */
 const toolNames = ['pencil', 'eraser', 'polygon-full', 'polygon-empty', 'point', 'line', 'circle', 'rectangle'] as const;
-const nonSelectableToolNames = ['undo', 'redo'] as const;
+const nonSelectableToolNames = ['undo', 'redo', 'trash-can'] as const;
 export type ToolName = typeof toolNames[number];
 export type UnSelectableToolName = typeof nonSelectableToolNames[number];
 
@@ -34,5 +35,6 @@ export const tools: ToolMeta[] = [
  */
 export const nonSelectableTools: UnselectableToolMeta[] = [
   { cls: UndoTool, desc: 'Icon button to undo action' },
-  { cls: RedoTool, desc: 'Icon button to redo action' }
+  { cls: RedoTool, desc: 'Icon button to redo action' },
+  { cls: TrashCanTool, desc: 'Icon button to trash all drawings' }
 ];

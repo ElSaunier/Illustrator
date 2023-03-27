@@ -57,7 +57,13 @@ export class RectangleTool extends Tool {
   }
 
   override doUnPress(x: number, y: number, stack?: ActionStack | undefined): Action[] | null {
+    
     if (this.actionDone != 1 || stack === undefined) {
+      return null;
+    }
+
+    if (stack.getStack().length < 1) {
+      this.actionDone = 0;
       return null;
     }
 

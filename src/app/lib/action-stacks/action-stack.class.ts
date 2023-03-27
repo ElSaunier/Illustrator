@@ -58,4 +58,12 @@ export class ActionStack {
   getHeadPosition(): number {
     return this._headPosition;
   }
+
+  /**
+   * @summary reset the stack actions
+   */
+  resetStackActions(): void {
+    this._stack = [];
+    this._headPosition = -1;
+  }
 }

@@ -74,6 +74,7 @@ export class PointTool extends Tool {
     const actions: Action[] = stack!.getStack();
 
     if (actions.length < 1) {
+      this.actionDone = 0;
       return null;
     }
 

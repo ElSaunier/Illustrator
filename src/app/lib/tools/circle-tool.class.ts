@@ -43,6 +43,7 @@ export class CircleTool extends Tool {
     const actions: Action[] = stack!.getStack();
 
     if (actions.length < 1) {
+      this.nbrClick = 0;
       return null;
     }
 
