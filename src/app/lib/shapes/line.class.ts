@@ -5,7 +5,7 @@ import { Shape } from '@lib/interfaces/shape.interface';
 export class Line implements Shape {
   public uuid: string;
 
-  private TOLERANCE = 1;
+  private TOLERANCE = 2;
 
   constructor(
     public stroke: string,

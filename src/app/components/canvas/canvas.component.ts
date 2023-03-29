@@ -175,7 +175,7 @@ export class CanvasComponent implements AfterViewInit {
     this.canvasElement.nativeElement.getContext('2d')?.clearRect(0, 0, shape.width, shape.height);
     const actions = this.stack.getActiveStack();
     actions.forEach(action => {
-      if (action.getIsShowed()) {
+      if (action.getIsShowed() && !action.getIsDeleted()) {
         const shapes = action.getShapes();
         shapes.forEach(shape => {
           this.shapeService.add(shape);
