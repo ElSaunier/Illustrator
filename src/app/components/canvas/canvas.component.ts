@@ -1,13 +1,7 @@
-import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { ActionStack } from '@lib/action-stacks/action-stack.class';
 import { Shape } from '@lib/interfaces/shape.interface';
-import { Circle } from '@lib/shapes/circle.class';
-import { Line } from '@lib/shapes/line.class';
-import { Rect } from '@lib/shapes/rect.class';
-import { UndoTool } from '@lib/tools/undo-tool.class';
-import { Vec2 } from '@lib/vec2';
 import ShapeService from 'src/app/services/shapes.service';
-import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'ill-app-canvas',
@@ -17,8 +11,9 @@ import { StorageService } from 'src/app/services/storage.service';
 export class CanvasComponent implements AfterViewInit {
   @ViewChild('canvas') canvasElement!: ElementRef<HTMLCanvasElement>;
 
-  constructor(private shapeService: ShapeService, private storage: StorageService,
-    private element: ElementRef<HTMLElement>, private stack: ActionStack) {
+  constructor(private shapeService: ShapeService,
+    private rootElement: ElementRef<HTMLElement>,
+    private stack: ActionStack) {
   }
 
   ngAfterViewInit() {
@@ -61,6 +56,14 @@ export class CanvasComponent implements AfterViewInit {
    */
   initSubscriptions() {
     this.shapeService.pushElement$.subscribe(shape => this._drawElement(shape));
+    this.shapeService.elements$.subscribe(shapes => this._replaceShapes(shapes));
+  }
+
+  _replaceShapes(shapes: Shape[]) {
+    const ctxt = this.canvasElement.nativeElement.getContext('2d');
+    const clientRect = this.canvasElement.nativeElement.getBoundingClientRect();
+    ctxt?.clearRect(0, 0, clientRect.width, clientRect.height);
+    shapes.forEach(shape => this._drawElement(shape));
   }
 
   /**
@@ -73,25 +76,6 @@ export class CanvasComponent implements AfterViewInit {
     if (ctxt) {
       shape.render(ctxt);
     }
-  }
-
-  /**
-   * 
-   * @param shapeId 
-   * @returns 
-   */
-  _eraseElement(shapeId: string) {
-    // const canvas = this.canvasElement.nativeElement as unknown as HTMLElement;
-
-    // const elements = canvas.getElementsByClassName('svgElement');
-    // for (const element in elements) {
-    //   const e = elements[element];
-    //   if (e.id === shapeId) {
-    //     e.remove();
-
-    //     return;
-    //   }
-    // }
   }
 
   /**
@@ -217,7 +201,7 @@ export class CanvasComponent implements AfterViewInit {
    */
   getCoordinates(event: MouseEvent) {
     const { offsetX, offsetY } = event;
-    const canvas = this.element.nativeElement;
+    const canvas = this.rootElement.nativeElement;
     const canvasWidth = canvas.getBoundingClientRect().width;
     const documentWidth = document.documentElement.clientWidth;
     const coef = canvasWidth / documentWidth;
@@ -248,126 +232,5 @@ export class CanvasComponent implements AfterViewInit {
     }
 
     this.updateCanvas();
-  }
-
-  /**
-   * @summary handle mouse move when clicked events
-   * triggers the concerned event in the currently selected tool
-   * process the returned action if any (for instance, draw a line between two points)
-   * @param event 
-  */
-  onAddElement(ePos: Vec2) {
-    const toolName = this.storage.get('toolName');
-    const canvas = this.element.nativeElement;
-
-    const canvasWidth = canvas.getBoundingClientRect().width;
-    const documentWidth = document.documentElement.clientWidth;
-    const coef = canvasWidth / documentWidth;
-
-    const pos = { x: ePos.x * coef, y: ePos.y };
-
-    if (canvas === null) {
-      return;
-    }
-
-    switch (toolName) {
-      case 'polygon-empty':
-        this.onAddPolygonEmpty(pos);
-        break;
-      case 'polygon-full':
-        this.onAddPolygonFill(pos);
-        break;
-      case 'point':
-        this.onAddPoint(pos);
-        break;
-      case 'pencil': {
-        const point = new Circle('fill', this.storage.get('stroke'), 0, pos, 1);
-        this.shapeService.add(point);
-        break;
-      }
-      case 'line':
-        for (let i = 0; i < this.shapeService.getElements().length; i++) {
-          let shape: Shape;
-          if ((shape = this.shapeService.getElement(i)) instanceof Circle) {
-            if (shape.isColliding(pos)) {
-              if (this.storage.get('lastCircleSelected') === null) {
-                this.storage.set('lastCircleSelected', shape);
-              } else {
-                if (shape !== this.storage.get('lastCircleSelected')) {
-                  this.onAddLine(this.storage.get('lastCircleSelected')!.rpos, shape.rpos);
-                  this.storage.set('lastCircleSelected', null);
-                }
-              }
-            }
-          }
-        }
-        break;
-      default:
-        console.error('DrawMode not found : ' + toolName.toString());
-    }
-  }
-
-  /**
-   * @summary add line from pos1 to pos2 and push it to the element service.
-   * @param pos1 
-   * @param pos2 
-   */
-  onAddLine(pos1: Vec2, pos2: Vec2) {
-    const line = new Line(this.storage.get('stroke'), 0, pos1, pos2);
-    this.shapeService.add(line);
-  }
-
-  /**
-   * Add a point to the elements
-   * @param ePos 
-   */
-  onAddPoint(ePos: Vec2) {
-    const stroke = this.storage.get('stroke');
-
-    const radius = 5;
-
-    const point = new Circle('fill', stroke, 0, ePos, radius);
-    this.shapeService.add(point);
-  }
-
-  /**
-   * Add a filled polygon to the elements list
-   * @param ePos 
-   */
-  onAddPolygonFill(ePos: Vec2) {
-    const stroke = this.storage.get('stroke');
-
-    const width = 100;
-    const height = 100;
-    const rect = new Rect(this.storage.get('fill'), stroke, 0, ePos, width, height);
-    this.shapeService.add(rect);
-  }
-
-  /**
-   * Add an empty polygon to the elements list
-   * @param ePos
-   */
-  onAddPolygonEmpty(ePos: Vec2) {
-    const stroke = this.storage.get('stroke');
-
-    const width = 100;
-    const height = 100;
-    const rect = new Rect('transparent', stroke, 0, ePos, width, height);
-    this.shapeService.add(rect);
-  }
-
-  /**
-   * Remove an element from a given position
-   * @param ePos 
-   */
-  onRemoveElement(ePos: Vec2) {
-    // const elements = document.elementsFromPoint(ePos.x, ePos.y)
-    //   .filter(shape => shape.classList.contains('svgElement'));
-
-    // if (elements.length > 0) {
-    //   const uuid = elements[0].id;
-
-    //   this.shapeService.remove(uuid);
-    // }
   }
 }

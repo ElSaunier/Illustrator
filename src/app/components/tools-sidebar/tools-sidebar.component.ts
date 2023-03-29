@@ -10,7 +10,7 @@ import { ToolComponent } from '../tool/tool.component';
 import { UnselectableTool } from '@lib/tools/unselectableTool.class';
 import { UnselectableToolComponent } from '../tool/unselectableTool.component';
 import { ActionStack } from '@lib/action-stacks/action-stack.class';
-import { CanvasComponent } from '../canvas/canvas.component';
+
 @Component({
   selector: 'ill-app-tools-sidebar',
   templateUrl: './tools-sidebar.component.html',
@@ -63,10 +63,16 @@ export class ToolsSidebarComponent implements OnInit, AfterViewInit {
   }
 
   onToolClicked(tool: [Tool, ToolName]) {
-    this.setActive(tool[1], tool[0]);
+    const [toolInstance, toolName] = tool;
+    this.setActive(toolName, toolInstance);
   }
 
   onUnselectableToolClicked(unselectableTool: [UnselectableTool, UnSelectableToolName]) {
-    unselectableTool[0].doClick(0, 0, this.stack);
+    const [toolInstance] = unselectableTool;
+
+    toolInstance.doClick(0, 0, this.stack);
+
+    const shapes = this.stack.getStack().filter(action => action.getIsShowed()).map(action => action.getShapes()).flat();
+    this.shapeService.updateElements(shapes);
   }
 }
