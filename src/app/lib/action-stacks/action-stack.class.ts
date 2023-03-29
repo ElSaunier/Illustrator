@@ -1,5 +1,6 @@
 import { Action } from '@lib/actions/action.class';
 import { Injectable } from '@angular/core';
+import { ISerializedActionStack } from './serialized-action-stack.interface';
 
 
 @Injectable({
@@ -14,7 +15,7 @@ export class ActionStack {
   /**
    * @summary Insert a new action atop the stack and update the stack head postion.
    * @param action
-   * 
+   *
    */
   insert(action: Action): void {
     if (this._stack.length - 1 !== this._headPosition) {
@@ -39,7 +40,7 @@ export class ActionStack {
   }
 
   /**
-   * 
+   *
    * @returns the action stack with the head position as the top of the stack
    */
   getActiveStack(): Action[] {
@@ -52,7 +53,7 @@ export class ActionStack {
   }
 
   /**
-   * 
+   *
    * @returns the head position
    */
   getHeadPosition(): number {
@@ -65,5 +66,12 @@ export class ActionStack {
   resetStackActions(): void {
     this._stack = [];
     this._headPosition = -1;
+  }
+
+  serialize(): ISerializedActionStack {
+    return {
+      stack: this._stack.map(s => s.serialize()),
+      headPosition: this._headPosition
+    };
   }
 }
