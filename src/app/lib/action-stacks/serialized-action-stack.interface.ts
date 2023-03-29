@@ -1,6 +1,6 @@
-import { ISerializedAction } from '@lib/actions/serialize-action.interface';
+import { ISerializedAction } from '@lib/actions/serialized-action.interface';
 
 export interface ISerializedActionStack {
-  stack: ISerializedAction[],
+  actions: ISerializedAction[],
   headPosition: number
 }

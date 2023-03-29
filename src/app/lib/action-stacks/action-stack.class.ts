@@ -94,7 +94,7 @@ export class ActionStack {
 
   serialize(): ISerializedActionStack {
     return {
-      stack: this._stack.map(s => s.serialize()),
+      actions: this._stack.map(s => s.serialize()),
       headPosition: this._headPosition
     };
   }

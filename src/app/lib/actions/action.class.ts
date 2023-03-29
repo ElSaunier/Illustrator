@@ -1,7 +1,7 @@
 import { Tool } from '@lib/tools/tool.abstract';
 import { IShape } from '@lib/shapes/shape.interface';
 import { Vec2 } from '@lib/vec2';
-import { ISerializedAction } from './serialize-action.interface';
+import { ISerializedAction } from './serialized-action.interface';
 /**
  * An action which can be triggered by a tool
  */

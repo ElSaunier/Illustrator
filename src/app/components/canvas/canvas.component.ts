@@ -1,6 +1,7 @@
-import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core';
 import { ActionStack } from '@lib/action-stacks/action-stack.class';
-import { Shape } from '@lib/interfaces/shape.interface';
+import { ISerializedCanva } from '@lib/serialized-canva.interface';
+import { IShape } from '@lib/shapes/shape.interface';
 import { Circle } from '@lib/shapes/circle.class';
 import { Line } from '@lib/shapes/line.class';
 import { Rect } from '@lib/shapes/rect.class';
@@ -8,6 +9,7 @@ import { UndoTool } from '@lib/tools/undo-tool.class';
 import { Vec2 } from '@lib/vec2';
 import ShapeService from 'src/app/services/shapes.service';
 import { StorageService } from 'src/app/services/storage.service';
+import { exportState } from '@lib/utils';
 
 @Component({
   selector: 'ill-app-canvas',
@@ -65,33 +67,14 @@ export class CanvasComponent implements AfterViewInit {
 
   /**
    * Draw an element into the canvas context
-   * @param shape 
+   * @param shape
    */
-  _drawElement(shape: Shape) {
+  _drawElement(shape: IShape) {
     const ctxt = this.canvasElement.nativeElement.getContext('2d');
 
     if (ctxt) {
       shape.render(ctxt);
     }
-  }
-
-  /**
-   * 
-   * @param shapeId 
-   * @returns 
-   */
-  _eraseElement(shapeId: string) {
-    // const canvas = this.canvasElement.nativeElement as unknown as HTMLElement;
-
-    // const elements = canvas.getElementsByClassName('svgElement');
-    // for (const element in elements) {
-    //   const e = elements[element];
-    //   if (e.id === shapeId) {
-    //     e.remove();
-
-    //     return;
-    //   }
-    // }
   }
 
   /**
@@ -114,7 +97,7 @@ export class CanvasComponent implements AfterViewInit {
   /**
    * @summary handle mouse button released events
    * triggers the concerned event in the currently selected tool, and process the returned action if any (for instance, draw a line between two points)
-   * @param event 
+   * @param event
    */
   handleMouseRelease(event: MouseEvent) {
     const tool = this.shapeService.activeTool;
@@ -139,7 +122,7 @@ export class CanvasComponent implements AfterViewInit {
   /**
    * @summary handle mouse move events
    * triggers the concerned event in the currently selected tool, and process the returned action if any (for instance, draw a line between two points)
-   * @param event 
+   * @param event
   */
   handleMouseMoveWhenUnClicked(event: MouseEvent) {
     const tool = this.shapeService.activeTool;
@@ -188,7 +171,7 @@ export class CanvasComponent implements AfterViewInit {
    * @summary handle mouse move when clicked events
    * triggers the concerned event in the currently selected tool
    * process the returned action if any (for instance, draw a line between two points)
-   * @param event 
+   * @param event
   */
   handleMouseMoveWhenClicked(event: MouseEvent) {
     const tool = this.shapeService.activeTool;
@@ -212,7 +195,7 @@ export class CanvasComponent implements AfterViewInit {
 
   /**
    * Compute the coordinates of an event
-   * @param event 
+   * @param event
    * @returns x and y
    */
   getCoordinates(event: MouseEvent) {
@@ -228,7 +211,7 @@ export class CanvasComponent implements AfterViewInit {
    * @summary handle click events
    * triggers the concerned event in the currently selected tool
    * process the returned action if any (for instance, draw a line between two points)
-   * @param event 
+   * @param event
   */
   handleClick(event: MouseEvent) {
     const tool = this.shapeService.activeTool;
@@ -254,7 +237,7 @@ export class CanvasComponent implements AfterViewInit {
    * @summary handle mouse move when clicked events
    * triggers the concerned event in the currently selected tool
    * process the returned action if any (for instance, draw a line between two points)
-   * @param event 
+   * @param event
   */
   onAddElement(ePos: Vec2) {
     const toolName = this.storage.get('toolName');
@@ -287,7 +270,7 @@ export class CanvasComponent implements AfterViewInit {
       }
       case 'line':
         for (let i = 0; i < this.shapeService.getElements().length; i++) {
-          let shape: Shape;
+          let shape: IShape;
           if ((shape = this.shapeService.getElement(i)) instanceof Circle) {
             if (shape.isColliding(pos)) {
               if (this.storage.get('lastCircleSelected') === null) {
@@ -309,8 +292,8 @@ export class CanvasComponent implements AfterViewInit {
 
   /**
    * @summary add line from pos1 to pos2 and push it to the element service.
-   * @param pos1 
-   * @param pos2 
+   * @param pos1
+   * @param pos2
    */
   onAddLine(pos1: Vec2, pos2: Vec2) {
     const line = new Line(this.storage.get('stroke'), 0, pos1, pos2);
@@ -319,7 +302,7 @@ export class CanvasComponent implements AfterViewInit {
 
   /**
    * Add a point to the elements
-   * @param ePos 
+   * @param ePos
    */
   onAddPoint(ePos: Vec2) {
     const stroke = this.storage.get('stroke');
@@ -332,7 +315,7 @@ export class CanvasComponent implements AfterViewInit {
 
   /**
    * Add a filled polygon to the elements list
-   * @param ePos 
+   * @param ePos
    */
   onAddPolygonFill(ePos: Vec2) {
     const stroke = this.storage.get('stroke');
@@ -358,7 +341,7 @@ export class CanvasComponent implements AfterViewInit {
 
   /**
    * Remove an element from a given position
-   * @param ePos 
+   * @param ePos
    */
   onRemoveElement(ePos: Vec2) {
     // const elements = document.elementsFromPoint(ePos.x, ePos.y)
@@ -369,5 +352,33 @@ export class CanvasComponent implements AfterViewInit {
 
     //   this.shapeService.remove(uuid);
     // }
+  }
+
+  /**
+   * Save the current stack in the local storage
+   */
+  @HostListener('document:keydown.control.s', ['$event'])
+  onExp(event: KeyboardEvent) {
+    event.preventDefault();
+
+    const state = this.serialize();
+    exportState(state, 'canva');
+  }
+
+  /**
+   * Export the current stack in a .sil file
+   */
+  onExport(canvaState?: object) {
+    const state = canvaState ?? this.serialize();
+    const stringifiedState =  JSON.stringify(state);
+    const fileName = 'canva.sil';
+    const file = new Blob([stringifiedState], { type: 'text/plain' });
+
+  }
+
+  serialize(): ISerializedCanva {
+    return {
+      stack: this.stack.serialize()
+    };
   }
 }
