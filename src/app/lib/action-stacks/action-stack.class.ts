@@ -17,6 +17,18 @@ export class ActionStack {
    * 
    */
   insert(action: Action): void {
+    if (!action.getPending() && this._stack.length >= 0) {
+      // Remove all actions which is not showed
+      let index = 0;
+      while (index < this._stack.length) {
+        if (!this._stack[index].getPending() && !this._stack[index].getIsShowed()) {
+          this._stack.splice(index, 1);
+          this._headPosition--;
+        } else {
+          index++;
+        }
+      }
+    }
     if (this._stack.length - 1 !== this._headPosition) {
       this._stack = this.getActiveStack();
     }
