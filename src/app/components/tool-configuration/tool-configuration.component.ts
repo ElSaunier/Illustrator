@@ -1,7 +1,6 @@
-import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IToolConfiguration } from '@lib/tools/tool-configuration.interface';
 import { StorageService } from 'src/app/services/storage.service';
-import SvgElementsService from 'src/app/services/svg-elements.service';
 
 @Component({
   selector: 'ill-app-tool-configuration',
