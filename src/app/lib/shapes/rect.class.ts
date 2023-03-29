@@ -1,8 +1,8 @@
-import { Shape } from '@lib/interfaces/shape.interface';
+import { IShape } from '@lib/shapes/shape.interface';
 import { randomUuid } from '../uuid';
 import { Vec2 } from '../vec2';
 
-export class Rect implements Shape {
+export class Rect implements IShape {
   public uuid: string;
 
   constructor(
@@ -24,8 +24,7 @@ export class Rect implements Shape {
     if (this.fill === 'none') {
       ctx.strokeStyle = this.stroke;
       ctx.strokeRect(this.rpos.x, this.rpos.y, this.width, this.height);
-    }
-    else {
+    } else {
       ctx.fillStyle = this.fill;
       ctx.strokeStyle = this.stroke;
       ctx.fillRect(this.rpos.x, this.rpos.y, this.width, this.height);
@@ -34,5 +33,17 @@ export class Rect implements Shape {
 
   isColliding(pos: Vec2): boolean {
     throw new Error('Method not implemented.');
+  }
+
+  serialize() {
+    return {
+      uuid: this.uuid,
+      fill: this.fill,
+      stroke: this.stroke,
+      strokeWidth: this.strokeWidth,
+      rpos: this.rpos,
+      width: this.width,
+      heigth: this.height
+    };
   }
 }

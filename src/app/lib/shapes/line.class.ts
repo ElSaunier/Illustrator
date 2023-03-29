@@ -1,8 +1,8 @@
 import { Vec2 } from '@lib/vec2';
 import { randomUuid } from '@lib/uuid';
-import { Shape } from '@lib/interfaces/shape.interface';
+import { IShape } from '@lib/shapes/shape.interface';
 
-export class Line implements Shape {
+export class Line implements IShape {
   public uuid: string;
 
   constructor(
@@ -31,5 +31,15 @@ export class Line implements Shape {
 
   isColliding(pos: Vec2): boolean {
     throw new Error('Method not implemented.');
+  }
+
+  serialize() {
+    return {
+      uuid: this.uuid,
+      stroke: this.stroke,
+      strokeWidth: this.strokeWidth,
+      rpos: this.rpos,
+      lpos: this.lpos
+    };
   }
 }

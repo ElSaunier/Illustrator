@@ -1,6 +1,5 @@
 import { Vec2 } from '@lib/vec2';
-
-export interface Shape {
+export interface IShape {
   /** the unique id of the shape */
   uuid: string;
 
@@ -20,7 +19,9 @@ export interface Shape {
 
   /**
    * @returns true if the pos is inside the concerning shape.
-   * @param pos 
+   * @param pos
    */
   isColliding(pos: Vec2): boolean;
+
+  serialize(): object
 }

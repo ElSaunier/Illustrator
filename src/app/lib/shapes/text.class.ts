@@ -1,8 +1,8 @@
 import { Vec2 } from '@lib/vec2';
 import { randomUuid } from '@lib/uuid';
-import { Shape } from '@lib/interfaces/shape.interface';
+import { IShape } from '@lib/shapes/shape.interface';
 
-export class Text implements Shape {
+export class Text implements IShape {
   public uuid: string;
 
   constructor(
@@ -24,10 +24,18 @@ export class Text implements Shape {
   public render(ctx: CanvasRenderingContext2D): void {
     ctx.fillStyle = this.stroke;
     ctx.textAlign = 'center';
-    ctx.fillText(this.text, this.pos.x, this.pos.y)
+    ctx.fillText(this.text, this.pos.x, this.pos.y);
   }
 
   isColliding(pos: Vec2): boolean {
     throw new Error('Method not implemented.');
+  }
+
+  serialize() {
+    return {
+      stroke: this.stroke,
+      text: this.text,
+      pos: this.pos
+    };
   }
 }

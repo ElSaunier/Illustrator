@@ -1,9 +1,8 @@
 import { Vec2 } from '@lib/vec2';
 import { randomUuid } from '@lib/uuid';
-import { Shape } from '@lib/interfaces/shape.interface';
-import { ɵpublishDefaultGlobalUtils } from '@angular/core';
+import { IShape } from '@lib/shapes/shape.interface';
 
-export class Circle implements Shape {
+export class Circle implements IShape {
   public uuid: string;
 
   constructor(
@@ -41,4 +40,14 @@ export class Circle implements Shape {
     return false;
   }
 
+  serialize()  {
+    return {
+      uuid: this.uuid,
+      fill: this.fill,
+      stroke: this.stroke,
+      strokeWidth: this.strokeWidth,
+      rpos: this.rpos,
+      radius: this.radius
+    };
+  }
 }
