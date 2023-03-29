@@ -30,52 +30,57 @@ export class PencilTool extends Tool {
   override doPress(x: number, y: number): Action[] | null {
     this.inTrace = true;
     return [
-      new Action(x, y, [new Circle('', '', 0, { x, y }, 0)], PencilTool, true),
+      new Action(x, y, [], PencilTool, true),
     ];
   }
 
-  override doRelease(x: number, y: number): Action[] | null {
+  override doRelease(x: number, y: number, stack: ActionStack): Action[] | null {
     this.inTrace = false;
+    const lastAction: Action | null = this.getLastPendingPencilTool(stack.getActiveStack());
+    lastAction?.setPending(false);
     return null;
   }
 
   override checkCompleted(stack: ActionStack): Action | null {
-    const actions: Action[] = stack.getStack();
+    const actions: Action[] = stack.getActiveStack();
 
-    if (actions.length < 2) {
+    if (actions.length < 2 || !this.inTrace) {
       return null;
     }
 
     const lastAction: Action | null = this.getLastPendingPencilTool(actions);
-    const beforeLastAction: Action | null =
+    const displayedAction: Action | null =
       this.getBeforeLastPendingTool(actions);
 
-    if (!lastAction || !beforeLastAction) {
+    if (!lastAction) {
       return null;
     }
 
-    const newAction: Action = new Action(
-      0,
-      0,
-      [
-        new Line(
-          this.config.color,
-          this.config.thickness,
-          beforeLastAction!.getCoordinates(),
-          lastAction!.getCoordinates()
-        ),
-      ],
-      PencilTool,
-      false
-    );
+    if (!displayedAction) {
+      const newAction = new Action(
+        lastAction.getCoordinates().x,
+        lastAction.getCoordinates().y,
+        [],
+        PencilTool,
+        true,
+        true
+      );
 
-    beforeLastAction.setPending(false);
-
-    if (!this.inTrace) {
-      lastAction.setPending(false);
+      return newAction;
     }
 
-    return newAction;
+    displayedAction?.getShapes().push(new Line(
+      this.config.color,
+      this.config.thickness,
+      displayedAction.getCoordinates(),
+      lastAction?.getCoordinates()
+    ));
+
+    displayedAction.setCoordinates(lastAction.getCoordinates().x, lastAction.getCoordinates().y);
+
+    this.removeTemporaryElement(stack);
+
+    return null;
   }
 
   getLastPendingPencilTool(actions: Action[]) {
@@ -101,6 +106,22 @@ export class PencilTool extends Tool {
         return actions[i];
       } else {
         alreadyFoundOne = true;
+      }
+    }
+    return null;
+  }
+
+  removeTemporaryElement(stack: ActionStack) {
+    for (let i = stack.getStack().length - 1; i >= 0;) {
+      if (
+        stack.getStack()[i].getToolType() === PencilTool &&
+        stack.getStack()[i].getPending() === true &&
+        stack.getStack()[i].getShapes().length == 0
+      ) {
+        stack.removeAction(i);
+        i -= 2;
+      } else {
+        i--;
       }
     }
     return null;

@@ -78,4 +78,16 @@ export class ActionStack {
     this._stack = [];
     this._headPosition = -1;
   }
+
+  /**
+   * @summary remove element at index x
+   * @param index index to remove from stack
+   */
+  removeAction(index: number): void {
+    if (this._stack.length <= index || index < 0) {
+      return;
+    }
+    this._stack.splice(index, 1);
+    this._headPosition--;
+  }
 }
