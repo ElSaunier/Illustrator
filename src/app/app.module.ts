@@ -13,8 +13,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { HttpClientModule } from '@angular/common/http';
 import { ColorPickerModule } from 'ngx-color-picker';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import { FormsModule } from '@angular/forms';
 import { ToolComponent } from './components/tool/tool.component';
+import { ToolConfigurationComponent } from './components/tool-configuration/tool-configuration.component';
 import { UnselectableToolComponent } from './components/tool/unselectableTool.component';
+
 
 @NgModule({
   declarations: [
@@ -22,6 +26,7 @@ import { UnselectableToolComponent } from './components/tool/unselectableTool.co
     CanvasComponent,
     ToolsSidebarComponent,
     ToolComponent,
+    ToolConfigurationComponent
     UnselectableToolComponent
   ],
   imports: [
@@ -32,7 +37,9 @@ import { UnselectableToolComponent } from './components/tool/unselectableTool.co
     MatButtonModule,
     MatIconModule,
     HttpClientModule,
-    ColorPickerModule
+    ColorPickerModule,
+    MatButtonToggleModule,
+    FormsModule
   ],
   providers: [
     ShapeService,

@@ -10,17 +10,6 @@ export class PencilTool extends Tool {
   static override toolName: ToolName = 'pencil';
   static override svgPath = '/assets/customSVG/pencil.svg';
 
-  constructor() {
-    super();
-    const config: IToolConfiguration = {
-      color: 'rgba(0,0,0,1)',
-      thickness: 1,
-      fill: true,
-      fillColor: 'rgba(0,0,0,1)',
-    };
-    this.configure(config);
-  }
-
   inTrace = false;
 
   override doClick(x: number, y: number): Action[] | null {
