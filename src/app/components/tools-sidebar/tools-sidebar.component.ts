@@ -80,7 +80,7 @@ export class ToolsSidebarComponent implements OnInit, AfterViewInit {
 
     toolInstance.doClick(0, 0, this.stack);
 
-    const shapes = this.stack.getStack().filter(action => action.getIsShowed()).map(action => action.getShapes()).flat();
+    const shapes = this.stack.getStack().filter(action => action.getIsShowed() && !action.getIsDeleted()).map(action => action.getShapes()).flat();
     this.shapeService.updateElements(shapes);
   }
 }
