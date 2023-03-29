@@ -12,17 +12,6 @@ export class PolygonFullTool extends Tool {
 
   actionDone = 0;
 
-  constructor() {
-    super();
-    const config: IToolConfiguration = {
-      color: 'rgba(0,0,0,1)',
-      thickness: 1,
-      fill: true,
-      fillColor: 'rgba(0,0,0,1)',
-    };
-    this.configure(config);
-  }
-
   override doClick(x: number, y: number): Action[] | null {
 
     const rect = new Rect(
