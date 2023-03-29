@@ -1,6 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit, QueryList, ViewChildren } from '@angular/core';
-import { MatIconRegistry } from '@angular/material/icon';
-import { DomSanitizer } from '@angular/platform-browser';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit, QueryList, ViewChildren, } from '@angular/core';
 import { ToolName } from '@lib/tools/tools';
 import { StorageService } from 'src/app/services/storage.service';
 import SvgElementsService from 'src/app/services/svg-elements.service';
@@ -19,12 +17,17 @@ export class ToolsSidebarComponent implements OnInit, AfterViewInit {
   private activeButton!: ToolName;
   protected fillColor = 'rgba(0,0,0,1)';
   protected strokeColor = 'rgba(0,0,0,1)';
+  protected config = {
+    color:'#000000',
+    thickness: 1,
+    fill: true,
+    fillColor: 'rgba(0,0,0,1)'
+  };
 
   constructor(private storage: StorageService, private elementsService: SvgElementsService, private cd: ChangeDetectorRef) {}
 
   ngOnInit() {
-    this.fillColor = this.storage.get('fill');
-    this.strokeColor = this.storage.get('stroke');
+    this.config = this.storage.get('config');
   }
 
   ngAfterViewInit() {
@@ -35,6 +38,10 @@ export class ToolsSidebarComponent implements OnInit, AfterViewInit {
       this.setActive(toolName, toolComponent.instance);
     }
     this.cd.detectChanges();
+
+    this.storage.subject('config').subscribe( cfg => {
+      this.elementsService.activeTool.configure(cfg);
+    });
   }
 
   /* Function for buttons */
@@ -46,6 +53,8 @@ export class ToolsSidebarComponent implements OnInit, AfterViewInit {
     this.activeButton = name;
     this.storage.set('toolName', name);
     this.elementsService.activeTool = tool;
+
+    this.elementsService.activeTool.configure(this.config);
   }
 
   /* Function called when click on clear all picture */

@@ -1,5 +1,6 @@
 import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { IToolConfiguration } from '@lib/tools/tool-configuration.interface';
+import { StorageService } from 'src/app/services/storage.service';
 import SvgElementsService from 'src/app/services/svg-elements.service';
 
 @Component({
@@ -11,13 +12,8 @@ export class ToolConfigurationComponent implements OnInit {
 
   config: IToolConfiguration;
 
-  constructor(private elementService: SvgElementsService) {
-    this.config = {
-      color:'#000000',
-      thickness: 1,
-      fill: true,
-      fillColor: 'rgba(0,0,0,1)'
-    };
+  constructor(private elementService: SvgElementsService, private storageService: StorageService) {
+    this.config = storageService.get('config');
   }
 
   ngOnInit(): void {
@@ -25,13 +21,13 @@ export class ToolConfigurationComponent implements OnInit {
 
   onThicknessChange(event: any) {
     this.config.thickness = event;
-    this.elementService.activeTool.configure(this.config);
+    this.storageService.set('config', this.config);
   }
 
   onColorSelect(event: any) {
     this.config.color = event;
     this.config.fillColor = event;
-    this.elementService.activeTool.configure(this.config);
+    this.storageService.set('config', this.config);
   }
 
 }

@@ -35,10 +35,6 @@ input {
     height: 40px;
 }
 
-.active {
-    background-color: blue;
-}
-
 section {
     display: flex;
     align-items: center;
@@ -50,17 +46,37 @@ section {
     border-radius: 50%;
 }
 
-#high, #high > .mat-button-toggle-button {
+#high, button#high-button {
     height: 30px;
     width: 30px;
 }
 
-#medium, #medium > .mat-button-toggle-button  {
-    height: 15px;
-    width: 15px;
+#medium, #medium-button {
+    height: 20px;
+    width: 20px;
 }
 
-#low, #low > .mat-button-toggle-button  {
-    height: 5px;
-    width: 5px;
+#low, #low-button {
+    height: 10px;
+    width: 10px;
+}
+
+#colorPicker {
+    cursor: pointer;
+}
+
+.mat-button-toggle:hover, .active{
+    background-color: #5647d3 !important;
+}
+
+.mat-button-toggle{
+    overflow: hidden;
+}
+
+::ng-deep.mat-button-toggle-button{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }

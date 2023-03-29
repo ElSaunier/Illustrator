@@ -11,17 +11,6 @@ export class CircleTool extends Tool {
   static override toolName: ToolName = 'circle';
   static override svgPath = '/assets/customSVG/point.svg';
 
-  constructor() {
-    super();
-    const config: IToolConfiguration = {
-      color: 'rgba(0,0,0,1)',
-      thickness: 1,
-      fill: true,
-      fillColor: 'rgba(0,0,0,1)',
-    };
-    this.configure(config);
-  }
-
   nbrClick = 0;
 
   override doClick(x: number, y: number): Action[] | null {
