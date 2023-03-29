@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Shape } from '@lib/interfaces/shape.interface';
+import { IShape } from '@lib/shapes/shape.interface';
 import { Tool } from '@lib/tools/tool.abstract';
 import { Subject } from 'rxjs';
 
@@ -9,11 +9,11 @@ import { Subject } from 'rxjs';
 export default class ShapeService {
   activeTool!: Tool;
 
-  private elements: Shape[] = [];
-  public pushElement$ = new Subject<Shape>();
+  private elements: IShape[] = [];
+  public pushElement$ = new Subject<IShape>();
   public deleteElement$ = new Subject<string>();
 
-  public add(e: Shape) {
+  public add(e: IShape) {
     this.elements.push(e);
     this.pushElement$.next(e);
   }
