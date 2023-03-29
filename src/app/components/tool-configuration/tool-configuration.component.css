@@ -50,17 +50,17 @@ section {
     border-radius: 50%;
 }
 
-#high {
+#high, #high > .mat-button-toggle-button {
     height: 30px;
     width: 30px;
 }
 
-#medium {
+#medium, #medium > .mat-button-toggle-button  {
     height: 15px;
     width: 15px;
 }
 
-#low {
+#low, #low > .mat-button-toggle-button  {
     height: 5px;
     width: 5px;
 }
