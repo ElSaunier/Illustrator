@@ -9,20 +9,16 @@ export class UndoTool extends UnselectableTool {
 
   override doClick(x: number, y: number, stack?: ActionStack): Action[] | null {
     if (stack) {
-      const actions: Action[] = stack.getStack();
 
+      const actions: Action[] = stack.getActiveStack();
+    
       let lastNonPendingShownAction = null;
   
-      let indice = stack.getHeadPosition();
-      while (indice > 0 && lastNonPendingShownAction === null) {
-        if (!actions[indice].getPending() && actions[indice].getIsShowed()) {
-          lastNonPendingShownAction = actions[indice];
+      let idx = stack.getHeadPosition();
+      while (idx >= 0 && lastNonPendingShownAction == null) {
+        if (!actions[idx].getPending() && actions[idx].getIsShowed()) {
+          lastNonPendingShownAction = actions[idx];
         }
-        indice--;
-      }
-  
-      if (lastNonPendingShownAction !== null) {
-        lastNonPendingShownAction.setIsShowed(false);
       }
     }
 

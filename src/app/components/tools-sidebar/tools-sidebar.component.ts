@@ -25,13 +25,18 @@ export class ToolsSidebarComponent implements OnInit, AfterViewInit {
   private activeButton!: ToolName;
   protected fillColor = 'rgba(0,0,0,1)';
   protected strokeColor = 'rgba(0,0,0,1)';
+  protected config = {
+    color:'#000000',
+    thickness: 1,
+    fill: true,
+    fillColor: 'rgba(0,0,0,1)'
+  };
 
   constructor(private storage: StorageService, private shapeService: ShapeService, private cd: ChangeDetectorRef,
     private stack: ActionStack) { }
 
   ngOnInit() {
-    this.fillColor = this.storage.get('fill');
-    this.strokeColor = this.storage.get('stroke');
+    this.config = this.storage.get('config');
   }
 
   ngAfterViewInit() {
@@ -42,6 +47,10 @@ export class ToolsSidebarComponent implements OnInit, AfterViewInit {
       this.setActive(toolName, toolComponent.instance);
     }
     this.cd.detectChanges();
+
+    this.storage.subject('config').subscribe( cfg => {
+      this.shapeService.activeTool.configure(cfg);
+    });
   }
 
   /* Function for buttons */
@@ -53,6 +62,7 @@ export class ToolsSidebarComponent implements OnInit, AfterViewInit {
     this.activeButton = name;
     this.storage.set('toolName', name);
     this.shapeService.activeTool = tool;
+    this.shapeService.activeTool.configure(this.config);
   }
 
   /* Function called when click on clear all picture */
