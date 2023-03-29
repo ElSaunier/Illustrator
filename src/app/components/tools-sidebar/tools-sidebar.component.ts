@@ -1,6 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { MatIconRegistry } from '@angular/material/icon';
-import { DomSanitizer } from '@angular/platform-browser';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { nonSelectableTools, ToolName, UnSelectableToolName } from '@lib/tools/tools';
 import { StorageService } from 'src/app/services/storage.service';
 import ShapeService from 'src/app/services/shapes.service';
