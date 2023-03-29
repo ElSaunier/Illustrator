@@ -1,7 +1,6 @@
 import { Vec2 } from '@lib/vec2';
 import { randomUuid } from '@lib/uuid';
 import { Shape } from '@lib/interfaces/shape.interface';
-import { ɵpublishDefaultGlobalUtils } from '@angular/core';
 
 export class Circle implements Shape {
   public uuid: string;
