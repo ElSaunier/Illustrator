@@ -24,8 +24,7 @@ export class Rect implements Shape {
     if (this.fill === 'none') {
       ctx.strokeStyle = this.stroke;
       ctx.strokeRect(this.rpos.x, this.rpos.y, this.width, this.height);
-    }
-    else {
+    } else {
       ctx.fillStyle = this.fill;
       ctx.strokeStyle = this.stroke;
       ctx.fillRect(this.rpos.x, this.rpos.y, this.width, this.height);
@@ -33,6 +32,13 @@ export class Rect implements Shape {
   }
 
   isColliding(pos: Vec2): boolean {
-    throw new Error('Method not implemented.');
+    const minX = Math.min(this.rpos.x, this.rpos.x + this.width);
+    const maxX = Math.max(this.rpos.x, this.rpos.x + this.width);
+    const minY = Math.min(this.rpos.y, this.rpos.y + this.height);
+    const maxY = Math.max(this.rpos.y, this.rpos.y + this.height);
+    if (pos.x >= minX && pos.x <= maxX && pos.y >= minY && pos.y <= maxY) {
+      return true;
+    }
+    return false;
   }
 }

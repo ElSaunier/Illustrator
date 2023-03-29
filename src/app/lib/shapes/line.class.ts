@@ -5,6 +5,8 @@ import { Shape } from '@lib/interfaces/shape.interface';
 export class Line implements Shape {
   public uuid: string;
 
+  private TOLERANCE = 1;
+
   constructor(
     public stroke: string,
     public strokeWidth: number,
@@ -30,6 +32,12 @@ export class Line implements Shape {
   }
 
   isColliding(pos: Vec2): boolean {
-    throw new Error('Method not implemented.');
+    const slope = (this.rpos.y - this.lpos.y) / (this.rpos.x - this.lpos.x);
+    const yIntercept = this.lpos.y - slope * this.lpos.x;
+    const resultY = slope * pos.x + yIntercept;
+    if (Math.abs(pos.y - resultY) <= this.TOLERANCE) {
+      return true;
+    }
+    return false;
   }
 }
