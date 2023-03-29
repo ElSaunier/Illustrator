@@ -5,11 +5,10 @@ import { IShape } from '@lib/shapes/shape.interface';
 import { Circle } from '@lib/shapes/circle.class';
 import { Line } from '@lib/shapes/line.class';
 import { Rect } from '@lib/shapes/rect.class';
-import { UndoTool } from '@lib/tools/undo-tool.class';
 import { Vec2 } from '@lib/vec2';
 import ShapeService from 'src/app/services/shapes.service';
 import { StorageService } from 'src/app/services/storage.service';
-import { exportState } from '@lib/utils';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'ill-app-canvas',
@@ -355,24 +354,20 @@ export class CanvasComponent implements AfterViewInit {
   }
 
   /**
-   * Save the current stack in the local storage
+   * Export the current stack in a .sil file
    */
   @HostListener('document:keydown.control.s', ['$event'])
-  onExp(event: KeyboardEvent) {
+  onExport(event: KeyboardEvent) {
     event.preventDefault();
 
     const state = this.serialize();
-    exportState(state, 'canva');
+    this.exportState(state, 'canva');
   }
 
   /**
-   * Export the current stack in a .sil file
+   * Save the current stack in the local storage
    */
-  onExport(canvaState?: object) {
-    const state = canvaState ?? this.serialize();
-    const stringifiedState =  JSON.stringify(state);
-    const fileName = 'canva.sil';
-    const file = new Blob([stringifiedState], { type: 'text/plain' });
+  onSave() {
 
   }
 
@@ -380,5 +375,11 @@ export class CanvasComponent implements AfterViewInit {
     return {
       stack: this.stack.serialize()
     };
+  }
+
+  exportState(state: object, fileName: string) {
+    const json = JSON.stringify(state);
+    const blob = new Blob([json], { type: 'application/json' });
+    saveAs(blob, fileName + '.sil');
   }
 }
