@@ -8,9 +8,22 @@ app-root {
     height: 100vh;
 }
 button {
-    background-color: #b3e3ff;
+    background-color: #7A93AC;
 }
 
 button:hover, button.active{
-    background-color: #5647d3;
+    background-color: #E4FDE1;
 }
+
+mat-sidenav{
+    background-color: #171A21;
+    width: 80%;
+    border-radius: 50px;
+    overflow: visible;
+    margin-top: 10%;
+    margin-bottom: 10%;
+    filter: drop-shadow(0 0 0.35rem black);
+    color: #7A93AC;
+}
+
+
