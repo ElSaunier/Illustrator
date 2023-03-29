@@ -1,23 +1,24 @@
 import { Tool } from '@lib/tools/tool.abstract';
-import { Shape } from '@lib/interfaces/shape.interface';
+import { IShape } from '@lib/shapes/shape.interface';
 import { Vec2 } from '@lib/vec2';
+import { ISerializedAction } from './serialize-action.interface';
 /**
  * An action which can be triggered by a tool
  */
 export class Action {
   /**
-   * 
+   *
    * @param x the x position of the event
    * @param y the y position of the event
    * @param shapes a list of shapes the action is adding
    * @param toolType the type of tool which triggered the action
    * @param isPending Default value is true. Is the action finished ? Updated by the tool most of the time.
    */
-  constructor(protected x: number, protected y: number, protected shapes: Shape[], protected toolType: typeof Tool, protected isPending = true, protected isShowed = true) {
+  constructor(protected x: number, protected y: number, protected shapes: IShape[], protected toolType: typeof Tool, protected isPending = true, protected isShowed = true) {
   }
 
   /**
-   * 
+   *
    * @returns a boolean to know if the action is finished or not.
    */
   getPending(): boolean {
@@ -26,14 +27,14 @@ export class Action {
 
   /**
    * @summary updates the pending state of the action
-   * @param isPending 
+   * @param isPending
    */
   setPending(isPending: boolean) {
     this.isPending = isPending;
   }
 
   /**
-   * 
+   *
    * @returns the coordinates where the action takes/took place
    */
   getCoordinates(): Vec2 {
@@ -42,8 +43,8 @@ export class Action {
 
   /**
    * @summary update the coordinates where the action takes/took place
-   * @param x 
-   * @param y 
+   * @param x
+   * @param y
    */
   setCoordinates(x: number, y: number) {
     this.x = x;
@@ -51,10 +52,10 @@ export class Action {
   }
 
   /**
-   * 
+   *
    * @returns the list of shapes added by the action
    */
-  getShapes(): Shape[] {
+  getShapes(): IShape[] {
     return this.shapes;
   }
 
@@ -62,12 +63,12 @@ export class Action {
    * @summary set a new list of shapes that the action is working on
    * @param shapes
    */
-  setShapes(shapes: Shape[]) {
+  setIShapes(shapes: IShape[]) {
     this.shapes = shapes;
   }
 
   /**
-   * 
+   *
    * @returns the type of the tool that the action has been triggered by
    */
   getToolType(): typeof Tool {
@@ -88,5 +89,16 @@ export class Action {
 
   setIsShowed(isShowed: boolean) {
     this.isShowed = isShowed;
+  }
+
+  serialize(): ISerializedAction {
+    return {
+      x: this.x,
+      y: this.y,
+      shapes: this.shapes.map(s => s.serialize()),
+      toolType: this.toolType,
+      isPending: this.isPending,
+      isShowed: this.isShowed
+    };
   }
 }
