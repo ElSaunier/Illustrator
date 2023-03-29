@@ -32,6 +32,7 @@ export class CircleTool extends Tool {
     const actions: Action[] = stack!.getStack();
 
     if (actions.length < 1) {
+      this.nbrClick = 0;
       return null;
     }
 
@@ -131,7 +132,7 @@ export class CircleTool extends Tool {
     return newAction;
   }
 
-  removeGhostElement(stack: ActionStack): void {
+  override removeGhostElement(stack: ActionStack): void {
     let allAsbeenRemoved = false;
     const actions: Action[] = stack.getStack();
     while (!allAsbeenRemoved) {

@@ -46,7 +46,13 @@ export class RectangleTool extends Tool {
   }
 
   override doUnPress(x: number, y: number, stack?: ActionStack | undefined): Action[] | null {
+    
     if (this.actionDone != 1 || stack === undefined) {
+      return null;
+    }
+
+    if (stack.getStack().length < 1) {
+      this.actionDone = 0;
       return null;
     }
 
@@ -132,7 +138,7 @@ export class RectangleTool extends Tool {
     return newAction;
   }
 
-  removeGhostElement(stack: ActionStack): void {
+  override removeGhostElement(stack: ActionStack): void {
     const actions = stack.getActiveStack();
     const lastAction = actions[stack.getHeadPosition()];
     if (this.actionDone == 1 && lastAction.getToolType() === RectangleTool && lastAction.getPending() && lastAction.getShapes().find(shape => shape instanceof Rect)) { // Point - Ghost
@@ -141,7 +147,7 @@ export class RectangleTool extends Tool {
       const lastPoint = actions[stack.getHeadPosition()];
       stack.undo();
       stack.undo();
-      stack.do(lastPoint);
+      stack.insert(lastPoint);
     }
   }
 }

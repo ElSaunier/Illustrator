@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CanvasComponent } from './components/canvas/canvas.component';
-import SvgElementsService from './services/svg-elements.service';
+import ShapeService from './services/shapes.service';
 import { StorageService } from './services/storage.service';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { ToolsSidebarComponent } from './components/tools-sidebar/tools-sidebar.component';
@@ -17,6 +17,8 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { FormsModule } from '@angular/forms';
 import { ToolComponent } from './components/tool/tool.component';
 import { ToolConfigurationComponent } from './components/tool-configuration/tool-configuration.component';
+import { UnselectableToolComponent } from './components/tool/unselectableTool.component';
+
 
 @NgModule({
   declarations: [
@@ -25,6 +27,7 @@ import { ToolConfigurationComponent } from './components/tool-configuration/tool
     ToolsSidebarComponent,
     ToolComponent,
     ToolConfigurationComponent
+    UnselectableToolComponent
   ],
   imports: [
     BrowserModule,
@@ -39,7 +42,7 @@ import { ToolConfigurationComponent } from './components/tool-configuration/tool
     FormsModule
   ],
   providers: [
-    SvgElementsService,
+    ShapeService,
     StorageService
   ],
   bootstrap: [AppComponent]

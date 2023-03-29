@@ -6,7 +6,7 @@ import { Subject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export default class SvgElementsService {
+export default class ShapeService {
   activeTool!: Tool;
 
   private elements: Shape[] = [];

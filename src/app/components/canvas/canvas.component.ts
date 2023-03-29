@@ -1,12 +1,13 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { ActionStack } from '@lib/action-stacks/action-stack.class';
 import { Shape } from '@lib/interfaces/shape.interface';
 import { Circle } from '@lib/shapes/circle.class';
 import { Line } from '@lib/shapes/line.class';
 import { Rect } from '@lib/shapes/rect.class';
+import { UndoTool } from '@lib/tools/undo-tool.class';
 import { Vec2 } from '@lib/vec2';
+import ShapeService from 'src/app/services/shapes.service';
 import { StorageService } from 'src/app/services/storage.service';
-import SvgElementsService from 'src/app/services/svg-elements.service';
 
 @Component({
   selector: 'ill-app-canvas',
@@ -16,16 +17,16 @@ import SvgElementsService from 'src/app/services/svg-elements.service';
 export class CanvasComponent implements AfterViewInit {
   @ViewChild('canvas') canvasElement!: ElementRef<HTMLCanvasElement>;
 
-  constructor(private elementsService: SvgElementsService, private storage: StorageService,
+  constructor(private shapeService: ShapeService, private storage: StorageService,
     private element: ElementRef<HTMLElement>, private stack: ActionStack) {
   }
 
   ngAfterViewInit() {
-    const elem = this.canvasElement.nativeElement;
-    if (elem && elem.parentElement) {
-      const rect = elem.parentElement.getBoundingClientRect();
-      elem.width = rect.width;
-      elem.height = rect.height;
+    const shape = this.canvasElement.nativeElement;
+    if (shape && shape.parentElement) {
+      const rect = shape.parentElement.getBoundingClientRect();
+      shape.width = rect.width;
+      shape.height = rect.height;
     }
 
     let isMouseDown = false;
@@ -49,113 +50,171 @@ export class CanvasComponent implements AfterViewInit {
       }
     });
 
+    window.addEventListener('keydown', event => this.handleKeyDown(event));
+
     this.initSubscriptions();
   }
 
+  /**
+   * Init subscriptions for the component.
+   * Listen for new elements to be added
+   */
   initSubscriptions() {
-    this.elementsService.pushElement$.subscribe(elem => this._drawElement(elem));
+    this.shapeService.pushElement$.subscribe(shape => this._drawElement(shape));
   }
 
-  _drawElement(e: Shape) {
+  /**
+   * Draw an element into the canvas context
+   * @param shape 
+   */
+  _drawElement(shape: Shape) {
     const ctxt = this.canvasElement.nativeElement.getContext('2d');
 
     if (ctxt) {
-      e.render(ctxt);
+      shape.render(ctxt);
     }
   }
 
-  _eraseElement(eUuid: string) {
-    const canvas = this.canvasElement.nativeElement as unknown as HTMLElement;
+  /**
+   * 
+   * @param shapeId 
+   * @returns 
+   */
+  _eraseElement(shapeId: string) {
+    // const canvas = this.canvasElement.nativeElement as unknown as HTMLElement;
 
-    const elements = canvas.getElementsByClassName('svgElement');
-    for (const element in elements) {
-      const e = elements[element];
-      if (e.id === eUuid) {
-        e.remove();
+    // const elements = canvas.getElementsByClassName('svgElement');
+    // for (const element in elements) {
+    //   const e = elements[element];
+    //   if (e.id === shapeId) {
+    //     e.remove();
 
-        return;
-      }
+    //     return;
+    //   }
+    // }
+  }
+
+  /**
+   * @summary handle key down events
+   * triggers the tool wich is concerned by the key press
+   * @param event
+   */
+  handleKeyDown(event: KeyboardEvent) {
+    if (event.ctrlKey && event.key === 'z') {
+      event.preventDefault();
+      (document.getElementById('undo')?.children[0] as HTMLElement).click();
+      this.updateCanvas();
+    } else if (event.ctrlKey && event.key === 'y') {
+      event.preventDefault();
+      (document.getElementById('redo')?.children[0] as HTMLElement).click();
+      this.updateCanvas();
     }
   }
 
+  /**
+   * @summary handle mouse button released events
+   * triggers the concerned event in the currently selected tool, and process the returned action if any (for instance, draw a line between two points)
+   * @param event 
+   */
   handleMouseRelease(event: MouseEvent) {
-    const tool = this.elementsService.activeTool;
+    const tool = this.shapeService.activeTool;
     const coord = this.getCoordinates(event);
 
     const curActions = tool.doRelease(coord.x, coord.y, this.stack);
 
     if (curActions) {
       curActions.forEach(curAction => {
-        this.stack.do(curAction);
+        this.stack.insert(curAction);
       });
     }
 
     const lastAction = tool.checkCompleted(this.stack);
     if (lastAction) {
-      this.stack.do(lastAction);
+      this.stack.insert(lastAction);
     }
 
     this.updateCanvas();
   }
 
+  /**
+   * @summary handle mouse move events
+   * triggers the concerned event in the currently selected tool, and process the returned action if any (for instance, draw a line between two points)
+   * @param event 
+  */
   handleMouseMoveWhenUnClicked(event: MouseEvent) {
-    const tool = this.elementsService.activeTool;
+    const tool = this.shapeService.activeTool;
     const coord = this.getCoordinates(event);
 
     const curActions = tool.doUnPress(coord.x, coord.y, this.stack);
 
     if (curActions) {
       curActions.forEach(curAction => {
-        this.stack.do(curAction);
+        this.stack.insert(curAction);
       });
     }
 
     const lastAction = tool.checkCompleted(this.stack);
     if (lastAction) {
-      this.stack.do(lastAction);
+      this.stack.insert(lastAction);
     }
 
     this.updateCanvas();
   }
 
+  /**
+   * @summary redraw the entire canvas with the stack
+   */
   updateCanvas() {
-    const elem = this.canvasElement.nativeElement;
-    if (!elem) {
+    const shape = this.canvasElement.nativeElement;
+    if (!shape) {
       return;
     }
-    const rect = elem.parentElement!.getBoundingClientRect();
-    elem.width = rect.width;
-    elem.height = rect.height;
-    this.canvasElement.nativeElement.getContext('2d')?.clearRect(0, 0, elem.width, elem.height);
+    const rect = shape.parentElement!.getBoundingClientRect();
+    shape.width = rect.width;
+    shape.height = rect.height;
+    this.canvasElement.nativeElement.getContext('2d')?.clearRect(0, 0, shape.width, shape.height);
     const actions = this.stack.getActiveStack();
     actions.forEach(action => {
-      const shapes = action.getShapes();
-      shapes.forEach(shape => {
-        this.elementsService.add(shape);
-      });
+      if (action.getIsShowed()) {
+        const shapes = action.getShapes();
+        shapes.forEach(shape => {
+          this.shapeService.add(shape);
+        });
+      }
     });
   }
 
+  /**
+   * @summary handle mouse move when clicked events
+   * triggers the concerned event in the currently selected tool
+   * process the returned action if any (for instance, draw a line between two points)
+   * @param event 
+  */
   handleMouseMoveWhenClicked(event: MouseEvent) {
-    const tool = this.elementsService.activeTool;
+    const tool = this.shapeService.activeTool;
     const coord = this.getCoordinates(event);
 
     const curActions = tool.doPress(coord.x, coord.y, this.stack);
 
     if (curActions) {
       curActions.forEach(curAction => {
-        this.stack.do(curAction);
+        this.stack.insert(curAction);
       });
     }
 
     const lastAction = tool.checkCompleted(this.stack);
     if (lastAction) {
-      this.stack.do(lastAction);
+      this.stack.insert(lastAction);
     }
 
     this.updateCanvas();
   }
 
+  /**
+   * Compute the coordinates of an event
+   * @param event 
+   * @returns x and y
+   */
   getCoordinates(event: MouseEvent) {
     const { offsetX, offsetY } = event;
     const canvas = this.element.nativeElement;
@@ -165,27 +224,38 @@ export class CanvasComponent implements AfterViewInit {
     return { x: offsetX * coef, y: offsetY };
   }
 
+  /**
+   * @summary handle click events
+   * triggers the concerned event in the currently selected tool
+   * process the returned action if any (for instance, draw a line between two points)
+   * @param event 
+  */
   handleClick(event: MouseEvent) {
-    const tool = this.elementsService.activeTool;
+    const tool = this.shapeService.activeTool;
     const coord = this.getCoordinates(event);
 
     const curActions = tool.doClick(coord.x, coord.y, this.stack);
 
     if (curActions) {
       curActions.forEach(curAction => {
-        this.stack.do(curAction);
+        this.stack.insert(curAction);
       });
     }
 
     const lastAction = tool.checkCompleted(this.stack);
     if (lastAction) {
-      this.stack.do(lastAction);
+      this.stack.insert(lastAction);
     }
 
     this.updateCanvas();
   }
 
-
+  /**
+   * @summary handle mouse move when clicked events
+   * triggers the concerned event in the currently selected tool
+   * process the returned action if any (for instance, draw a line between two points)
+   * @param event 
+  */
   onAddElement(ePos: Vec2) {
     const toolName = this.storage.get('toolName');
     const canvas = this.element.nativeElement;
@@ -212,19 +282,19 @@ export class CanvasComponent implements AfterViewInit {
         break;
       case 'pencil': {
         const point = new Circle('fill', this.storage.get('stroke'), 0, pos, 1);
-        this.elementsService.add(point);
+        this.shapeService.add(point);
         break;
       }
       case 'line':
-        for (let i = 0; i < this.elementsService.getElements().length; i++) {
-          let elem: Shape;
-          if ((elem = this.elementsService.getElement(i)) instanceof Circle) {
-            if (elem.isColliding(pos)) {
+        for (let i = 0; i < this.shapeService.getElements().length; i++) {
+          let shape: Shape;
+          if ((shape = this.shapeService.getElement(i)) instanceof Circle) {
+            if (shape.isColliding(pos)) {
               if (this.storage.get('lastCircleSelected') === null) {
-                this.storage.set('lastCircleSelected', elem);
+                this.storage.set('lastCircleSelected', shape);
               } else {
-                if (elem !== this.storage.get('lastCircleSelected')) {
-                  this.onAddLine(this.storage.get('lastCircleSelected')!.rpos, elem.rpos);
+                if (shape !== this.storage.get('lastCircleSelected')) {
+                  this.onAddLine(this.storage.get('lastCircleSelected')!.rpos, shape.rpos);
                   this.storage.set('lastCircleSelected', null);
                 }
               }
@@ -237,46 +307,67 @@ export class CanvasComponent implements AfterViewInit {
     }
   }
 
+  /**
+   * @summary add line from pos1 to pos2 and push it to the element service.
+   * @param pos1 
+   * @param pos2 
+   */
   onAddLine(pos1: Vec2, pos2: Vec2) {
     const line = new Line(this.storage.get('stroke'), 0, pos1, pos2);
-    this.elementsService.add(line);
+    this.shapeService.add(line);
   }
 
+  /**
+   * Add a point to the elements
+   * @param ePos 
+   */
   onAddPoint(ePos: Vec2) {
     const stroke = this.storage.get('stroke');
 
     const radius = 5;
 
     const point = new Circle('fill', stroke, 0, ePos, radius);
-    this.elementsService.add(point);
+    this.shapeService.add(point);
   }
 
+  /**
+   * Add a filled polygon to the elements list
+   * @param ePos 
+   */
   onAddPolygonFill(ePos: Vec2) {
     const stroke = this.storage.get('stroke');
 
     const width = 100;
     const height = 100;
     const rect = new Rect(this.storage.get('fill'), stroke, 0, ePos, width, height);
-    this.elementsService.add(rect);
+    this.shapeService.add(rect);
   }
 
+  /**
+   * Add an empty polygon to the elements list
+   * @param ePos
+   */
   onAddPolygonEmpty(ePos: Vec2) {
     const stroke = this.storage.get('stroke');
 
     const width = 100;
     const height = 100;
     const rect = new Rect('transparent', stroke, 0, ePos, width, height);
-    this.elementsService.add(rect);
+    this.shapeService.add(rect);
   }
 
+  /**
+   * Remove an element from a given position
+   * @param ePos 
+   */
   onRemoveElement(ePos: Vec2) {
     // const elements = document.elementsFromPoint(ePos.x, ePos.y)
-    //   .filter(elem => elem.classList.contains('svgElement'));
+    //   .filter(shape => shape.classList.contains('svgElement'));
 
     // if (elements.length > 0) {
     //   const uuid = elements[0].id;
 
-    //   this.elementsService.remove(uuid);
+    //   this.shapeService.remove(uuid);
     // }
   }
 }

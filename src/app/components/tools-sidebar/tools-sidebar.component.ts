@@ -1,10 +1,17 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit, QueryList, ViewChildren, } from '@angular/core';
 import { ToolName } from '@lib/tools/tools';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { MatIconRegistry } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
+import { nonSelectableTools, ToolName, UnSelectableToolName } from '@lib/tools/tools';
 import { StorageService } from 'src/app/services/storage.service';
-import SvgElementsService from 'src/app/services/svg-elements.service';
+import ShapeService from 'src/app/services/shapes.service';
 import { tools } from '@lib/tools/tools';
 import { Tool } from '@lib/tools/tool.abstract';
 import { ToolComponent } from '../tool/tool.component';
+import { UnselectableTool } from '@lib/tools/unselectableTool.class';
+import { UnselectableToolComponent } from '../tool/unselectableTool.component';
+import { ActionStack } from '@lib/action-stacks/action-stack.class';
+import { CanvasComponent } from '../canvas/canvas.component';
 @Component({
   selector: 'ill-app-tools-sidebar',
   templateUrl: './tools-sidebar.component.html',
@@ -12,8 +19,10 @@ import { ToolComponent } from '../tool/tool.component';
 })
 export class ToolsSidebarComponent implements OnInit, AfterViewInit {
   @ViewChildren(ToolComponent) toolComponentRefs!: QueryList<ToolComponent>;
+  @ViewChildren(UnselectableToolComponent) unselectableToolComponentRefs!: QueryList<UnselectableToolComponent>;
 
   protected tools = tools;
+  protected nonSelectableTools = nonSelectableTools;
   private activeButton!: ToolName;
   protected fillColor = 'rgba(0,0,0,1)';
   protected strokeColor = 'rgba(0,0,0,1)';
@@ -24,7 +33,8 @@ export class ToolsSidebarComponent implements OnInit, AfterViewInit {
     fillColor: 'rgba(0,0,0,1)'
   };
 
-  constructor(private storage: StorageService, private elementsService: SvgElementsService, private cd: ChangeDetectorRef) {}
+  constructor(private storage: StorageService, private shapeService: ShapeService, private cd: ChangeDetectorRef,
+    private stack: ActionStack) { }
 
   ngOnInit() {
     this.config = this.storage.get('config');
@@ -40,7 +50,7 @@ export class ToolsSidebarComponent implements OnInit, AfterViewInit {
     this.cd.detectChanges();
 
     this.storage.subject('config').subscribe( cfg => {
-      this.elementsService.activeTool.configure(cfg);
+      this.shapeService.activeTool.configure(cfg);
     });
   }
 
@@ -52,19 +62,22 @@ export class ToolsSidebarComponent implements OnInit, AfterViewInit {
   setActive(name: ToolName, tool: Tool) {
     this.activeButton = name;
     this.storage.set('toolName', name);
-    this.elementsService.activeTool = tool;
-
-    this.elementsService.activeTool.configure(this.config);
+    this.shapeService.activeTool = tool;
+    this.shapeService.activeTool.configure(this.config);
   }
 
   /* Function called when click on clear all picture */
   onEraseAll() {
-    while (this.elementsService.getElements().length > 0) {
-      this.elementsService.remove(this.elementsService.getElement(0).uuid);
+    while (this.shapeService.getElements().length > 0) {
+      this.shapeService.remove(this.shapeService.getElement(0).uuid);
     }
   }
 
   onToolClicked(tool: [Tool, ToolName]) {
     this.setActive(tool[1], tool[0]);
+  }
+
+  onUnselectableToolClicked(unselectableTool: [UnselectableTool, UnSelectableToolName]) {
+    unselectableTool[0].doClick(0, 0, this.stack);
   }
 }
