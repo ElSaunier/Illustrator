@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 
@@ -9,6 +9,8 @@ import { DomSanitizer } from '@angular/platform-browser';
   styleUrls: ['./system-bar.component.css']
 })
 export class SystemBarComponent implements OnInit {
+  @Output() import = new EventEmitter<void>;
+  @Output() export = new EventEmitter<void>;
 
   saveSVGPath = '/assets/customSVG/save.svg';
   exportSVGPath = '/assets/customSVG/export.svg';

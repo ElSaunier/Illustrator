@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core';
 import { ActionStack } from '@lib/action-stacks/action-stack.class';
-import { ISerializedCanva } from '@lib/serialized-canva.interface';
+import { ISerializedCanvas } from '@lib/serialized-canvas.interface';
 import { IShape } from '@lib/shapes/shape.interface';
 import { Circle } from '@lib/shapes/circle.class';
 import { Line } from '@lib/shapes/line.class';
@@ -245,30 +245,26 @@ export class CanvasComponent implements AfterViewInit {
    * Export the current stack in a .sil file
    */
   @HostListener('document:keydown.control.s', ['$event'])
-  onExport(event: KeyboardEvent) {
-    event.preventDefault();
+  onExport(event?: KeyboardEvent) {
+    event?.preventDefault();
 
-    const state = this.serialize();
-    this.exportState(state, 'canva');
+    const state = this._serialize();
+    this._exportState(state, 'canvas');
   }
 
-  /**
-    * Save the current stack in the local storage
-    */
-  onSave() {
+  onAImport() {
 
   }
 
-  serialize(): ISerializedCanva {
+  private _serialize(): ISerializedCanvas {
     return {
       stack: this.stack.serialize()
     };
   }
 
-  exportState(state: object, fileName: string) {
+  private _exportState(state: object, fileName: string) {
     const json = JSON.stringify(state);
     const blob = new Blob([json], { type: 'application/json' });
     saveAs(blob, fileName + '.sil');
   }
-
 }

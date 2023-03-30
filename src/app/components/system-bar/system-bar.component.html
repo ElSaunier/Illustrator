@@ -7,14 +7,10 @@
 
     <div class="btn-ctr">
         <button mat-icon-button>
-            <mat-icon [svgIcon]="'save'"></mat-icon>
+            <mat-icon [svgIcon]="'import'" (click)="this.import.emit()"></mat-icon>
         </button>
 
-        <button mat-icon-button>
-            <mat-icon [svgIcon]="'import'"></mat-icon>
-        </button>
-
-        <button mat-icon-button>
+        <button mat-icon-button (click)="this.export.emit()">
             <mat-icon [svgIcon]="'export'"></mat-icon>
         </button>
     </div>
