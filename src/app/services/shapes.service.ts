@@ -10,6 +10,7 @@ export default class ShapeService {
   activeTool!: Tool;
 
   private elements: IShape[] = [];
+  public elements$ = new Subject<IShape[]>();
   public pushElement$ = new Subject<IShape>();
   public deleteElement$ = new Subject<string>();
 
@@ -37,5 +38,10 @@ export default class ShapeService {
 
   public getElements() {
     return this.elements;
+  }
+
+  updateElements(shapes: IShape[]) {
+    this.elements = shapes;
+    this.elements$.next(this.elements);
   }
 }

@@ -51,7 +51,6 @@ export class PencilTool extends Tool {
         lastAction.getCoordinates().y,
         [],
         PencilTool,
-        true,
         true
       );
 

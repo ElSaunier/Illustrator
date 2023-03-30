@@ -32,7 +32,14 @@ export class Rect implements IShape {
   }
 
   isColliding(pos: Vec2): boolean {
-    throw new Error('Method not implemented.');
+    const minX = Math.min(this.rpos.x, this.rpos.x + this.width);
+    const maxX = Math.max(this.rpos.x, this.rpos.x + this.width);
+    const minY = Math.min(this.rpos.y, this.rpos.y + this.height);
+    const maxY = Math.max(this.rpos.y, this.rpos.y + this.height);
+    if (pos.x >= minX && pos.x <= maxX && pos.y >= minY && pos.y <= maxY) {
+      return true;
+    }
+    return false;
   }
 
   serialize() {

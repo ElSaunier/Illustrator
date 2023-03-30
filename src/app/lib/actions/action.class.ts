@@ -2,6 +2,7 @@ import { Tool } from '@lib/tools/tool.abstract';
 import { IShape } from '@lib/shapes/shape.interface';
 import { Vec2 } from '@lib/vec2';
 import { ISerializedAction } from './serialized-action.interface';
+import { EraserTool } from '@lib/tools/eraser-tool.class';
 /**
  * An action which can be triggered by a tool
  */
@@ -14,8 +15,21 @@ export class Action {
    * @param toolType the type of tool which triggered the action
    * @param isPending Default value is true. Is the action finished ? Updated by the tool most of the time.
    */
-  constructor(protected x: number, protected y: number, protected shapes: IShape[], protected toolType: typeof Tool, protected isPending = true, protected isShowed = true) {
+  constructor(protected x: number, protected y: number, protected shapes: IShape[], protected toolType: typeof Tool, protected isPending = true) {
   }
+
+  /**
+   * Tell if the action is showed or not (used for undo / do action)
+   */
+  protected isShowed = true;
+  /**
+   * Tell if the action is deleted or not (used for the EraserTool)
+   */
+  protected isDeleted = false;
+  /**
+   * Action reference another existing action
+   */
+  protected refAction: Action | null = null;
 
   /**
    *
@@ -83,12 +97,51 @@ export class Action {
     this.toolType = toolType;
   }
 
+  /**
+   * @returns if the action is showed or not
+   */
   getIsShowed() {
     return this.isShowed;
   }
 
+  /**
+   * @param isShowed set if the action is showed or not
+   */
   setIsShowed(isShowed: boolean) {
     this.isShowed = isShowed;
+    if (this.toolType === EraserTool && this.isShowed) {
+      this.refAction?.setIsDeletd(true);
+    } else if (this.toolType === EraserTool && !this.isShowed) {
+      this.refAction?.setIsDeletd(false);
+    }
+  }
+
+  /**
+   * @param isDeleted set if the action is deleted or not
+   */
+  setIsDeletd(isDeleted: boolean) {
+    this.isDeleted = isDeleted;
+  }
+
+  /**
+   * @returns if the action is deleted or not
+   */
+  getIsDeleted() {
+    return this.isDeleted;
+  }
+
+  /**
+   * @returns the referenced action
+   */
+  getRefAction() {
+    return this.refAction;
+  }
+
+  /**
+   * @param refAction set the referenced action if any
+   */
+  setRefAction(refAction: Action) {
+    this.refAction = refAction;
   }
 
   serialize(): ISerializedAction {

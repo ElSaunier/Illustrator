@@ -1,9 +1,6 @@
-/* eslint-disable @typescript-eslint/no-useless-constructor */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ActionStack } from '@lib/action-stacks/action-stack.class';
 import { Action } from '@lib/actions/action.class';
-import { Tool } from './tool.abstract';
-import { ToolName, UnSelectableToolName } from './tools';
+import { UnSelectableToolName } from './tools';
 import { UnselectableTool } from './unselectableTool.class';
 
 export class UndoTool extends UnselectableTool {
@@ -11,7 +8,11 @@ export class UndoTool extends UnselectableTool {
   static override svgPath = '/assets/customSVG/undo.svg';
 
   override doClick(x: number, y: number, stack?: ActionStack): Action[] | null {
-    const actions: Action[] = stack!.getActiveStack();
+    if (stack === undefined) {
+      return null;
+    }
+
+    const actions: Action[] = stack.getActiveStack();
     
     let lastNonPendingShownAction = null;
 
