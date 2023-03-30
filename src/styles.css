@@ -22,8 +22,18 @@ mat-sidenav{
     overflow: visible;
     margin-top: 10%;
     margin-bottom: 10%;
+    padding-right: 3%;
+    padding-left: 3%;
     filter: drop-shadow(0 0 0.35rem black);
     color: #7A93AC;
 }
 
+mat-sidenav-container {
+    width: 100%;
+
+    overflow: visible;
+    display: flex !important;
+    justify-content: center;
+    background-color: #DFE6F3;
+}
 
