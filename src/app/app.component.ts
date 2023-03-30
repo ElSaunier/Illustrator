@@ -17,7 +17,7 @@ export class AppComponent {
   isErasing = this.storage.subject('toolName').pipe(map(val => val === 'eraser'));
 
   onImport() {
-    this.canvas.onAImport();
+    this.canvas.onImport();
   }
 
   onExport() {

@@ -252,7 +252,11 @@ export class CanvasComponent implements AfterViewInit {
     this._exportState(state, 'canvas');
   }
 
-  onAImport() {
+  onImport() {
+
+  }
+
+  private _parse() {
 
   }
 
