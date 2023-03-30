@@ -1,19 +1,26 @@
 ill-app-canvas {
     display: inline-flex;
-    width: 88%;
-    height: 100%;
+    width: 92%;
+    height: 95%;
 }
 
 ill-app-tools-sidebar {
     display: inline-flex;
-    width: 6%;
-    height: 100%;
+    width: 4%;
+    height: 95%;
 }
 
 ill-app-tool-configuration {
     display: inline-flex;
-    width: 6%;
-    height: 100%;
+    width: 4%;
+    height: 95%;
+}
+
+ill-app-system-bar {
+    display: inline-flex;
+    width: 100%;
+    height: 5%;
+    background: #dee5f2;
 }
 
 .eraser {

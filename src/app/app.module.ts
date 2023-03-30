@@ -18,6 +18,7 @@ import { FormsModule } from '@angular/forms';
 import { ToolComponent } from './components/tool/tool.component';
 import { UnselectableToolComponent } from './components/tool/unselectableTool.component';
 import { ToolConfigurationComponent } from './components/tool-configuration/tool-configuration.component';
+import { SystemBarComponent } from './components/system-bar/system-bar.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { ToolConfigurationComponent } from './components/tool-configuration/tool
     ToolsSidebarComponent,
     ToolComponent,
     UnselectableToolComponent,
-    ToolConfigurationComponent
+    ToolConfigurationComponent,
+    SystemBarComponent
   ],
   imports: [
     BrowserModule,
