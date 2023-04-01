@@ -158,7 +158,6 @@ export class CanvasComponent implements AfterViewInit {
     shape.height = rect.height;
     this.canvasElement.nativeElement.getContext('2d')?.clearRect(0, 0, shape.width, shape.height);
     const actions = this.stack.getActiveStack();
-    console.log(actions);
     actions.forEach(action => {
       if (action.getIsShowed() && !action.getIsDeleted()) {
         const shapes = action.getShapes();

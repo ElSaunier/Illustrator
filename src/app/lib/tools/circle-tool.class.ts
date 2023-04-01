@@ -111,6 +111,8 @@ export class CircleTool extends Tool {
     const coord2 = lastAction.getCoordinates();
     const distance = Math.sqrt(Math.pow(coord2.x - coord1.x, 2) + Math.pow(coord2.y - coord1.y, 2));
 
+    stack.undo();
+
     const newAction = new Action(
       firstAction.getCoordinates().x,
       firstAction.getCoordinates().y,
