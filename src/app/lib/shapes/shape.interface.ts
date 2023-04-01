@@ -23,5 +23,7 @@ export interface IShape {
    */
   isColliding(pos: Vec2): boolean;
 
+  parse(serializedShape: any): IShape;
+
   serialize(): object
 }

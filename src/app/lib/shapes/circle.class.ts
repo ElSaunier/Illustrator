@@ -10,9 +10,11 @@ export class Circle implements IShape {
     public stroke: string,
     public strokeWidth: number,
     public rpos: Vec2,
-    public radius: number) {
+    public radius: number,
+    uuid?: string
+  ) {
 
-    this.uuid = randomUuid();
+    this.uuid = uuid ?? randomUuid();
   }
   callback() {
 
@@ -49,5 +51,17 @@ export class Circle implements IShape {
       rpos: this.rpos,
       radius: this.radius
     };
+  }
+
+  parse(serializedShape: any): IShape {
+    const shape = new Circle(
+      serializedShape.fill,
+      serializedShape.stroke,
+      serializedShape.strokeWidth,
+      serializedShape.rpos,
+      serializedShape.radius,
+      serializedShape.uuid
+    );
+    return shape;
   }
 }

@@ -4,20 +4,17 @@ import { Vec2 } from '../vec2';
 
 export class Rect implements IShape {
   public uuid: string;
-
   constructor(
     public fill: string,
     public stroke: string,
     public strokeWidth: number,
     public rpos: Vec2,
     public width: number,
-    public height: number) {
+    public height: number,
+    uuid?: string
+  ) {
 
-    this.uuid = randomUuid();
-
-    // this.rpos.x -= 0.5 * this.width;
-    // this.rpos.y -= 0.5 * this.height;
-
+    this.uuid = uuid ?? randomUuid();
   }
 
   public render(ctx: CanvasRenderingContext2D) {
@@ -50,7 +47,20 @@ export class Rect implements IShape {
       strokeWidth: this.strokeWidth,
       rpos: this.rpos,
       width: this.width,
-      heigth: this.height
+      height: this.height
     };
+  }
+
+  parse(serializedShape: any): IShape {
+    const shape = new Rect(
+      serializedShape.fill,
+      serializedShape.stroke,
+      serializedShape.strokeWidth,
+      serializedShape.rpos,
+      serializedShape.width,
+      serializedShape.height,
+      serializedShape.uuid
+    );
+    return shape;
   }
 }

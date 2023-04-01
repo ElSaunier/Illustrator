@@ -8,10 +8,11 @@ export class Text implements IShape {
   constructor(
     public stroke: string,
     public text: string,
-    public pos: Vec2
+    public pos: Vec2,
+    uuid?: string
   ) {
 
-    this.uuid = randomUuid();
+    this.uuid = uuid ?? randomUuid();
   }
 
   fill!: string;
@@ -35,7 +36,19 @@ export class Text implements IShape {
     return {
       stroke: this.stroke,
       text: this.text,
-      pos: this.pos
+      pos: this.pos,
+      uuid: this.uuid
     };
+  }
+
+  parse(serializedShape: any): Text {
+    const shape = new Text(
+      serializedShape.stroke,
+      serializedShape.text,
+      serializedShape.pos,
+      serializedShape.uuid
+    );
+
+    return shape;
   }
 }

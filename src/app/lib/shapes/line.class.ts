@@ -3,17 +3,18 @@ import { randomUuid } from '@lib/uuid';
 import { IShape } from '@lib/shapes/shape.interface';
 
 export class Line implements IShape {
-  public uuid: string;
-
   private TOLERANCE = 2;
+  public uuid: string;
 
   constructor(
     public stroke: string,
     public strokeWidth: number,
     public rpos: Vec2,
-    public lpos: Vec2) {
+    public lpos: Vec2,
+    uuid?: string
+  ) {
 
-    this.uuid = randomUuid();
+    this.uuid = uuid ?? randomUuid();
   }
 
   fill!: string;
@@ -49,5 +50,16 @@ export class Line implements IShape {
       rpos: this.rpos,
       lpos: this.lpos
     };
+  }
+
+  parse(serializedShape: any): IShape {
+    const shape = new Line(
+      serializedShape.stroke,
+      serializedShape.strokeWidth,
+      serializedShape.rpos,
+      serializedShape.lpos,
+      serializedShape.uuid
+    );
+    return shape;
   }
 }
