@@ -1,6 +1,6 @@
 import { CircleTool } from './circle-tool.class';
 import { PencilTool } from './pencil-tool.class';
-import { PointTool } from './point-tool.class';
+import { PointTool } from './line-tool.class';
 import { RectangleTool } from './rectangle-tool.class';
 import { RedoTool } from './redo-tool.class';
 import { Tool } from './tool.abstract';

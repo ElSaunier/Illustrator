@@ -40,7 +40,7 @@ export class ActionStack {
    * @summary move to the previous action within the stack
    */
   undo(): void {
-    this._headPosition = Math.max(0, this._headPosition - 1);
+    this._headPosition = Math.max(-1, this._headPosition - 1);
   }
 
   /**
