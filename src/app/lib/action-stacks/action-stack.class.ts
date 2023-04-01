@@ -1,5 +1,6 @@
 import { Action } from '@lib/actions/action.class';
 import { Injectable } from '@angular/core';
+import { EraserTool } from '@lib/tools/eraser-tool.class';
 
 
 @Injectable({
@@ -39,6 +40,9 @@ export class ActionStack {
    * @summary move to the previous action within the stack
    */
   undo(): void {
+    if (this._stack[this._headPosition].getToolType() === EraserTool) {
+      this._stack[this._headPosition].getRefAction()?.setIsDeletd(false);
+    }
     this._headPosition = Math.max(-1, this._headPosition - 1);
   }
 
@@ -47,6 +51,9 @@ export class ActionStack {
    */
   redo(): void {
     this._headPosition = Math.min(this._stack.length - 1, this._headPosition + 1);
+    if (this._stack[this._headPosition].getToolType() === EraserTool) {
+      this._stack[this._headPosition].getRefAction()?.setIsDeletd(true);
+    }
   }
 
   /**
