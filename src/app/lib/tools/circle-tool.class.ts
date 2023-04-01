@@ -29,7 +29,7 @@ export class CircleTool extends Tool {
       return null;
     }
 
-    const actions: Action[] = stack!.getStack();
+    const actions: Action[] = stack!.getActiveStack();
 
     if (actions.length < 1) {
       this.nbrClick = 0;
@@ -84,7 +84,7 @@ export class CircleTool extends Tool {
   }
 
   override checkCompleted(stack: ActionStack): Action | null {
-    const actions: Action[] = stack.getStack();
+    const actions: Action[] = stack.getActiveStack();
 
     if (this.nbrClick < 2) {
       return null;
@@ -104,14 +104,9 @@ export class CircleTool extends Tool {
       return null;
     }
 
-    // Remove the last ghot shown circle
-    this.removeGhostElement(stack);
-
     const coord1 = firstAction.getCoordinates();
     const coord2 = lastAction.getCoordinates();
     const distance = Math.sqrt(Math.pow(coord2.x - coord1.x, 2) + Math.pow(coord2.y - coord1.y, 2));
-
-    stack.undo();
 
     const newAction = new Action(
       firstAction.getCoordinates().x,
@@ -129,7 +124,10 @@ export class CircleTool extends Tool {
       false
     );
 
+    this.removePendingActions(stack);
+
     this.nbrClick = 0;
+    console.log(stack.getActiveStack());
 
     return newAction;
   }

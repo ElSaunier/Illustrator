@@ -30,7 +30,7 @@ export class EraserTool extends Tool {
     let action = undefined;
 
     for (let i = actions.length - 1; i >= 0 && action === undefined; i--) {
-      if (actions[i].getIsShowed() && actions[i].getShapes().find(s => s.isColliding({ x: x, y: y })) !== undefined) {
+      if (actions[i].getShapes().find(s => s.isColliding({ x: x, y: y })) !== undefined) {
         action = actions[i];
       }
     }

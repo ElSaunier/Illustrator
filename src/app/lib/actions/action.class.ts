@@ -18,10 +18,6 @@ export class Action {
   }
 
   /**
-   * Tell if the action is showed or not (used for undo / do action)
-   */
-  protected isShowed = true;
-  /**
    * Tell if the action is deleted or not (used for the EraserTool)
    */
   protected isDeleted = false;
@@ -94,25 +90,6 @@ export class Action {
    */
   setToolType(toolType: typeof Tool) {
     this.toolType = toolType;
-  }
-
-  /**
-   * @returns if the action is showed or not
-   */
-  getIsShowed() {
-    return this.isShowed;
-  }
-
-  /**
-   * @param isShowed set if the action is showed or not
-   */
-  setIsShowed(isShowed: boolean) {
-    this.isShowed = isShowed;
-    if (this.toolType === EraserTool && this.isShowed) {
-      this.refAction?.setIsDeletd(true);
-    } else if (this.toolType === EraserTool && !this.isShowed) {
-      this.refAction?.setIsDeletd(false);
-    }
   }
 
   /**

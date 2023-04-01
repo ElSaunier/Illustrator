@@ -67,4 +67,18 @@ export class Tool implements ToolWrapper {
    * @param stack 
    */
   removeGhostElement(stack: ActionStack): void { }
+
+  /**
+   * @summary remove all pending actions
+   * @param stack
+   */
+  removePendingActions(stack: ActionStack): void { 
+    for (let i = 0; i <= stack.getHeadPosition();) {
+      if (stack.getActiveStack()[i].getPending()) {
+        stack.removeAction(i);
+      } else {
+        i++;
+      }
+    }
+  }
 }

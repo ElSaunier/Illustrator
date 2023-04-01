@@ -11,24 +11,8 @@ export class UndoTool extends UnselectableTool {
     if (stack === undefined) {
       return null;
     }
-
-    const actions: Action[] = stack.getActiveStack();
     
-    let lastNonPendingShownAction = null;
-
-    let indice = stack!.getHeadPosition();
-    while (indice >= 0 && lastNonPendingShownAction == null) {
-      if (!actions[indice].getPending() && actions[indice].getIsShowed()) {
-        lastNonPendingShownAction = actions[indice];
-      }
-      indice--;
-    }
-
-    if (lastNonPendingShownAction == null) {
-      return null;
-    }
-
-    lastNonPendingShownAction.setIsShowed(false);
+    stack.undo();
 
     return null;
   }

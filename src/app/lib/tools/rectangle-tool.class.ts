@@ -116,9 +116,8 @@ export class RectangleTool extends Tool {
     const coord1 = lastAction.getCoordinates();
     const coord2 = beforeLastAction.getCoordinates();
 
-    // Remove the last 2 actions to draw the rectangle 
-    stack.undo();
-    stack.undo();
+    // Remove the last 2 actions to draw the rectangle
+    this.removePendingActions(stack);
 
     const newAction = new Action(
       0,

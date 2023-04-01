@@ -15,23 +15,8 @@ export class RedoTool extends UnselectableTool {
   }
 
   override doClick(x: number, y: number, stack: ActionStack): Action[] | null {
-    const actions: Action[] = stack!.getStack();
 
-    let lastNonPendingNotShownAction = null;
-
-    let indice = 0;
-    while (indice <= stack.getHeadPosition() && lastNonPendingNotShownAction == null) {
-      if (!actions[indice].getPending() && !actions[indice].getIsShowed()) {
-        lastNonPendingNotShownAction = actions[indice];
-      }
-      indice++;
-    }
-    
-    if (lastNonPendingNotShownAction == null) {
-      return null;
-    }
-
-    lastNonPendingNotShownAction.setIsShowed(true);
+    stack?.redo();
 
     return null;
   }
