@@ -7,7 +7,6 @@ import { UnselectableTool } from '@lib/tools/unselectableTool.class';
 @Component({
   selector: 'app-unselectable-tool[unselectableTool]',
   templateUrl: './unselectableTool.component.html',
-  styleUrls: ['./unselectableTool.component.css']
 })
 export class UnselectableToolComponent implements OnInit {
   @Input() unselectableTool!: UnselectableToolMeta;

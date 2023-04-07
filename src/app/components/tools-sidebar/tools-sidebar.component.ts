@@ -51,7 +51,6 @@ export class ToolsSidebarComponent implements OnInit, AfterViewInit {
     });
   }
 
-  /* Function for buttons */
   isButtonActive(name: ToolName) {
     return this.activeButton === name;
   }

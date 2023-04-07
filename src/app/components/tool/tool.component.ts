@@ -7,7 +7,6 @@ import { ToolMeta, ToolName } from '@lib/tools/tools';
 @Component({
   selector: 'app-tool[tool][active]',
   templateUrl: './tool.component.html',
-  styleUrls: ['./tool.component.css']
 })
 export class ToolComponent implements OnInit {
   @Input() tool!: ToolMeta;

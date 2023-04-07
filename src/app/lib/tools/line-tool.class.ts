@@ -5,7 +5,6 @@ import { Line } from '@lib/shapes/line.class';
 
 import { Tool } from './tool.abstract';
 import { ToolName } from './tools';
-import { IToolConfiguration } from '@lib/tools/tool-configuration.interface';
 import { Text } from '@lib/shapes/text.class';
 
 export class PointTool extends Tool {
