@@ -1,39 +1,61 @@
 import { Vec2 } from '@lib/vec2';
-import { randomUuid } from '@lib/uuid';
-import { Shape } from '@lib/interfaces/shape.interface';
+import { Shape } from './shape.abstract';
 
-export class Line implements Shape {
-  public uuid: string;
-
+export class Line extends Shape {
   private TOLERANCE = 2;
 
   constructor(
-    public stroke: string,
-    public strokeWidth: number,
-    public pos: Vec2,
-    public lpos: Vec2) {
-
-    this.uuid = randomUuid();
+    stroke: string,
+    strokeWidth: number,
+    public p1: Vec2,
+    public p2: Vec2,
+    uuid?: string
+  ) {
+    super(null, stroke, strokeWidth, uuid);
   }
 
-  fill!: string;
+  callback() {
+
+  }
 
   public render(ctx: CanvasRenderingContext2D): void {
-    ctx.strokeStyle = this.stroke;
-    ctx.lineWidth = this.strokeWidth;
+    ctx.strokeStyle = this.stroke as string;
+    ctx.lineWidth = this.strokeWidth as number;
     ctx.beginPath();
-    ctx.moveTo(this.pos.x, this.pos.y);
-    ctx.lineTo(this.lpos.x, this.lpos.y);
+    ctx.moveTo(this.p1.x, this.p1.y);
+    ctx.lineTo(this.p2.x, this.p2.y);
     ctx.stroke();
   }
 
   isColliding(pos: Vec2): boolean {
-    const slope = (this.pos.y - this.lpos.y) / (this.pos.x - this.lpos.x);
-    const yIntercept = this.lpos.y - slope * this.lpos.x;
+    const slope = (this.p1.y - this.p2.y) / (this.p1.x - this.p2.x);
+    const yIntercept = this.p2.y - slope * this.p2.x;
     const resultY = slope * pos.x + yIntercept;
     if (Math.abs(pos.y - resultY) <= this.TOLERANCE) {
       return true;
     }
     return false;
+  }
+
+  serialize() {
+    return {
+      uuid: this.uuid,
+      type: this.constructor.name,
+      stroke: this.stroke,
+      strokeWidth: this.strokeWidth,
+      p1: this.p1,
+      p2: this.p2
+    };
+  }
+
+  static parse(serializedShape: any): Shape {
+    const shape = new Line(
+      serializedShape.stroke,
+      serializedShape.strokeWidth,
+      serializedShape.rpos,
+      serializedShape.lpos,
+      serializedShape.uuid
+    );
+    return shape;
   }
 }

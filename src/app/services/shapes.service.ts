@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Shape } from '@lib/interfaces/shape.interface';
+import { Shape } from '@lib/shapes/shape.abstract';
 import { Tool } from '@lib/tools/tool.abstract';
 import { Subject } from 'rxjs';
 
@@ -19,7 +19,9 @@ export default class ShapeService {
     this.pushElement$.next(e);
   }
 
-  public remove(uuid: string) {
+  public remove(uuid: string | undefined) {
+    if (!uuid) return;
+
     const element = this.elements.find(elem => elem.uuid === uuid);
 
     if (!element) {

@@ -1,29 +1,44 @@
 import { Vec2 } from '@lib/vec2';
-import { randomUuid } from '@lib/uuid';
-import { Shape } from '@lib/interfaces/shape.interface';
+import { Shape } from './shape.abstract';
 
-export class Text implements Shape {
-  public uuid: string;
-
+export class Text extends Shape {
   constructor(
-    public stroke: string,
+    stroke: string,
     public text: string,
-    public pos: Vec2
+    public pos: Vec2,
+    uuid?: string
   ) {
-
-    this.uuid = randomUuid();
+    super(null, stroke, null, uuid);
   }
 
-  fill!: string;
-  strokeWidth!: number;
-
   public render(ctx: CanvasRenderingContext2D): void {
-    ctx.fillStyle = this.stroke;
+    ctx.fillStyle = this.stroke as string;
     ctx.textAlign = 'center';
     ctx.fillText(this.text, this.pos.x, this.pos.y);
   }
 
   isColliding(pos: Vec2): boolean {
     throw new Error('Method not implemented.');
+  }
+
+  serialize() {
+    return {
+      uuid: this.uuid,
+      type: this.constructor.name,
+      stroke: this.stroke,
+      text: this.text,
+      pos: this.pos
+    };
+  }
+
+  static parse(serializedShape: any): Text {
+    const shape = new Text(
+      serializedShape.stroke,
+      serializedShape.text,
+      serializedShape.pos,
+      serializedShape.uuid
+    );
+
+    return shape;
   }
 }

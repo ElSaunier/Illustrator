@@ -1,40 +1,67 @@
-import { Shape } from '@lib/interfaces/shape.interface';
-import { randomUuid } from '../uuid';
+import { Shape } from '@lib/shapes/shape.abstract';
 import { Vec2 } from '../vec2';
 
-export class Rect implements Shape {
-  public uuid: string;
-
+export class Rect extends Shape {
   constructor(
-    public fill: string,
-    public stroke: string,
-    public strokeWidth: number,
+    fill: string,
+    stroke: string,
+    strokeWidth: number,
     public pos: Vec2,
     public width: number,
-    public height: number) {
-
-    this.uuid = randomUuid();
+    public height: number,
+    uuid?: string
+  ) {
+    super(fill, stroke, strokeWidth, uuid);
   }
 
   public render(ctx: CanvasRenderingContext2D) {
     if (this.fill === 'none') {
-      ctx.strokeStyle = this.stroke;
+      ctx.strokeStyle = this.stroke as string;
       ctx.strokeRect(this.pos.x, this.pos.y, this.width, this.height);
     } else {
-      ctx.fillStyle = this.fill;
-      ctx.strokeStyle = this.stroke;
+      ctx.fillStyle = this.fill as string;
+      ctx.strokeStyle = this.stroke as string;
       ctx.fillRect(this.pos.x, this.pos.y, this.width, this.height);
     }
   }
 
   isColliding(pos: Vec2): boolean {
+    // Compute the rect corners
     const minX = Math.min(this.pos.x, this.pos.x + this.width);
     const maxX = Math.max(this.pos.x, this.pos.x + this.width);
     const minY = Math.min(this.pos.y, this.pos.y + this.height);
     const maxY = Math.max(this.pos.y, this.pos.y + this.height);
+
+    // Check the testing point is between each corner
     if (pos.x >= minX && pos.x <= maxX && pos.y >= minY && pos.y <= maxY) {
       return true;
     }
     return false;
+  }
+
+  serialize() {
+    return {
+      uuid: this.uuid,
+      type: this.constructor.name,
+      fill: this.fill,
+      stroke: this.stroke,
+      strokeWidth: this.strokeWidth,
+      pos: this.pos,
+      width: this.width,
+      height: this.height
+    };
+  }
+
+  static parse(serializedShape: any) {
+    const shape = new Rect(
+      serializedShape.fill,
+      serializedShape.stroke,
+      serializedShape.strokeWidth,
+      serializedShape.rpos,
+      serializedShape.width,
+      serializedShape.height,
+      serializedShape.uuid
+    );
+    return shape;
   }
 }

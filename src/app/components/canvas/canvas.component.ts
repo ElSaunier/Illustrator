@@ -1,7 +1,14 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core';
 import { ActionStack } from '@lib/action-stacks/action-stack.class';
-import { Shape } from '@lib/interfaces/shape.interface';
+import { ISerializedCanvas } from '@lib/serialized-canvas.interface';
+import { Circle } from '@lib/shapes/circle.class';
+import { Line } from '@lib/shapes/line.class';
+import { Rect } from '@lib/shapes/rect.class';
+import { Vec2 } from '@lib/vec2';
 import ShapeService from 'src/app/services/shapes.service';
+import { StorageService } from 'src/app/services/storage.service';
+import { saveAs } from 'file-saver';
+import { Shape } from '@lib/shapes/shape.abstract';
 
 @Component({
   selector: 'ill-app-canvas',
@@ -68,7 +75,7 @@ export class CanvasComponent implements AfterViewInit {
 
   /**
    * Draw an element into the canvas context
-   * @param shape 
+   * @param shape
    */
   _drawElement(shape: Shape) {
     const ctxt = this.canvasElement.nativeElement.getContext('2d');
@@ -98,7 +105,7 @@ export class CanvasComponent implements AfterViewInit {
   /**
    * @summary handle mouse button released events
    * triggers the concerned event in the currently selected tool, and process the returned action if any (for instance, draw a line between two points)
-   * @param event 
+   * @param event
    */
   handleMouseRelease(event: MouseEvent) {
     const tool = this.shapeService.activeTool;
@@ -123,7 +130,7 @@ export class CanvasComponent implements AfterViewInit {
   /**
    * @summary handle mouse move events
    * triggers the concerned event in the currently selected tool, and process the returned action if any (for instance, draw a line between two points)
-   * @param event 
+   * @param event
   */
   handleMouseMoveWhenUnClicked(event: MouseEvent) {
     const tool = this.shapeService.activeTool;
@@ -172,7 +179,7 @@ export class CanvasComponent implements AfterViewInit {
    * @summary handle mouse move when clicked events
    * triggers the concerned event in the currently selected tool
    * process the returned action if any (for instance, draw a line between two points)
-   * @param event 
+   * @param event
   */
   handleMouseMoveWhenClicked(event: MouseEvent) {
     const tool = this.shapeService.activeTool;
@@ -196,7 +203,7 @@ export class CanvasComponent implements AfterViewInit {
 
   /**
    * Compute the coordinates of an event
-   * @param event 
+   * @param event
    * @returns x and y
    */
   getCoordinates(event: MouseEvent) {
@@ -212,7 +219,7 @@ export class CanvasComponent implements AfterViewInit {
    * @summary handle click events
    * triggers the concerned event in the currently selected tool
    * process the returned action if any (for instance, draw a line between two points)
-   * @param event 
+   * @param event
   */
   handleClick(event: MouseEvent) {
     const tool = this.shapeService.activeTool;
@@ -232,5 +239,67 @@ export class CanvasComponent implements AfterViewInit {
     }
 
     this.updateCanvas();
+  }
+
+  /**
+   * Export the current stack in a .sil file
+   */
+  @HostListener('document:keydown.control.s', ['$event'])
+  onExport(event?: KeyboardEvent) {
+    event?.preventDefault();
+
+    const state = this._serialize();
+    this._exportState(state, 'canvas');
+  }
+
+  /**
+   * Import a stack from a .sil file
+   */
+  onImport(event: Event) {
+    const eventTarget = event.target as HTMLInputElement;
+    console.log('====', eventTarget, !eventTarget, eventTarget.files);
+
+    if (!eventTarget) return;
+    if (!eventTarget.files?.length) return;
+    const file = eventTarget.files[0];
+    console.log('~~~~', file);
+
+    const fileReader: FileReader = new FileReader();
+    fileReader.readAsText(file);
+    fileReader.onload = () => {
+      const json = JSON.parse(fileReader.result as string);
+      const state = CanvasComponent.parse(json);
+      this._applyState(state);
+    };
+    fileReader.onerror = () => {
+      console.error('Could not parse the file');
+    };
+  }
+
+  private _applyState(state: any) {
+    console.log('####', state);
+    this.stack = state.stack;
+  }
+
+  static parse(serializedCanva: ISerializedCanvas) {
+    if (!serializedCanva.stack) return null;
+    const parsedStack = ActionStack.parse(serializedCanva.stack);
+    if (!parsedStack) return null;
+
+    return {
+      stack: parsedStack
+    };
+  }
+
+  private _serialize(): ISerializedCanvas {
+    return {
+      stack: this.stack.serialize()
+    };
+  }
+
+  private _exportState(state: object, fileName: string) {
+    const json = JSON.stringify(state);
+    const blob = new Blob([json], { type: 'application/json' });
+    saveAs(blob, fileName + '.sil');
   }
 }

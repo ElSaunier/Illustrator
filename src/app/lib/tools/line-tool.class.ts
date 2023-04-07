@@ -124,8 +124,8 @@ export class PointTool extends Tool {
       0,
       0,
       [
-        new Circle(firstShape.fill, firstShape.stroke, firstShape.strokeWidth, firstShape.pos, firstShape.radius),
-        new Circle(secondShape.fill, secondShape.stroke, secondShape.strokeWidth, secondShape.pos, secondShape.radius),
+        new Circle(firstShape.fill as string, firstShape.stroke as string, firstShape.strokeWidth as number, firstShape.pos, firstShape.radius),
+        new Circle(secondShape.fill as string, secondShape.stroke  as string, secondShape.strokeWidth as number, secondShape.pos, secondShape.radius),
         new Line(
           this.config.color,
           this.config.thickness,

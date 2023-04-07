@@ -1,6 +1,7 @@
 import { Action } from '@lib/actions/action.class';
 import { Injectable } from '@angular/core';
 import { EraserTool } from '@lib/tools/eraser-tool.class';
+import { ISerializedActionStack } from './serialized-action-stack.interface';
 
 
 @Injectable({
@@ -15,7 +16,7 @@ export class ActionStack {
   /**
    * @summary Insert a new action atop the stack and update the stack head postion.
    * @param action
-   * 
+   *
    */
   insert(action: Action): void {
     if (!action.getPending() && this._stack.length >= 0) {
@@ -57,7 +58,7 @@ export class ActionStack {
   }
 
   /**
-   * 
+   *
    * @returns the action stack with the head position as the top of the stack
    */
   getActiveStack(): Action[] {
@@ -70,7 +71,7 @@ export class ActionStack {
   }
 
   /**
-   * 
+   *
    * @returns the head position
    */
   getHeadPosition(): number {
@@ -95,5 +96,31 @@ export class ActionStack {
     }
     this._stack.splice(index, 1);
     this._headPosition--;
+  }
+
+
+  /**
+   * Serialized the stack
+   * @returns A serialized ActionStack
+   */
+  serialize(): ISerializedActionStack {
+    return {
+      actions: this._stack.map(s => s.serialize()),
+      headPosition: this._headPosition
+    };
+  }
+
+  /**
+   * Parse a serialized stack
+   * @param serializedStack A serialized ActionStack
+   * @returns An instantiated ActionStack
+   */
+  static parse(serializedStack: ISerializedActionStack): ActionStack {
+    const stack = new ActionStack();
+    for (const serializedAction of serializedStack.actions) {
+      const parsedAction = Action.parse(serializedAction);
+      stack.insert(parsedAction);
+    }
+    return stack;
   }
 }

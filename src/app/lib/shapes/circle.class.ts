@@ -1,29 +1,27 @@
 import { Vec2 } from '@lib/vec2';
-import { randomUuid } from '@lib/uuid';
-import { Shape } from '@lib/interfaces/shape.interface';
+import { Shape } from './shape.abstract';
 
-export class Circle implements Shape {
-  public uuid: string;
-
+export class Circle extends Shape {
   constructor(
-    public fill: string,
-    public stroke: string,
-    public strokeWidth: number,
+    fill: string,
+    stroke: string,
+    strokeWidth: number,
     public pos: Vec2,
-    public radius: number) {
-
-    this.uuid = randomUuid();
+    public radius: number,
+    uuid?: string
+  ) {
+    super(fill, stroke, strokeWidth, uuid);
   }
 
   public render(ctx: CanvasRenderingContext2D): void {
     ctx.beginPath();
     ctx.arc(this.pos.x, this.pos.y, this.radius, 0, 2 * Math.PI);
     if (this.fill === 'fill') {
-      ctx.fillStyle = this.stroke;
+      ctx.fillStyle = this.stroke as string;
       ctx.fill();
     }
-    ctx.lineWidth = this.strokeWidth;
-    ctx.strokeStyle = this.stroke;
+    ctx.lineWidth = this.strokeWidth as number;
+    ctx.strokeStyle = this.stroke as string;
     ctx.stroke();
   }
 
@@ -37,4 +35,27 @@ export class Circle implements Shape {
     return false;
   }
 
+  serialize() {
+    return {
+      uuid: this.uuid,
+      type: this.constructor.name,
+      fill: this.fill,
+      stroke: this.stroke,
+      strokeWidth: this.strokeWidth,
+      pos: this.pos,
+      radius: this.radius
+    };
+  }
+
+  static parse(serializedShape: any): Shape {
+    const shape = new Circle(
+      serializedShape.fill,
+      serializedShape.stroke,
+      serializedShape.strokeWidth,
+      serializedShape.rpos,
+      serializedShape.radius,
+      serializedShape.uuid
+    );
+    return shape;
+  }
 }
