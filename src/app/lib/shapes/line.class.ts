@@ -22,16 +22,20 @@ export class Line extends Shape {
     ctx.strokeStyle = this.stroke as string;
     ctx.lineWidth = this.strokeWidth as number;
     ctx.beginPath();
-    ctx.moveTo(this.p1.x, this.p1.y);
-    ctx.lineTo(this.p2.x, this.p2.y);
-    ctx.stroke();
+    ctx.moveTo(this.p1.x, this.p1.y); // Move the context to the first point
+    ctx.lineTo(this.p2.x, this.p2.y); // Build a line from the first point to the second one
+    ctx.stroke(); // Draw the line
   }
 
-  isColliding(pos: Vec2): boolean {
-    const slope = (this.p1.y - this.p2.y) / (this.p1.x - this.p2.x);
-    const yIntercept = this.p2.y - slope * this.p2.x;
-    const resultY = slope * pos.x + yIntercept;
-    if (Math.abs(pos.y - resultY) <= this.TOLERANCE) {
+  isColliding(testingPos: Vec2): boolean {
+    // Compute the equation of the line
+    const a = (this.p1.y - this.p2.y) / (this.p1.x - this.p2.x); // Compute a in ax + b
+    const b = this.p2.y - a * this.p2.x; // Compute b in ax + b
+
+    const resultY = a * testingPos.x + b; // Compute y for pos.x on the line
+
+    // If the computed y is equal to testingPos.y, then the point is on the line
+    if (Math.abs(testingPos.y - resultY) <= this.TOLERANCE) {
       return true;
     }
     return false;

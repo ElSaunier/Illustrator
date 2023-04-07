@@ -18,15 +18,22 @@ export class ToolConfigurationComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  /**
+   * @summary When thinckess changes in the template, update config and save it in the store
+   * @param event 
+   */
   onThicknessChange(event: any) {
     this.config.thickness = event;
     this.storageService.set('config', this.config);
   }
 
+  /**
+   * @summary When color changes in the template, update config and save it in the storage
+   * @param event 
+   */
   onColorSelect(event: any) {
     this.config.color = event;
     this.config.fillColor = event;
     this.storageService.set('config', this.config);
   }
-
 }

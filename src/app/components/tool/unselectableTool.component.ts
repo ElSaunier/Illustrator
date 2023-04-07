@@ -24,6 +24,7 @@ export class UnselectableToolComponent implements OnInit {
       this.domSanitizer.bypassSecurityTrustResourceUrl(this.unselectableTool.cls.svgPath)
     );
 
+    // Create an instance of the tool this component is representing
     this.instance = new this.unselectableTool.cls();
   }
 

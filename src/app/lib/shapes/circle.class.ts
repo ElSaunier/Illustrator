@@ -15,7 +15,10 @@ export class Circle extends Shape {
 
   public render(ctx: CanvasRenderingContext2D): void {
     ctx.beginPath();
+    // Draw the circle
     ctx.arc(this.pos.x, this.pos.y, this.radius, 0, 2 * Math.PI);
+
+    // Fill the circle ?
     if (this.fill === 'fill') {
       ctx.fillStyle = this.stroke as string;
       ctx.fill();
@@ -26,9 +29,12 @@ export class Circle extends Shape {
   }
 
   isColliding(pos: Vec2): boolean {
+    // Compute the distance between pos and this.pos
     const distX: number = pos.x - this.pos.x;
     const distY: number = pos.y - this.pos.y;
     const distance: number = Math.sqrt((distX * distX) + (distY * distY));
+
+    // pos is colliding with the circle if it between the center and the radius.
     if (distance <= this.radius) {
       return true;
     }
