@@ -9,7 +9,7 @@ import { DomSanitizer } from '@angular/platform-browser';
   styleUrls: ['./system-bar.component.css']
 })
 export class SystemBarComponent implements OnInit {
-  @Output() import = new EventEmitter<void>;
+  @Output() import = new EventEmitter<Event>;
   @Output() export = new EventEmitter<void>;
 
   saveSVGPath = '/assets/customSVG/save.svg';

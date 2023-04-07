@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core';
 import { ActionStack } from '@lib/action-stacks/action-stack.class';
 import { ISerializedCanvas } from '@lib/serialized-canvas.interface';
-import { IShape } from '@lib/shapes/shape.interface';
 import { Circle } from '@lib/shapes/circle.class';
 import { Line } from '@lib/shapes/line.class';
 import { Rect } from '@lib/shapes/rect.class';
@@ -9,6 +8,7 @@ import { Vec2 } from '@lib/vec2';
 import ShapeService from 'src/app/services/shapes.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { saveAs } from 'file-saver';
+import { Shape } from '@lib/shapes/shape.abstract';
 
 @Component({
   selector: 'ill-app-canvas',
@@ -66,7 +66,7 @@ export class CanvasComponent implements AfterViewInit {
     this.shapeService.elements$.subscribe(shapes => this._replaceShapes(shapes));
   }
 
-  _replaceShapes(shapes: IShape[]) {
+  _replaceShapes(shapes: Shape[]) {
     const ctxt = this.canvasElement.nativeElement.getContext('2d');
     const clientRect = this.canvasElement.nativeElement.getBoundingClientRect();
     ctxt?.clearRect(0, 0, clientRect.width, clientRect.height);
@@ -77,7 +77,7 @@ export class CanvasComponent implements AfterViewInit {
    * Draw an element into the canvas context
    * @param shape
    */
-  _drawElement(shape: IShape) {
+  _drawElement(shape: Shape) {
     const ctxt = this.canvasElement.nativeElement.getContext('2d');
 
     if (ctxt) {
@@ -252,12 +252,43 @@ export class CanvasComponent implements AfterViewInit {
     this._exportState(state, 'canvas');
   }
 
-  onImport() {
+  /**
+   * Import a stack from a .sil file
+   */
+  onImport(event: Event) {
+    const eventTarget = event.target as HTMLInputElement;
+    console.log('====', eventTarget, !eventTarget, eventTarget.files);
 
+    if (!eventTarget) return;
+    if (!eventTarget.files?.length) return;
+    const file = eventTarget.files[0];
+    console.log('~~~~', file);
+
+    const fileReader: FileReader = new FileReader();
+    fileReader.readAsText(file);
+    fileReader.onload = () => {
+      const json = JSON.parse(fileReader.result as string);
+      const state = CanvasComponent.parse(json);
+      this._applyState(state);
+    };
+    fileReader.onerror = () => {
+      console.error('Could not parse the file');
+    };
   }
 
-  private _parse() {
+  private _applyState(state: any) {
+    console.log('####', state);
+    this.stack = state.stack;
+  }
 
+  static parse(serializedCanva: ISerializedCanvas) {
+    if (!serializedCanva.stack) return null;
+    const parsedStack = ActionStack.parse(serializedCanva.stack);
+    if (!parsedStack) return null;
+
+    return {
+      stack: parsedStack
+    };
   }
 
   private _serialize(): ISerializedCanvas {

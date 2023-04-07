@@ -98,4 +98,13 @@ export class ActionStack {
       headPosition: this._headPosition
     };
   }
+
+  static parse(serializedStack: ISerializedActionStack): ActionStack {
+    const stack = new ActionStack();
+    for (const serializedAction of serializedStack.actions) {
+      const parsedAction = Action.parse(serializedAction);
+      stack.insert(parsedAction);
+    }
+    return stack;
+  }
 }

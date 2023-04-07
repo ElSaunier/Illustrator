@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IShape } from '@lib/shapes/shape.interface';
+import { Shape } from '@lib/shapes/shape.abstract';
 import { Tool } from '@lib/tools/tool.abstract';
 import { Subject } from 'rxjs';
 
@@ -9,17 +9,19 @@ import { Subject } from 'rxjs';
 export default class ShapeService {
   activeTool!: Tool;
 
-  private elements: IShape[] = [];
-  public elements$ = new Subject<IShape[]>();
-  public pushElement$ = new Subject<IShape>();
+  private elements: Shape[] = [];
+  public elements$ = new Subject<Shape[]>();
+  public pushElement$ = new Subject<Shape>();
   public deleteElement$ = new Subject<string>();
 
-  public add(e: IShape) {
+  public add(e: Shape) {
     this.elements.push(e);
     this.pushElement$.next(e);
   }
 
-  public remove(uuid: string) {
+  public remove(uuid: string | undefined) {
+    if (!uuid) return;
+
     const element = this.elements.find(elem => elem.uuid === uuid);
 
     if (!element) {
@@ -40,7 +42,7 @@ export default class ShapeService {
     return this.elements;
   }
 
-  updateElements(shapes: IShape[]) {
+  updateElements(shapes: Shape[]) {
     this.elements = shapes;
     this.elements$.next(this.elements);
   }

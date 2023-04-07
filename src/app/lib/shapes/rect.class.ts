@@ -1,29 +1,26 @@
-import { IShape } from '@lib/shapes/shape.interface';
-import { randomUuid } from '../uuid';
+import { Shape } from '@lib/shapes/shape.abstract';
 import { Vec2 } from '../vec2';
 
-export class Rect implements IShape {
-  public uuid: string;
+export class Rect extends Shape {
   constructor(
-    public fill: string,
-    public stroke: string,
-    public strokeWidth: number,
+    fill: string,
+    stroke: string,
+    strokeWidth: number,
     public rpos: Vec2,
     public width: number,
     public height: number,
     uuid?: string
   ) {
-
-    this.uuid = uuid ?? randomUuid();
+    super(fill, stroke, strokeWidth, uuid);
   }
 
   public render(ctx: CanvasRenderingContext2D) {
     if (this.fill === 'none') {
-      ctx.strokeStyle = this.stroke;
+      ctx.strokeStyle = this.stroke as string;
       ctx.strokeRect(this.rpos.x, this.rpos.y, this.width, this.height);
     } else {
-      ctx.fillStyle = this.fill;
-      ctx.strokeStyle = this.stroke;
+      ctx.fillStyle = this.fill as string;
+      ctx.strokeStyle = this.stroke as string;
       ctx.fillRect(this.rpos.x, this.rpos.y, this.width, this.height);
     }
   }
@@ -42,6 +39,7 @@ export class Rect implements IShape {
   serialize() {
     return {
       uuid: this.uuid,
+      type: this.constructor.name,
       fill: this.fill,
       stroke: this.stroke,
       strokeWidth: this.strokeWidth,
@@ -51,7 +49,7 @@ export class Rect implements IShape {
     };
   }
 
-  parse(serializedShape: any): IShape {
+  static parse(serializedShape: any) {
     const shape = new Rect(
       serializedShape.fill,
       serializedShape.stroke,

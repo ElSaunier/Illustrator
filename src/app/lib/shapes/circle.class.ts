@@ -1,21 +1,18 @@
 import { Vec2 } from '@lib/vec2';
-import { randomUuid } from '@lib/uuid';
-import { IShape } from '@lib/shapes/shape.interface';
+import { Shape } from './shape.abstract';
 
-export class Circle implements IShape {
-  public uuid: string;
-
+export class Circle extends Shape {
   constructor(
-    public fill: string,
-    public stroke: string,
-    public strokeWidth: number,
+    fill: string,
+    stroke: string,
+    strokeWidth: number,
     public rpos: Vec2,
     public radius: number,
     uuid?: string
   ) {
-
-    this.uuid = uuid ?? randomUuid();
+    super(fill, stroke, strokeWidth, uuid);
   }
+
   callback() {
 
   }
@@ -24,11 +21,11 @@ export class Circle implements IShape {
     ctx.beginPath();
     ctx.arc(this.rpos.x, this.rpos.y, this.radius, 0, 2 * Math.PI);
     if (this.fill === 'fill') {
-      ctx.fillStyle = this.stroke;
+      ctx.fillStyle = this.stroke as string;
       ctx.fill();
     }
-    ctx.lineWidth = this.strokeWidth;
-    ctx.strokeStyle = this.stroke;
+    ctx.lineWidth = this.strokeWidth as number;
+    ctx.strokeStyle = this.stroke as string;
     ctx.stroke();
   }
 
@@ -42,9 +39,10 @@ export class Circle implements IShape {
     return false;
   }
 
-  serialize()  {
+  serialize() {
     return {
       uuid: this.uuid,
+      type: this.constructor.name,
       fill: this.fill,
       stroke: this.stroke,
       strokeWidth: this.strokeWidth,
@@ -53,7 +51,7 @@ export class Circle implements IShape {
     };
   }
 
-  parse(serializedShape: any): IShape {
+  static parse(serializedShape: any): Shape {
     const shape = new Circle(
       serializedShape.fill,
       serializedShape.stroke,

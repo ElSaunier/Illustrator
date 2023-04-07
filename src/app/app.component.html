@@ -1,4 +1,4 @@
-<ill-app-system-bar (export)="this.onExport()" (import)="this.onImport()"></ill-app-system-bar>
+<ill-app-system-bar (export)="onExport()" (import)="onImport($event)"></ill-app-system-bar>
 <ill-app-tools-sidebar></ill-app-tools-sidebar>
 <ill-app-canvas #canvas [ngClass]="{ eraser: (isErasing | async) }">
 </ill-app-canvas>

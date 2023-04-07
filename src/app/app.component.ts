@@ -16,8 +16,8 @@ export class AppComponent {
   constructor(private storage: StorageService) {}
   isErasing = this.storage.subject('toolName').pipe(map(val => val === 'eraser'));
 
-  onImport() {
-    this.canvas.onImport();
+  onImport(event: Event) {
+    this.canvas.onImport(event);
   }
 
   onExport() {

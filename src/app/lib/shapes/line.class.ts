@@ -1,31 +1,26 @@
 import { Vec2 } from '@lib/vec2';
-import { randomUuid } from '@lib/uuid';
-import { IShape } from '@lib/shapes/shape.interface';
+import { Shape } from './shape.abstract';
 
-export class Line implements IShape {
+export class Line extends Shape {
   private TOLERANCE = 2;
-  public uuid: string;
 
   constructor(
-    public stroke: string,
-    public strokeWidth: number,
+    stroke: string,
+    strokeWidth: number,
     public rpos: Vec2,
     public lpos: Vec2,
     uuid?: string
   ) {
-
-    this.uuid = uuid ?? randomUuid();
+    super(null, stroke, strokeWidth, uuid);
   }
-
-  fill!: string;
 
   callback() {
 
   }
 
   public render(ctx: CanvasRenderingContext2D): void {
-    ctx.strokeStyle = this.stroke;
-    ctx.lineWidth = this.strokeWidth;
+    ctx.strokeStyle = this.stroke as string;
+    ctx.lineWidth = this.strokeWidth as number;
     ctx.beginPath();
     ctx.moveTo(this.rpos.x, this.rpos.y);
     ctx.lineTo(this.lpos.x, this.lpos.y);
@@ -45,6 +40,7 @@ export class Line implements IShape {
   serialize() {
     return {
       uuid: this.uuid,
+      type: this.constructor.name,
       stroke: this.stroke,
       strokeWidth: this.strokeWidth,
       rpos: this.rpos,
@@ -52,7 +48,7 @@ export class Line implements IShape {
     };
   }
 
-  parse(serializedShape: any): IShape {
+  static parse(serializedShape: any): Shape {
     const shape = new Line(
       serializedShape.stroke,
       serializedShape.strokeWidth,

@@ -1,8 +1,12 @@
 import { Tool } from '@lib/tools/tool.abstract';
-import { IShape } from '@lib/shapes/shape.interface';
 import { Vec2 } from '@lib/vec2';
 import { ISerializedAction } from './serialized-action.interface';
 import { EraserTool } from '@lib/tools/eraser-tool.class';
+import { Shape } from '@lib/shapes/shape.abstract';
+import { Rect } from '@lib/shapes/rect.class';
+import { Circle } from '@lib/shapes/circle.class';
+import { Text } from '@lib/shapes/text.class';
+import { Line } from '@lib/shapes/line.class';
 /**
  * An action which can be triggered by a tool
  */
@@ -15,7 +19,7 @@ export class Action {
    * @param toolType the type of tool which triggered the action
    * @param isPending Default value is true. Is the action finished ? Updated by the tool most of the time.
    */
-  constructor(protected x: number, protected y: number, protected shapes: IShape[], protected toolType: typeof Tool, protected isPending = true) {
+  constructor(protected x: number, protected y: number, protected shapes: Shape[], protected toolType: typeof Tool, protected isPending = true) {
   }
 
   /**
@@ -69,7 +73,7 @@ export class Action {
    *
    * @returns the list of shapes added by the action
    */
-  getShapes(): IShape[] {
+  getShapes(): Shape[] {
     return this.shapes;
   }
 
@@ -77,7 +81,7 @@ export class Action {
    * @summary set a new list of shapes that the action is working on
    * @param shapes
    */
-  setIShapes(shapes: IShape[]) {
+  setShapes(shapes: Shape[]) {
     this.shapes = shapes;
   }
 
@@ -144,6 +148,42 @@ export class Action {
     this.refAction = refAction;
   }
 
+  static parse(serializedAction: ISerializedAction): Action {
+    let shapes = serializedAction.shapes.map(serializedShape => {
+      return this._parseShape(serializedShape);
+    });
+    shapes = shapes.filter(shape => shape != null);
+
+    const action = new Action(
+      serializedAction.x,
+      serializedAction.y,
+      shapes as Shape[],
+      serializedAction.toolType,
+      serializedAction.isPending
+    );
+
+    return action;
+  }
+
+  private static _parseShape(serializedShape: any): Shape | null {
+    switch (serializedShape?.type) {
+      case 'Rect':
+        return Rect.parse(serializedShape);
+      case 'Circle':
+        return Circle.parse(serializedShape);
+      case 'Text':
+        return Text.parse(serializedShape);
+      case 'Line':
+        return Line.parse(serializedShape);
+      default:
+        return null;
+    }
+  }
+
+  /**
+   *
+   * @returns A serialized
+   */
   serialize(): ISerializedAction {
     return {
       x: this.x,
