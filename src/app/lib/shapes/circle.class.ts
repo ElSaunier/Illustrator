@@ -14,9 +14,6 @@ export class Circle implements Shape {
 
     this.uuid = randomUuid();
   }
-  callback() {
-
-  }
 
   public render(ctx: CanvasRenderingContext2D): void {
     ctx.beginPath();

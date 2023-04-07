@@ -18,10 +18,6 @@ export class Line implements Shape {
 
   fill!: string;
 
-  callback() {
-
-  }
-
   public render(ctx: CanvasRenderingContext2D): void {
     ctx.strokeStyle = this.stroke;
     ctx.lineWidth = this.strokeWidth;

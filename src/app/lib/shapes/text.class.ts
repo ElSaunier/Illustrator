@@ -17,10 +17,6 @@ export class Text implements Shape {
   fill!: string;
   strokeWidth!: number;
 
-  callback() {
-
-  }
-
   public render(ctx: CanvasRenderingContext2D): void {
     ctx.fillStyle = this.stroke;
     ctx.textAlign = 'center';
