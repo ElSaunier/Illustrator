@@ -6,5 +6,4 @@ export interface ISerializedAction {
   shapes: object[],
   toolType: typeof Tool,
   isPending: boolean,
-  isShowed: boolean
 }

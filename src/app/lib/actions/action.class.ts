@@ -178,7 +178,6 @@ export class Action {
       shapes: this.shapes.map(s => s.serialize()),
       toolType: this.toolType,
       isPending: this.isPending,
-      isShowed: this.isShowed
     };
   }
 }
