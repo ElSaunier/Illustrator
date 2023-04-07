@@ -9,7 +9,7 @@ export class Circle implements Shape {
     public fill: string,
     public stroke: string,
     public strokeWidth: number,
-    public rpos: Vec2,
+    public pos: Vec2,
     public radius: number) {
 
     this.uuid = randomUuid();
@@ -17,7 +17,7 @@ export class Circle implements Shape {
 
   public render(ctx: CanvasRenderingContext2D): void {
     ctx.beginPath();
-    ctx.arc(this.rpos.x, this.rpos.y, this.radius, 0, 2 * Math.PI);
+    ctx.arc(this.pos.x, this.pos.y, this.radius, 0, 2 * Math.PI);
     if (this.fill === 'fill') {
       ctx.fillStyle = this.stroke;
       ctx.fill();
@@ -28,8 +28,8 @@ export class Circle implements Shape {
   }
 
   isColliding(pos: Vec2): boolean {
-    const distX: number = pos.x - this.rpos.x;
-    const distY: number = pos.y - this.rpos.y;
+    const distX: number = pos.x - this.pos.x;
+    const distY: number = pos.y - this.pos.y;
     const distance: number = Math.sqrt((distX * distX) + (distY * distY));
     if (distance <= this.radius) {
       return true;

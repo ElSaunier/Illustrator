@@ -10,7 +10,7 @@ export class Line implements Shape {
   constructor(
     public stroke: string,
     public strokeWidth: number,
-    public rpos: Vec2,
+    public pos: Vec2,
     public lpos: Vec2) {
 
     this.uuid = randomUuid();
@@ -22,13 +22,13 @@ export class Line implements Shape {
     ctx.strokeStyle = this.stroke;
     ctx.lineWidth = this.strokeWidth;
     ctx.beginPath();
-    ctx.moveTo(this.rpos.x, this.rpos.y);
+    ctx.moveTo(this.pos.x, this.pos.y);
     ctx.lineTo(this.lpos.x, this.lpos.y);
     ctx.stroke();
   }
 
   isColliding(pos: Vec2): boolean {
-    const slope = (this.rpos.y - this.lpos.y) / (this.rpos.x - this.lpos.x);
+    const slope = (this.pos.y - this.lpos.y) / (this.pos.x - this.lpos.x);
     const yIntercept = this.lpos.y - slope * this.lpos.x;
     const resultY = slope * pos.x + yIntercept;
     if (Math.abs(pos.y - resultY) <= this.TOLERANCE) {

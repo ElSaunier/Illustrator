@@ -23,8 +23,8 @@ export class PointTool extends Tool {
       if (action !== undefined) {
         const shape = action.getShapes().find(s => s instanceof Circle && s.isColliding({ x, y })) as Circle;
         if (shape !== undefined) {
-          x = shape.rpos.x;
-          y = shape.rpos.y;
+          x = shape.pos.x;
+          y = shape.pos.y;
         }
       }
     }
@@ -125,8 +125,8 @@ export class PointTool extends Tool {
       0,
       0,
       [
-        new Circle(firstShape.fill, firstShape.stroke, firstShape.strokeWidth, firstShape.rpos, firstShape.radius),
-        new Circle(secondShape.fill, secondShape.stroke, secondShape.strokeWidth, secondShape.rpos, secondShape.radius),
+        new Circle(firstShape.fill, firstShape.stroke, firstShape.strokeWidth, firstShape.pos, firstShape.radius),
+        new Circle(secondShape.fill, secondShape.stroke, secondShape.strokeWidth, secondShape.pos, secondShape.radius),
         new Line(
           this.config.color,
           this.config.thickness,
