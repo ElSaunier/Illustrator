@@ -1,30 +1,26 @@
 import { Vec2 } from '@lib/vec2';
-import { randomUuid } from '@lib/uuid';
-import { Shape } from '@lib/interfaces/shape.interface';
+import { Shape } from './shape.abstract';
 
-export class Line implements Shape {
-  public uuid: string;
-
+export class Line extends Shape {
   private TOLERANCE = 2;
 
   constructor(
-    public stroke: string,
-    public strokeWidth: number,
+    stroke: string,
+    strokeWidth: number,
     public rpos: Vec2,
-    public lpos: Vec2) {
-
-    this.uuid = randomUuid();
+    public lpos: Vec2,
+    uuid?: string
+  ) {
+    super(null, stroke, strokeWidth, uuid);
   }
-
-  fill!: string;
 
   callback() {
 
   }
 
   public render(ctx: CanvasRenderingContext2D): void {
-    ctx.strokeStyle = this.stroke;
-    ctx.lineWidth = this.strokeWidth;
+    ctx.strokeStyle = this.stroke as string;
+    ctx.lineWidth = this.strokeWidth as number;
     ctx.beginPath();
     ctx.moveTo(this.rpos.x, this.rpos.y);
     ctx.lineTo(this.lpos.x, this.lpos.y);
@@ -39,5 +35,27 @@ export class Line implements Shape {
       return true;
     }
     return false;
+  }
+
+  serialize() {
+    return {
+      uuid: this.uuid,
+      type: this.constructor.name,
+      stroke: this.stroke,
+      strokeWidth: this.strokeWidth,
+      rpos: this.rpos,
+      lpos: this.lpos
+    };
+  }
+
+  static parse(serializedShape: any): Shape {
+    const shape = new Line(
+      serializedShape.stroke,
+      serializedShape.strokeWidth,
+      serializedShape.rpos,
+      serializedShape.lpos,
+      serializedShape.uuid
+    );
+    return shape;
   }
 }
