@@ -92,6 +92,11 @@ export class ActionStack {
     this._headPosition--;
   }
 
+
+  /**
+   * Serialized the stack
+   * @returns A serialized ActionStack
+   */
   serialize(): ISerializedActionStack {
     return {
       actions: this._stack.map(s => s.serialize()),
@@ -99,6 +104,11 @@ export class ActionStack {
     };
   }
 
+  /**
+   * Parse a serialized stack
+   * @param serializedStack A serialized ActionStack
+   * @returns An instantiated ActionStack
+   */
   static parse(serializedStack: ISerializedActionStack): ActionStack {
     const stack = new ActionStack();
     for (const serializedAction of serializedStack.actions) {

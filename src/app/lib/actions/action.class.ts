@@ -148,6 +148,11 @@ export class Action {
     this.refAction = refAction;
   }
 
+  /**
+   * Parse a serialized Action
+   * @param serializedAction A serialized action
+   * @returns An instantiated action
+   */
   static parse(serializedAction: ISerializedAction): Action {
     let shapes = serializedAction.shapes.map(serializedShape => {
       return this._parseShape(serializedShape);
@@ -165,6 +170,11 @@ export class Action {
     return action;
   }
 
+  /**
+   * Parse a serialized Shape
+   * @param serializedShape A serialized Shape
+   * @returns An instantiated shape
+   */
   private static _parseShape(serializedShape: any): Shape | null {
     switch (serializedShape?.type) {
       case 'Rect':
@@ -181,8 +191,8 @@ export class Action {
   }
 
   /**
-   *
-   * @returns A serialized
+   * Serialize the action
+   * @returns A serialized Action
    */
   serialize(): ISerializedAction {
     return {
