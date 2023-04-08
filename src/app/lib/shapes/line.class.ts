@@ -56,8 +56,8 @@ export class Line extends Shape {
     const shape = new Line(
       serializedShape.stroke,
       serializedShape.strokeWidth,
-      serializedShape.rpos,
-      serializedShape.lpos,
+      serializedShape.p1,
+      serializedShape.p2,
       serializedShape.uuid
     );
     return shape;
