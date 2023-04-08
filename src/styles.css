@@ -15,6 +15,7 @@ button:hover, button.active{
     background-color: #E4FDE1;
 }
 
+
 mat-sidenav{
     background-color: #171A21;
     width: 80%;
@@ -28,10 +29,11 @@ mat-sidenav{
     color: #7A93AC;
 }
 
+
 mat-sidenav-container {
     width: 100%;
 
-    overflow: visible;
+    overflow: visible !important;
     display: flex !important;
     justify-content: center;
     background-color: #DFE6F3;
