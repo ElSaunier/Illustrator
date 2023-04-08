@@ -53,11 +53,12 @@ export class Rect extends Shape {
   }
 
   static parse(serializedShape: any) {
+
     const shape = new Rect(
       serializedShape.fill,
       serializedShape.stroke,
       serializedShape.strokeWidth,
-      serializedShape.rpos,
+      serializedShape.pos,
       serializedShape.width,
       serializedShape.height,
       serializedShape.uuid

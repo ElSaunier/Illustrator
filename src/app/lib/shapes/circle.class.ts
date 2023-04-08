@@ -58,7 +58,7 @@ export class Circle extends Shape {
       serializedShape.fill,
       serializedShape.stroke,
       serializedShape.strokeWidth,
-      serializedShape.rpos,
+      serializedShape.pos,
       serializedShape.radius,
       serializedShape.uuid
     );
