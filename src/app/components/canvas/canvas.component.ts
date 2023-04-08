@@ -257,12 +257,10 @@ export class CanvasComponent implements AfterViewInit {
    */
   onImport(event: Event) {
     const eventTarget = event.target as HTMLInputElement;
-    console.log('====', eventTarget, !eventTarget, eventTarget.files);
 
     if (!eventTarget) return;
     if (!eventTarget.files?.length) return;
     const file = eventTarget.files[0];
-    console.log('~~~~', file);
 
     const fileReader: FileReader = new FileReader();
     fileReader.readAsText(file);
@@ -277,8 +275,13 @@ export class CanvasComponent implements AfterViewInit {
   }
 
   private _applyState(state: any) {
-    console.log('####', state);
     this.stack = state.stack;
+    for (const action of this.stack.getStack()) {
+      const shapes = action.getShapes();
+      shapes.forEach(shape => {
+        this.shapeService.add(shape);
+      });
+    }
   }
 
   static parse(serializedCanva: ISerializedCanvas) {
