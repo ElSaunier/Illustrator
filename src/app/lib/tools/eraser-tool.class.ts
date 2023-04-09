@@ -24,6 +24,7 @@ export class EraserTool extends Tool {
 
     let action = undefined;
 
+    // Get the most recent action which took place at the point we clicked
     for (let i = actions.length - 1; i >= 0 && action === undefined; i--) {
       if (actions[i].getShapes().find(s => s.isColliding({ x: x, y: y })) !== undefined) {
         action = actions[i];
@@ -34,8 +35,10 @@ export class EraserTool extends Tool {
       return null;
     }
 
+    // If we found an action, we set it to deleted state (we do not remove it to be able to perform undo/redo)
     action.setIsDeletd(true);
 
+    // Add an action in the stack to inform that we deleted an element
     const newAction = new Action(
       x,
       y,

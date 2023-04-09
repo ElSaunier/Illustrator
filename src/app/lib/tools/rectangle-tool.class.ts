@@ -43,7 +43,7 @@ export class RectangleTool extends Tool {
   }
 
   override doUnPress(x: number, y: number, stack?: ActionStack | undefined): Action[] | null {
-
+    // We cannot process the the unpress if this action is the first one. We need at least a first point
     if (this.actionDone != 1 || stack === undefined) {
       return null;
     }
@@ -53,16 +53,18 @@ export class RectangleTool extends Tool {
       return null;
     }
 
+    // If we draw the rectangle, we first need to remove the ghost rectangle
     this.removeGhostElement(stack);
 
     const actions = stack.getActiveStack();
 
     const lastAction: Action = actions[stack.getHeadPosition()];
-
+    // Check the last action is concerning the Rectangle and is not pending
     if (lastAction.getToolType() !== RectangleTool || !lastAction.getPending()) {
       return null;
     }
 
+    // Draw the ghost rectangle with text informations
     const coord1 = lastAction.getCoordinates();
     const coord2 = { x, y };
 
