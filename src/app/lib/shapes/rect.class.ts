@@ -2,6 +2,12 @@ import { Shape } from '@lib/shapes/shape.abstract';
 import { Vec2 } from '../vec2';
 
 export class Rect extends Shape {
+  minX: number;
+  maxX: number;
+
+  minY: number;
+  maxY: number;
+
   constructor(
     fill: string,
     stroke: string,
@@ -12,6 +18,13 @@ export class Rect extends Shape {
     uuid?: string
   ) {
     super(fill, stroke, strokeWidth, uuid);
+
+
+    // Compute the rect corners
+    this.minX = Math.min(this.pos.x, this.pos.x + this.width);
+    this.maxX = Math.max(this.pos.x, this.pos.x + this.width);
+    this.minY = Math.min(this.pos.y, this.pos.y + this.height);
+    this.maxY = Math.max(this.pos.y, this.pos.y + this.height);
   }
 
   public render(ctx: CanvasRenderingContext2D) {
@@ -26,14 +39,9 @@ export class Rect extends Shape {
   }
 
   isColliding(pos: Vec2): boolean {
-    // Compute the rect corners
-    const minX = Math.min(this.pos.x, this.pos.x + this.width);
-    const maxX = Math.max(this.pos.x, this.pos.x + this.width);
-    const minY = Math.min(this.pos.y, this.pos.y + this.height);
-    const maxY = Math.max(this.pos.y, this.pos.y + this.height);
 
     // Check the testing point is between each corner
-    if (pos.x >= minX && pos.x <= maxX && pos.y >= minY && pos.y <= maxY) {
+    if (pos.x >= this.minX && pos.x <= this.maxX && pos.y >= this.minY && pos.y <= this.maxY) {
       return true;
     }
     return false;

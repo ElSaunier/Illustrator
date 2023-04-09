@@ -3,6 +3,8 @@ import { Shape } from './shape.abstract';
 
 export class Line extends Shape {
   private TOLERANCE = 2;
+  private a: number; // a in the ax + b equation
+  private b: number; // b in the ax + b equation
 
   constructor(
     stroke: string,
@@ -12,6 +14,9 @@ export class Line extends Shape {
     uuid?: string
   ) {
     super(null, stroke, strokeWidth, uuid);
+
+    this.a = (this.p1.y - this.p2.y) / (this.p1.x - this.p2.x);
+    this.b = this.p2.y - this.a * this.p2.x;
   }
 
   callback() {
@@ -28,11 +33,7 @@ export class Line extends Shape {
   }
 
   isColliding(testingPos: Vec2): boolean {
-    // Compute the equation of the line
-    const a = (this.p1.y - this.p2.y) / (this.p1.x - this.p2.x); // Compute a in ax + b
-    const b = this.p2.y - a * this.p2.x; // Compute b in ax + b
-
-    const resultY = a * testingPos.x + b; // Compute y for pos.x on the line
+    const resultY = this.a * testingPos.x + this.b; // Compute y for pos.x on the line
 
     // If the computed y is equal to testingPos.y, then the point is on the line
     if (Math.abs(testingPos.y - resultY) <= this.TOLERANCE) {
