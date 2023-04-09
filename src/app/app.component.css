@@ -13,11 +13,12 @@ ill-app-tool-configuration {
 
 ill-app-system-bar {
     display: flex;
+    flex: 0;
 }
 
 .canvas-container {
     display: flex;
-    height: 100%;
+    flex: 1;
 }
 
 .eraser {
