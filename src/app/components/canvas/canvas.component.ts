@@ -269,8 +269,12 @@ export class CanvasComponent implements AfterViewInit {
     };
   }
 
-  private _applyState(state: any) {
-    this.stack = state.stack;
+  private _applyState(state: ReturnType<typeof CanvasComponent.parse>) {
+    if (!state) {
+      return;
+    }
+
+    this.stack.setStack(state.stack);
     for (const action of this.stack.getStack()) {
       const shapes = action.getShapes();
       shapes.forEach(shape => {
@@ -295,7 +299,7 @@ export class CanvasComponent implements AfterViewInit {
     };
   }
 
-  private _exportState(state: object, fileName: string) {
+  private _exportState(state: unknown, fileName: string) {
     const json = JSON.stringify(state);
     const blob = new Blob([json], { type: 'application/json' });
     saveAs(blob, fileName + '.sil');

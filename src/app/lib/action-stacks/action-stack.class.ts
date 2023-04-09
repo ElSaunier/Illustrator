@@ -13,6 +13,11 @@ export class ActionStack {
   /** The position of the pointed stack top */
   private _headPosition = -1;
 
+  setStack(stack: ActionStack) {
+    this._headPosition = stack._headPosition;
+    this._stack = [...stack._stack];
+  }
+
   /**
    * @summary Insert a new action atop the stack and update the stack head postion.
    * @param action
@@ -41,6 +46,7 @@ export class ActionStack {
    * @summary move to the previous action within the stack
    */
   undo(): void {
+    console.log(this._stack)
     if (this._stack[this._headPosition].getToolType() === EraserTool) {
       this._stack[this._headPosition].getRefAction()?.setIsDeletd(false);
     }
@@ -117,10 +123,12 @@ export class ActionStack {
    */
   static parse(serializedStack: ISerializedActionStack): ActionStack {
     const stack = new ActionStack();
+    console.log(serializedStack);
     for (const serializedAction of serializedStack.actions) {
       const parsedAction = Action.parse(serializedAction);
       stack.insert(parsedAction);
     }
+    console.log(stack)
     return stack;
   }
 }
