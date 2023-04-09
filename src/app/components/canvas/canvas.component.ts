@@ -202,12 +202,12 @@ export class CanvasComponent implements AfterViewInit {
    * @returns x and y
    */
   getCoordinates(event: MouseEvent) {
-    const { offsetX, offsetY } = event;
+    const { clientX, clientY } = event;
     const canvas = this.rootElement.nativeElement;
-    const canvasWidth = canvas.getBoundingClientRect().width;
-    const documentWidth = document.documentElement.clientWidth;
-    const coef = canvasWidth / documentWidth;
-    return { x: offsetX * coef, y: offsetY };
+    const canvasLeft = canvas.getBoundingClientRect().left;
+    const canvasTop = canvas.getBoundingClientRect().top;
+
+    return { x: clientX - canvasLeft, y: clientY - canvasTop };
   }
 
   /**
