@@ -1,21 +1,12 @@
-<mat-sidenav-container class="example-container">
-    <mat-sidenav mode="side" opened>
-        <div class="content">
-
-            <section>
-                <h3> Thick </h3>
-                <mat-button-toggle-group [(ngModel)]="config.thickness" aria-label="thickness" (ngModelChange)="onThicknessChange($event)">
-                    <mat-button-toggle [value]="3" id="high" [class.active]="config.thickness === 3"></mat-button-toggle>
-                    <mat-button-toggle [value]="2" id="medium" [class.active]="config.thickness === 2"></mat-button-toggle>
-                    <mat-button-toggle [value]="1" id="low" [class.active]="config.thickness === 1"></mat-button-toggle>
-                </mat-button-toggle-group>
-            </section>
-        
-            <section>
-                <h3> Color </h3>
-                <input id="colorPicker" [colorPicker]="config.color" [style.background]="config.color" (colorPickerSelect)="onColorSelect($event)"/>
-            </section>
-
-        </div>
-    </mat-sidenav>
-</mat-sidenav-container>
+<aside class="custom-navbar">
+    <section>
+        <mat-button-toggle-group [(ngModel)]="config.thickness" aria-label="thickness" (ngModelChange)="onThicknessChange($event)">
+            <mat-button-toggle [value]="3" id="high" [class.active]="config.thickness === 3"></mat-button-toggle>
+            <mat-button-toggle [value]="2" id="medium" [class.active]="config.thickness === 2"></mat-button-toggle>
+            <mat-button-toggle [value]="1" id="low" [class.active]="config.thickness === 1"></mat-button-toggle>
+        </mat-button-toggle-group>
+    </section>
+    <section>
+        <input id="colorPicker" [colorPicker]="config.color" [style.background]="config.color" (colorPickerSelect)="onColorSelect($event)"/>
+    </section>
+</aside>
