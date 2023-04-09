@@ -16,6 +16,7 @@ app-root {
     display: flex;
     flex-direction: column;
     height: 100%;
+    overflow-y: hidden;
 }
 
 button {
@@ -25,18 +26,6 @@ button {
 button:hover,
 button.active {
     background-color: #4b74ef;
-}
-
-
-mat-sidenav {
-    background-color: #171A21;
-    overflow: visible;
-}
-
-
-mat-sidenav-container {
-    height: 100%;
-    overflow: visible !important;
 }
 
 .custom-navbar {
