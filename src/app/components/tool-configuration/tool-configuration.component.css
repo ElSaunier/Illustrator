@@ -34,7 +34,7 @@ section {
 #high,
 #medium,
 #low {
-    background-color: #7A93AC;
+    background-color: #9baed9;
     border-radius: 50%;
 }
 
@@ -81,4 +81,7 @@ button#high-button {
 h3.section-title {
     margin: 0;
     margin-bottom: 6px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
 }

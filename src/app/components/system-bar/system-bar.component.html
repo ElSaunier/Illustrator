@@ -1,19 +1,16 @@
-<nav>
+<header>
     <div class="name">
         ILLUSTRATOR
     </div>
 
-
     <div class="btn-ctr">
-        <label for="import-file">
-            <button mat-icon-button>
-              <mat-icon [svgIcon]="'import'"></mat-icon>
-            </button>
+        <label for="import-file" class="system-btn">
+            Import
         </label>
-        <input id="import-file" type="file" (change)="import.emit($event)">
+        <input id="import-file" type="file" (change)="import.emit($event)" accept=".sil" style="display: none;">
 
-        <button mat-icon-button (click)="export.emit()">
-            <mat-icon [svgIcon]="'export'"></mat-icon>
+        <button class="system-btn" (click)="export.emit()">
+            Export
         </button>
     </div>
-</nav>
+</header>
