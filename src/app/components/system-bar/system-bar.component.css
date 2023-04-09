@@ -6,9 +6,8 @@ nav {
     padding-left: 2%;
 }
 
-.btn-ctr{
+.btn-ctr {
     display: flex;
-    width: 15%;
-    margin-left: 5%;
+    margin-left: 32px;
     justify-content: space-evenly;
 }

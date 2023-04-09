@@ -1,15 +1,12 @@
 ill-app-canvas {
-    display: inline-flex;
     flex: 1;
 }
 
 ill-app-tools-sidebar {
-    display: inline-flex;
     flex: 0;
 }
 
 ill-app-tool-configuration {
-    display: inline-flex;
     flex: 0;
 }
 
@@ -24,4 +21,12 @@ ill-app-system-bar {
 
 .eraser {
     cursor: url('/assets/customSVG/eraser-small.svg'), auto;
+}
+
+.custom-navbar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    overflow: visible
 }
