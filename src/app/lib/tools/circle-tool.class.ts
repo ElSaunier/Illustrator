@@ -96,17 +96,22 @@ export class CircleTool extends Tool {
     const lastAction: Action = actions[stack.getHeadPosition()];
     const firstAction: Action = actions[stack.getHeadPosition() - 1];
 
+    // Check both events concerns the CircleTool
     if (lastAction.getToolType() !== CircleTool && firstAction.getToolType() !== CircleTool) {
       return null;
     }
+
+    // Check the action is not yet completed
     if (!lastAction.getPending() || !firstAction.getPending()) {
       return null;
     }
 
+    // Compute the position of both events
     const coord1 = firstAction.getCoordinates();
     const coord2 = lastAction.getCoordinates();
     const distance = Math.sqrt(Math.pow(coord2.x - coord1.x, 2) + Math.pow(coord2.y - coord1.y, 2));
 
+    // Build an action corresponding to the action completion
     const newAction = new Action(
       firstAction.getCoordinates().x,
       firstAction.getCoordinates().y,
@@ -123,6 +128,7 @@ export class CircleTool extends Tool {
       false
     );
 
+    // Clear actions
     this.removePendingActions(stack);
 
     this.nbrClick = 0;
@@ -140,14 +146,20 @@ export class CircleTool extends Tool {
       if (lastAction === undefined || beforeLastAction === undefined) {
         return;
       }
+
+      // If the last actions does not concern the Circle tool then there is no ghost element
       if (beforeLastAction.getToolType() !== CircleTool || lastAction.getToolType() !== CircleTool) {
         allAsbeenRemoved = true;
         break;
       }
+
+      // If the last actions are not pending then there is no ghost element
       if (!beforeLastAction.getPending() || !lastAction.getPending()) {
         allAsbeenRemoved = true;
         break;
       }
+
+      // the last action was a ghost element action, we pop it from the stack
       stack.undo();
     }
   }

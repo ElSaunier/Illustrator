@@ -35,6 +35,7 @@ export class PencilTool extends Tool {
       return null;
     }
 
+    // Get the last action and the one before it, concerning the pencil tool
     const lastAction: Action | null = this.getLastPendingPencilTool(actions);
     const displayedAction: Action | null =
       this.getBeforeLastPendingTool(actions);
@@ -43,6 +44,7 @@ export class PencilTool extends Tool {
       return null;
     }
 
+    // If we only have one action, we build a new one, corresponding to the new hand draw parcel
     if (!displayedAction) {
       const newAction = new Action(
         lastAction.getCoordinates().x,
@@ -55,6 +57,7 @@ export class PencilTool extends Tool {
       return newAction;
     }
 
+    // Draw a new line for the new built action
     displayedAction?.getShapes().push(new Line(
       this.config.color,
       this.config.thickness,
@@ -70,6 +73,7 @@ export class PencilTool extends Tool {
   }
 
   getLastPendingPencilTool(actions: Action[]) {
+    // Loop through the actions to find the most recent one which concerns the pencil tool
     for (let i = actions.length - 1; i >= 0; i--) {
       if (
         actions[i].getToolType() === PencilTool &&
@@ -83,6 +87,7 @@ export class PencilTool extends Tool {
 
   getBeforeLastPendingTool(actions: Action[]) {
     let alreadyFoundOne = false;
+    // Loop through the actions to find the one before the most recent one which concerns the pencil tool
     for (let i = actions.length - 1; i >= 0; i--) {
       if (
         actions[i].getToolType() === PencilTool &&
@@ -98,6 +103,7 @@ export class PencilTool extends Tool {
   }
 
   removeTemporaryElement(stack: ActionStack) {
+    // Remove the intermediate actions concerning the pencil tool to build a standalone one
     for (let i = stack.getStack().length - 1; i >= 0;) {
       if (
         stack.getStack()[i].getToolType() === PencilTool &&

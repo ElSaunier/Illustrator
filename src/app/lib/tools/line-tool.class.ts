@@ -16,6 +16,7 @@ export class PointTool extends Tool {
   override doClick(x: number, y: number, stack?: ActionStack): Action[] | null {
     this.actionDone++;
 
+    // Find an action corresponding to a circle at the same pos, adapt coordinates
     if (stack !== undefined) {
       const actions = stack.getActiveStack();
       const action = actions.find(ac => ac.getShapes().find(s => s instanceof Circle && s.isColliding({ x, y })));
@@ -28,6 +29,7 @@ export class PointTool extends Tool {
       }
     }
 
+    // Add a point at the position
     const startCircle = new Circle(
       this.config.fill ? 'fill' : '',
       this.config.color,
@@ -70,14 +72,16 @@ export class PointTool extends Tool {
     this.removeGhostElement(stack);
 
     const lastAction: Action = actions[stack.getHeadPosition()];
-
+    // Check the last action was the first point of the line
     if (lastAction.getToolType() !== PointTool && !lastAction.getPending()) {
       return null;
     }
 
+    // Compute informations from the first point
     const coord1 = lastAction.getCoordinates();
     const distance = Math.sqrt(Math.pow(x - coord1.x, 2) + Math.pow(y - coord1.y, 2));
 
+    // Build a new action with the ghost element (line with distance)
     const newAction = new Action(
       x,
       y,
@@ -120,6 +124,7 @@ export class PointTool extends Tool {
 
     this.removePendingActions(stack);
 
+    // If completed, build the new action with both points
     const newAction = new Action(
       0,
       0,
