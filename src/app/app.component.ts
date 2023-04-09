@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { map } from 'rxjs';
 import { CanvasComponent } from './components/canvas/canvas.component';
 import { StorageService } from './services/storage.service';

@@ -1,14 +1,9 @@
-import { AfterViewInit, Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { ActionStack } from '@lib/action-stacks/action-stack.class';
 import { ISerializedCanvas } from '@lib/serialized-canvas.interface';
-import { Circle } from '@lib/shapes/circle.class';
-import { Line } from '@lib/shapes/line.class';
-import { Rect } from '@lib/shapes/rect.class';
-import { Vec2 } from '@lib/vec2';
-import ShapeService from 'src/app/services/shapes.service';
-import { StorageService } from 'src/app/services/storage.service';
 import { saveAs } from 'file-saver';
 import { Shape } from '@lib/shapes/shape.abstract';
+import ShapeService from 'src/app/services/shapes.service';
 
 @Component({
   selector: 'ill-app-canvas',
@@ -168,8 +163,8 @@ export class CanvasComponent implements AfterViewInit {
     actions.forEach(action => {
       if (!action.getIsDeleted()) {
         const shapes = action.getShapes();
-        shapes.forEach(shape => {
-          this.shapeService.add(shape);
+        shapes.forEach(s => {
+          this.shapeService.add(s);
         });
       }
     });

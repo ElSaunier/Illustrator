@@ -3,7 +3,6 @@ import { Action } from '@lib/actions/action.class';
 import { Circle } from '@lib/shapes/circle.class';
 import { Line } from '@lib/shapes/line.class';
 import { Text } from '@lib/shapes/text.class';
-import { IToolConfiguration } from './tool-configuration.interface';
 import { Tool } from './tool.abstract';
 import { ToolName } from './tools';
 

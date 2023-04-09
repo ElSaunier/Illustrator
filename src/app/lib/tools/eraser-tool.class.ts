@@ -1,16 +1,11 @@
 import { ActionStack } from '@lib/action-stacks/action-stack.class';
 import { Action } from '@lib/actions/action.class';
-import { Circle } from '@lib/shapes/circle.class';
 import { Tool } from './tool.abstract';
 import { ToolName } from './tools';
 
 export class EraserTool extends Tool {
   static override toolName: ToolName = 'eraser';
   static override svgPath = '/assets/customSVG/eraser.svg';
-
-  constructor() {
-    super();
-  }
 
   override doClick(x: number, y: number, stack?: ActionStack | undefined): Action[] | null {
     return this.processSuppression(x, y, stack);
@@ -24,7 +19,7 @@ export class EraserTool extends Tool {
     if (stack === undefined) {
       return null;
     }
-    
+
     const actions = stack.getActiveStack();
 
     let action = undefined;
@@ -38,7 +33,7 @@ export class EraserTool extends Tool {
     if (action === undefined) {
       return null;
     }
-    
+
     action.setIsDeletd(true);
 
     const newAction = new Action(

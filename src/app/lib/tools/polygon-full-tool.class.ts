@@ -1,8 +1,6 @@
 import { ActionStack } from '@lib/action-stacks/action-stack.class';
 import { Action } from '@lib/actions/action.class';
 import { Rect } from '@lib/shapes/rect.class';
-import { IToolConfiguration } from './tool-configuration.interface';
-
 import { Tool } from './tool.abstract';
 import { ToolName } from './tools';
 

@@ -1,7 +1,6 @@
 import { Tool } from '@lib/tools/tool.abstract';
 import { Vec2 } from '@lib/vec2';
 import { ISerializedAction } from './serialized-action.interface';
-import { EraserTool } from '@lib/tools/eraser-tool.class';
 import { Shape } from '@lib/shapes/shape.abstract';
 import { Rect } from '@lib/shapes/rect.class';
 import { Circle } from '@lib/shapes/circle.class';
